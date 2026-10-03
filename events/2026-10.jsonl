@@ -5,3 +5,4 @@
 {"actor":"external:orchestrator","at":"2026-10-03T01:31:56.847325Z","queue":"reprioritized"}
 {"actor":"external:orchestrator","at":"2026-10-03T01:31:56.913670Z","queue":"reprioritized"}
 {"actor":"external:orchestrator","at":"2026-10-03T01:31:56.949850Z","queue":"reprioritized"}
+{"actor":"agent:manager-1","at":"2026-10-03T02:40:55.060072Z","from":"open","task":"ui-6e16","to":"planned"}

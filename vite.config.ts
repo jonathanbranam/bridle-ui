@@ -4,10 +4,7 @@ import { resolve } from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
-
-// The gateway API version this build targets; the gateway compares it with the
-// `api-version` file beside index.html.
-const API_VERSION = 1;
+import { API_VERSION } from "./src/api/version";
 
 function apiVersionFile(): Plugin {
 	let outDir = "dist";

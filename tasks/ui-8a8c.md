@@ -2,9 +2,9 @@
 id = "ui-8a8c"
 title = "v1 view: the human's to-dos and task questions across projects, with actions"
 kind = "feature"
-state = "open"
+state = "planned"
 created_at = "2026-10-03T01:31:51.819Z"
-updated_at = "2026-10-03T01:31:51.819Z"
+updated_at = "2026-10-03T02:53:48.644631Z"
 size = "M"
 +++
 

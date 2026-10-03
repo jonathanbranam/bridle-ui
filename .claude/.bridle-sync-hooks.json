@@ -1,0 +1,13 @@
+{
+  "PreToolUse": [
+    {
+      "hooks": [
+        {
+          "command": "bridle arch-guard",
+          "type": "command"
+        }
+      ],
+      "matcher": "Edit|Write|MultiEdit"
+    }
+  ]
+}

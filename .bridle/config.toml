@@ -1,0 +1,65 @@
+# bridle-ui on bridle (2026-10-03): a new project, worked directly on main.
+# Reference: docs/design/agent-host/roles-and-config.md in the bridle repo.
+#
+# There's no `project` key: bridle names the project after the repo
+# directory ("bridle-ui"), and an unknown key stops the daemon from starting.
+
+# L1 base layer, from the human's bridle checkout (path mode: follows bridle's
+# workflow as it changes).
+workflow = "/Volumes/Data/work/bridle/bridle/workflow"
+packs = ["typescript"]
+
+[tasks]
+prefix = "ui"
+
+[branches]
+integration = "main"
+
+# The definition of done. `npm run check` is defined by the scaffold task
+# (Biome, tsc, vitest, vite build), the same steps CI runs.
+[commands]
+check = "npm run check"
+
+# Each worker worktree needs its own node_modules.
+[worktrees]
+setup = "npm install --prefer-offline --no-audit --no-fund"
+
+[integration]
+check = "npm run check"
+
+[ci]
+github = true
+
+[budget]
+max_workers = 1
+
+[roles.worker]
+model            = "sonnet"
+effort           = "medium"
+workdir          = "worktree"
+permission_mode  = "acceptEdits"
+allowed_tools    = ["Bash", "Read", "Edit", "Write", "Glob", "Grep"]
+# A worker merges the local main into its own branch; remote refs are stale
+# (only the manager pushes), so no fetching, pulling or merging from origin.
+disallowed_tools = ["Bash(git push *)", "Bash(git checkout main*)", "Bash(git fetch *)", "Bash(git pull *)", "Bash(git merge origin*)"]
+system_prompt    = "/Volumes/Data/work/bridle/bridle/workflow/base/roles/worker.md"
+# A runaway guard per process, not pacing (that's the budget governor).
+max_budget_usd   = 50.0
+
+# Small project: no standing manager (ticket w2hj). The orchestrator starts
+# one when there's work and stops it when the project is idle.
+[roles.manager]
+model             = "sonnet"
+workdir           = "repo"
+permission_mode   = "dontAsk"
+allowed_tools     = ["Bash(bridle *)", "Bash(git log*)", "Bash(git diff*)", "Bash(git show*)", "Bash(git status*)", "Bash(git branch*)", "Bash(git grep*)", "Bash(git merge-base *)", "Bash(git merge --no-ff *)", "Bash(git push origin main)", "Bash(git -C * status*)", "Bash(gh run *)", "Read", "Glob", "Grep"]
+system_prompt     = "/Volumes/Data/work/bridle/bridle/workflow/base/roles/manager.md"
+autostart         = false
+resume_on_restart = false
+max_budget_usd    = 50.0
+start_prompt      = """
+You're starting up. Run `bridle status --json`, `bridle agents --json` and \
+`bridle inbox --json`, then send `external:orchestrator` one short line saying you're \
+ready and what, if anything, is already in flight. Then wait for work. You \
+have no product manager here: take tasks from the orchestrator and the human, \
+and keep `bridle queue` in step with what you plan to run."""

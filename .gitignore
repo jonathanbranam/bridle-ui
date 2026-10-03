@@ -1,0 +1,5 @@
+
+# bridle runtime files
+.bridle/*.db*
+.bridle/daemon.json
+.bridle/cache/

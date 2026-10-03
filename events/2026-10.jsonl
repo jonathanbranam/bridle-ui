@@ -12,3 +12,4 @@
 {"actor":"agent:manager-1","at":"2026-10-03T02:46:02.704904Z","from":"open","task":"ui-9f72","to":"planned"}
 {"actor":"agent:manager-1","at":"2026-10-03T02:53:42.202523Z","from":"planned","task":"ui-9f72","to":"integrated"}
 {"actor":"agent:manager-1","at":"2026-10-03T02:53:48.644631Z","from":"open","task":"ui-8a8c","to":"planned"}
+{"actor":"agent:manager-1","at":"2026-10-03T02:55:07.269176Z","from":"planned","task":"ui-8a8c","to":"integrated"}

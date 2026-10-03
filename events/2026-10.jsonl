@@ -18,3 +18,4 @@
 {"actor":"agent:manager-1","at":"2026-10-03T21:39:20.296959Z","from":"planned","task":"ui-89b4","to":"integrated"}
 {"actor":"human","at":"2026-10-03T22:14:41.027Z","from":"","task":"ui-2bb6","to":"open"}
 {"actor":"agent:manager-1","at":"2026-10-03T22:14:41.904896Z","from":"open","task":"ui-2bb6","to":"planned"}
+{"actor":"agent:manager-1","at":"2026-10-03T22:16:00.358720Z","from":"planned","task":"ui-2bb6","to":"integrated"}

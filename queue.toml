@@ -1,0 +1,11 @@
+[[tier]]
+tasks = ["ui-6e16"]
+
+[[tier]]
+tasks = [
+    "ui-1466",
+    "ui-9f72",
+]
+
+[[tier]]
+tasks = ["ui-8a8c"]

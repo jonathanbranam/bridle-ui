@@ -8,3 +8,5 @@
 {"actor":"agent:manager-1","at":"2026-10-03T02:40:55.060072Z","from":"open","task":"ui-6e16","to":"planned"}
 {"actor":"agent:manager-1","at":"2026-10-03T02:43:23.375303Z","from":"planned","task":"ui-6e16","to":"integrated"}
 {"actor":"agent:manager-1","at":"2026-10-03T02:43:28.760784Z","from":"open","task":"ui-1466","to":"planned"}
+{"actor":"agent:manager-1","at":"2026-10-03T02:45:59.094583Z","from":"planned","task":"ui-1466","to":"integrated"}
+{"actor":"agent:manager-1","at":"2026-10-03T02:46:02.704904Z","from":"open","task":"ui-9f72","to":"planned"}

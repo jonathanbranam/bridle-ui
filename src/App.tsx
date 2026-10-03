@@ -1,12 +1,16 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { logout, session } from "./api/client";
 import type { SessionInfo } from "./api/generated/SessionInfo";
+import { ItemsView } from "./Items";
 import { Login } from "./Login";
 
 // undefined while the first /session probe is in flight, null once known to be logged out.
 export function App() {
 	const [user, setUser] = useState<SessionInfo | null>();
 	const [error, setError] = useState<string>();
+
+	// Stable, or ItemsView would refetch on every App render.
+	const loggedOut = useCallback(() => setUser(null), []);
 
 	useEffect(() => {
 		session().then((r) => {
@@ -17,7 +21,7 @@ export function App() {
 	}, []);
 
 	return (
-		<main className="p-6">
+		<main className="mx-auto max-w-2xl space-y-4 p-4">
 			<h1 className="text-2xl font-semibold">bridle</h1>
 			{error && <p role="alert">{error}</p>}
 			{user === null && <Login onLogin={setUser} />}
@@ -36,6 +40,7 @@ export function App() {
 					</button>
 				</p>
 			)}
+			{user && <ItemsView onLoggedOut={loggedOut} />}
 		</main>
 	);
 }

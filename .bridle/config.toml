@@ -20,9 +20,10 @@ integration = "main"
 [commands]
 check = "npm run check"
 
-# Each worker worktree needs its own node_modules.
+# Each worker worktree needs its own node_modules. Skipped while there's no
+# package.json (before the scaffold lands).
 [worktrees]
-setup = "npm install --prefer-offline --no-audit --no-fund"
+setup = "test ! -f package.json || npm install --prefer-offline --no-audit --no-fund"
 
 [integration]
 check = "npm run check"

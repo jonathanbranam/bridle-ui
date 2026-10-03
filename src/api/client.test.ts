@@ -1,5 +1,14 @@
 import { afterEach, expect, test, vi } from "vitest";
-import { act, items, login, logout, session } from "./client";
+import {
+	act,
+	interactionDay,
+	interactionHours,
+	interactionReport,
+	items,
+	login,
+	logout,
+	session,
+} from "./client";
 
 function mockFetch(status: number, body?: unknown) {
 	const fn = vi.fn(
@@ -68,3 +77,21 @@ test.each(["done", "drop", "answer"] as const)(
 		expect(init.body).toBe('{"text":"because"}');
 	},
 );
+
+test("interaction reports use the gateway's paths and query names", async () => {
+	const fn = mockFetch(200, {});
+	await interactionReport({
+		from: "2026-10-01",
+		to: "2026-10-07",
+		group: "agent",
+		bucket: "week",
+	});
+	await interactionDay("2026-10-01");
+	await interactionHours("2026-10-01", "2026-10-07", "mon,wed");
+	const urls = fn.mock.calls.map((c) => (c as unknown as [string])[0]);
+	expect(urls).toEqual([
+		"/api/v1/interactions/report?from=2026-10-01&to=2026-10-07&group=agent&bucket=week",
+		"/api/v1/interactions/day?date=2026-10-01",
+		"/api/v1/interactions/hours?from=2026-10-01&to=2026-10-07&days=mon%2Cwed",
+	]);
+});

@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
-		"check": "biome check . && tsc --noEmit && vitest run && vite build"
+		"check": "biome check . && tsc --noEmit && vitest run && vite build",
+		"sync-types": "node scripts/sync-types.mjs"
 	},
 	"dependencies": {
 		"react": "^19.3.0",

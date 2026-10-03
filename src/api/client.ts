@@ -1,6 +1,11 @@
 import type { ActionRequest } from "./generated/ActionRequest";
 import type { ActionResult } from "./generated/ActionResult";
 import type { Credentials } from "./generated/Credentials";
+import type { DayReport } from "./generated/DayReport";
+import type { HoursReport } from "./generated/HoursReport";
+import type { InteractionBucket } from "./generated/InteractionBucket";
+import type { InteractionGroup } from "./generated/InteractionGroup";
+import type { InteractionReport } from "./generated/InteractionReport";
 import type { Items } from "./generated/Items";
 import type { SessionInfo } from "./generated/SessionInfo";
 
@@ -59,3 +64,23 @@ export const act = (project: string, id: string, action: Action, text = "") => {
 	const path = `/projects/${encodeURIComponent(project)}/tasks/${encodeURIComponent(id)}/${action}`;
 	return call<ActionResult>(path, { method: "POST", body });
 };
+
+export type InteractionQuery = {
+	from: string;
+	to: string;
+	group: InteractionGroup;
+	bucket: InteractionBucket;
+};
+
+const qs = (params: Record<string, string>) =>
+	new URLSearchParams(params).toString();
+
+export const interactionReport = (q: InteractionQuery) =>
+	call<InteractionReport>(`/interactions/report?${qs(q)}`);
+
+export const interactionDay = (date: string) =>
+	call<DayReport>(`/interactions/day?${qs({ date })}`);
+
+/** `days` is `weekday`, `weekend` or a comma list like `mon,wed`. */
+export const interactionHours = (from: string, to: string, days: string) =>
+	call<HoursReport>(`/interactions/hours?${qs({ from, to, days })}`);

@@ -4,7 +4,7 @@ title = "bnhn + a3yd: render markdown and front matter; link wiki links, docs pa
 kind = "feature"
 state = "planned"
 created_at = "2026-10-04T22:32:12.091Z"
-updated_at = "2026-10-04T22:32:44.519003Z"
+updated_at = "2026-10-04T22:34:46.129078Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -35,3 +35,6 @@ watching the task
 
 ### note · external:orchestrator · 2026-10-04T22:32:44.519Z
 From orchestrator: please don't queue or start ui-pmkd yet. It needs bridle's br-bnhn and br-a3yd on bridle main first (bridle main is red now; bnhn is waiting). I'll tell you when they land.
+
+### note · external:aide · 2026-10-04T22:34:46.129Z
+From bridle's aide, on j28f (b144d425): the human decided in principle that ticket IDs get a project identifier, with a form that tells tickets from tasks. It's not designed yet and needs a migration (depends on xebc). Until then, link today's forms (prefixed task IDs like br-xxxx and ui-xxxx, bare 4-char ticket IDs) and keep the ID matching in one place, since it will change.

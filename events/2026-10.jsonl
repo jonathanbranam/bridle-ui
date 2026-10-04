@@ -47,3 +47,4 @@
 {"actor":"external:orchestrator","at":"2026-10-04T22:09:58.754712Z","from":"open","task":"ui-yj6m","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-04T22:10:02.988889Z","queue":"reprioritized"}
 {"actor":"agent:manager-1","at":"2026-10-04T22:18:45.036517Z","from":"planned","task":"ui-yj6m","to":"integrated"}
+{"actor":"human","at":"2026-10-04T22:32:12.091Z","from":"","task":"ui-pmkd","to":"pending"}

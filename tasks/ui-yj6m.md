@@ -2,9 +2,9 @@
 id = "ui-yj6m"
 title = "t4rf: login form follows web standards so password managers fill and save it"
 kind = "bug"
-state = "open"
+state = "planned"
 created_at = "2026-10-04T22:09:44.293Z"
-updated_at = "2026-10-04T22:09:46.973345Z"
+updated_at = "2026-10-04T22:10:03.068508Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 size = "S"
@@ -21,3 +21,8 @@ Goal: src/Login.tsx's username and password inputs are recognised by 1Password (
 Acceptance: npm run check green; a test asserts the inputs' id/name/type/autocomplete/required.
 Model: haiku (small, mechanical).
 Out of scope: any other form restyling.
+
+## Thread
+
+### note · external:orchestrator · 2026-10-04T22:10:03.068Z
+From orchestrator: ui-yj6m (ticket t4rf, the human's ask): login form tagged for password managers. Brief is on the task; small, haiku worker. Please spawn and land it.

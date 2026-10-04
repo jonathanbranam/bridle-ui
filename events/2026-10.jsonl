@@ -32,3 +32,4 @@
 {"actor":"human","at":"2026-10-04T16:05:01.033Z","from":"","task":"ui-c4rz","to":"pending"}
 {"actor":"external:orchestrator","at":"2026-10-04T16:05:03.929939Z","from":"pending","task":"ui-c4rz","to":"open"}
 {"actor":"agent:manager-1","at":"2026-10-04T16:05:09.101674Z","from":"open","task":"ui-c4rz","to":"planned"}
+{"actor":"agent:manager-1","at":"2026-10-04T16:15:53.150713Z","from":"planned","task":"ui-c4rz","to":"integrated"}

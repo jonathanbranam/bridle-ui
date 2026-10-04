@@ -56,3 +56,6 @@
 {"actor":"external:orchestrator","at":"2026-10-04T22:45:54.774040Z","from":"pending","task":"ui-ng82","to":"open"}
 {"actor":"agent:manager-1","at":"2026-10-04T22:45:58.411276Z","from":"open","task":"ui-umaq","to":"planned"}
 {"actor":"agent:manager-1","at":"2026-10-04T22:46:04.302676Z","from":"open","task":"ui-ng82","to":"planned"}
+{"actor":"human","at":"2026-10-04T23:21:36.449Z","from":"","task":"ui-s3xe","to":"pending"}
+{"actor":"external:orchestrator","at":"2026-10-04T23:21:39.506364Z","from":"pending","task":"ui-s3xe","to":"open"}
+{"actor":"external:orchestrator","at":"2026-10-04T23:21:39.544991Z","from":"open","task":"ui-s3xe","to":"planned"}

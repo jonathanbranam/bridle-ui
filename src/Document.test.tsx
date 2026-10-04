@@ -16,11 +16,31 @@ Hello world.
 > **docs agent, 14:06:** @human Done.
 `;
 
+// The project list and the search, which every test needs; null for the document routes.
+function routed(url: string) {
+	if (url.endsWith("/projects"))
+		return new Response(
+			JSON.stringify({ projects: [{ project: "p", reachable: true }] }),
+		);
+	if (url.includes("/documents?")) {
+		const q = new URL(url, "http://x").searchParams.get("q");
+		return new Response(
+			JSON.stringify({
+				project: "p",
+				paths: q === "x8jt" ? ["docs/tickets/open/t-x8jt.md"] : ["a.md"],
+			}),
+		);
+	}
+	return null;
+}
+
 function stub(error?: string) {
 	const puts: { content: string; hash: string }[] = [];
 	vi.stubGlobal(
 		"fetch",
-		vi.fn(async (_url: string, init?: RequestInit) => {
+		vi.fn(async (url: string, init?: RequestInit) => {
+			const other = routed(url);
+			if (other) return other;
 			if (init?.method === "PUT") {
 				puts.push(JSON.parse(init.body as string));
 				return error
@@ -48,8 +68,7 @@ async function openDoc() {
 			<DocumentView onLoggedOut={() => {}} />
 		</MemoryRouter>,
 	);
-	await user.type(screen.getByLabelText("Project"), "p");
-	await user.type(screen.getByLabelText("Path"), "a.md");
+	await user.type(screen.getByLabelText("Document"), "a.md");
 	await user.click(screen.getByRole("button", { name: "Open" }));
 	await screen.findByText(/on feature/);
 	return user;
@@ -71,7 +90,7 @@ test("a selection becomes a comment in the approved format; errors are shown", a
 		"the working tree is on 'main', which the gateway doesn't commit to",
 	);
 	const user = await openDoc();
-	const text = screen.getByText("Hello world.");
+	const text = screen.getByText("world.");
 	vi.spyOn(window, "getSelection").mockReturnValue({
 		isCollapsed: false,
 		anchorNode: text.firstChild,
@@ -96,6 +115,8 @@ test("Request review posts the path with the resend choice, shows the result, an
 	vi.stubGlobal(
 		"fetch",
 		vi.fn(async (url: string, init?: RequestInit) => {
+			const other = routed(url);
+			if (other) return other;
 			if (init?.method === "POST") {
 				posts.push(JSON.parse(init.body as string));
 				return url.endsWith("/review") && posts.length === 3
@@ -140,4 +161,40 @@ test("Request review posts the path with the resend choice, shows the result, an
 	expect((await screen.findByRole("alert")).textContent).toBe(
 		"no agent for a.md",
 	);
+});
+
+test("the project is a dropdown of known projects and a bare ticket ID opens its ticket", async () => {
+	stub();
+	const user = userEvent.setup();
+	render(
+		<MemoryRouter>
+			<DocumentView onLoggedOut={() => {}} />
+		</MemoryRouter>,
+	);
+	expect((await screen.findByRole("option", { name: "p" })).textContent).toBe(
+		"p",
+	);
+	await user.type(screen.getByLabelText("Document"), "x8jt");
+	await user.click(screen.getByRole("button", { name: "Open" }));
+	await screen.findByText(/on feature/);
+	const urls = vi.mocked(fetch).mock.calls.map((c) => String(c[0]));
+	expect(urls).toContain(
+		"/api/v1/projects/p/documents/docs/tickets/open/t-x8jt.md",
+	);
+});
+
+test("the comment box opens at the highlighted block, not above the document", async () => {
+	stub();
+	const user = await openDoc();
+	const text = screen.getByText("world.");
+	// The highlight re-renders the text, so take the row now.
+	const row = text.closest("[data-last]")?.parentElement;
+	vi.spyOn(window, "getSelection").mockReturnValue({
+		isCollapsed: false,
+		anchorNode: text.firstChild,
+		toString: () => "world",
+	} as unknown as Selection);
+	await user.pointer({ target: text, keys: "[MouseLeft]" });
+	const box = await screen.findByLabelText("Comment");
+	expect(row?.contains(box)).toBe(true);
 });

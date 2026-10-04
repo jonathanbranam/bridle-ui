@@ -1,5 +1,11 @@
 import { expect, test } from "vitest";
-import { addComment, markRead, parseDocument } from "./comments";
+import {
+	addComment,
+	markQuotes,
+	markRead,
+	parseDocument,
+	resolveOpen,
+} from "./comments";
 
 const doc = `# Title
 
@@ -97,4 +103,28 @@ test("a sent mark on the header is not part of the quote; on a reply it leaves (
 	);
 	expect(read).toContain("@human (read) Done. · sent 2026-10-04 21:15");
 	expect(parseDocument(read)[0].threads[0].unread).toBe(false);
+});
+
+test("markQuotes marks the quote and keeps the rest", () => {
+	expect(markQuotes("a big dog ran", ["big dog"])).toEqual([
+		{ text: "a ", mark: false },
+		{ text: "big dog", mark: true },
+		{ text: " ran", mark: false },
+	]);
+});
+
+test("markQuotes ignores absent quotes and overlaps", () => {
+	expect(markQuotes("abc", ["zzz"])).toEqual([{ text: "abc", mark: false }]);
+	expect(markQuotes("abcd", ["abc", "bcd"]).filter((s) => s.mark)).toHaveLength(
+		1,
+	);
+});
+
+test("resolveOpen opens a path as typed and resolves a bare ID to the best match", () => {
+	expect(resolveOpen(" docs/a.md ", [])).toBe("docs/a.md");
+	expect(
+		resolveOpen("x8jt", ["docs/tickets/open/t-x8jt.md", "docs/z.md"]),
+	).toBe("docs/tickets/open/t-x8jt.md");
+	expect(resolveOpen("x8jt", [])).toBeUndefined();
+	expect(resolveOpen("  ", ["a"])).toBeUndefined();
 });

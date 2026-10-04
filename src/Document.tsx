@@ -1,13 +1,21 @@
 import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import { readDocument, requestReview, writeDocument } from "./api/client";
+import {
+	projects as listProjects,
+	readDocument,
+	requestReview,
+	searchDocuments,
+	writeDocument,
+} from "./api/client";
 import type { Document } from "./api/generated/Document";
 import {
 	addComment,
 	type Block,
+	markQuotes,
 	markRead,
 	parseDocument,
 	quoteOf,
+	resolveOpen,
 	type Thread,
 } from "./doc/comments";
 
@@ -31,7 +39,23 @@ function inline(text: string): ReactNode[] {
 	});
 }
 
-function BlockText({ block }: { block: Block }) {
+// The text a comment is on is highlighted, like Google Docs. Markup spanning a highlight edge
+// shows plain: the quote is rendered text and may not match the source.
+function Marked({ text, quotes }: { text: string; quotes: string[] }) {
+	return markQuotes(text, quotes).map((s, i) => {
+		const key = `${i}:${s.text}`;
+		return s.mark ? (
+			<mark key={key} className="bg-amber-200">
+				{inline(s.text)}
+			</mark>
+		) : (
+			<span key={key}>{inline(s.text)}</span>
+		);
+	});
+}
+
+function BlockText({ block, quotes }: { block: Block; quotes: string[] }) {
+	const t = <Marked text={block.text} quotes={quotes} />;
 	switch (block.kind) {
 		case "heading":
 			return (
@@ -39,11 +63,11 @@ function BlockText({ block }: { block: Block }) {
 					className="font-semibold"
 					style={{ fontSize: `${1.6 - block.level * 0.15}rem` }}
 				>
-					{inline(block.text)}
+					{t}
 				</p>
 			);
 		case "item":
-			return <p className="pl-4">• {inline(block.text)}</p>;
+			return <p className="pl-4">• {t}</p>;
 		case "code":
 			return (
 				<pre className="overflow-x-auto rounded bg-gray-100 p-2 text-sm">
@@ -51,7 +75,7 @@ function BlockText({ block }: { block: Block }) {
 				</pre>
 			);
 		default:
-			return <p>{inline(block.text)}</p>;
+			return <p>{t}</p>;
 	}
 }
 
@@ -111,6 +135,8 @@ export function DocumentView({ onLoggedOut }: Props) {
 	const [text, setText] = useState("");
 	const [resend, setResend] = useState(false);
 	const [reviewed, setReviewed] = useState<string>();
+	const [known, setKnown] = useState<string[]>([]);
+	const [matches, setMatches] = useState<string[]>([]);
 
 	const fail = useCallback(
 		(r: { notLoggedIn: boolean; error: string }) => {
@@ -144,9 +170,35 @@ export function DocumentView({ onLoggedOut }: Props) {
 		};
 	}, [qProject, qPath, fail]);
 
-	const open = (e: { preventDefault: () => void }) => {
+	useEffect(() => {
+		listProjects().then((r) => {
+			if (!r.ok) return fail(r);
+			const names = r.value.projects.map((p) => p.project);
+			setKnown(names);
+			setProject((cur) => cur || names[0] || "");
+		});
+	}, [fail]);
+
+	// Inline search while typing; a stale answer for an older query is dropped.
+	useEffect(() => {
+		if (!project) return;
+		let stale = false;
+		searchDocuments(project, path).then((r) => {
+			if (!stale && r.ok) setMatches(r.value.paths);
+		});
+		return () => {
+			stale = true;
+		};
+	}, [project, path]);
+
+	const open = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
-		setParams({ project, path });
+		// A bare ticket ID needs a fresh search: the list above may be for the last keystroke.
+		const found = await searchDocuments(project, path.trim());
+		if (!found.ok) return fail(found);
+		const target = resolveOpen(path, found.value.paths);
+		if (target) setParams({ project, path: target });
+		else setError(`No document matches "${path.trim()}".`);
 	};
 
 	// The write carries the hash we read; on success the new hash is the base for the next edit.
@@ -215,19 +267,36 @@ export function DocumentView({ onLoggedOut }: Props) {
 
 	return (
 		<div className="space-y-4">
-			<form className="flex flex-wrap gap-2" onSubmit={open}>
-				<input
-					aria-label="Project"
-					className="rounded border px-2 py-1"
-					value={project}
-					onChange={(e) => setProject(e.target.value)}
-				/>
-				<input
-					aria-label="Path"
-					className="min-w-64 flex-1 rounded border px-2 py-1"
-					value={path}
-					onChange={(e) => setPath(e.target.value)}
-				/>
+			<form className="flex flex-wrap items-end gap-2" onSubmit={open}>
+				<label className="flex flex-col text-sm">
+					Project
+					<select
+						className="rounded border px-2 py-1"
+						value={project}
+						onChange={(e) => setProject(e.target.value)}
+					>
+						{[...new Set([...known, project])]
+							.filter((n) => n !== "")
+							.map((n) => (
+								<option key={n}>{n}</option>
+							))}
+					</select>
+				</label>
+				<label className="flex min-w-64 flex-1 flex-col text-sm">
+					Document
+					<input
+						className="rounded border px-2 py-1"
+						list="document-matches"
+						placeholder="Search tickets and docs, or paste a ticket ID"
+						value={path}
+						onChange={(e) => setPath(e.target.value)}
+					/>
+					<datalist id="document-matches">
+						{matches.map((m) => (
+							<option key={m} value={m} />
+						))}
+					</datalist>
+				</label>
 				<button type="submit" className="rounded border px-3 py-1">
 					Open
 				</button>
@@ -260,51 +329,64 @@ export function DocumentView({ onLoggedOut }: Props) {
 					{reviewed && <span role="status">{reviewed}</span>}
 				</div>
 			)}
-			{pending && (
-				<div className="space-y-2 rounded border p-2">
-					<p className="text-sm italic">Comment on “{pending.quote}”</p>
-					<textarea
-						aria-label="Comment"
-						className="w-full rounded border p-1"
-						value={text}
-						onChange={(e) => setText(e.target.value)}
-					/>
-					<div className="flex gap-2">
-						<button
-							type="button"
-							className="rounded border px-3 py-1"
-							onClick={submit}
-						>
-							Add comment
-						</button>
-						<button
-							type="button"
-							className="rounded border px-3 py-1"
-							onClick={() => setPending(undefined)}
-						>
-							Cancel
-						</button>
-					</div>
-				</div>
-			)}
 			{/* biome-ignore lint/a11y/noStaticElementInteractions: mouse selection has no keyboard twin here */}
 			<div className="space-y-2" onMouseUp={select}>
-				{blocks.map((b) => (
-					<div key={b.start} className="grid grid-cols-[3fr_2fr] gap-4">
-						<div data-last={b.last}>
-							<BlockText block={b} />
+				{blocks.map((b) => {
+					const here =
+						pending && pending.after === b.last ? pending : undefined;
+					const quotes = [
+						...b.threads.map((t) => t.quote),
+						...(here ? [here.quote] : []),
+					];
+					// Wide: the document column and a right margin, threads level with their text.
+					// Narrow: one column, the threads and the comment box right below the block.
+					return (
+						<div
+							key={b.start}
+							className="grid gap-x-6 lg:grid-cols-[minmax(0,48rem)_minmax(16rem,22rem)] lg:justify-center"
+						>
+							<div data-last={b.last}>
+								<BlockText block={b} quotes={quotes} />
+							</div>
+							<div className="space-y-2">
+								{b.threads.map((t) => (
+									<ThreadView
+										key={`${t.start}:${t.unread}`}
+										thread={t}
+										onOpen={opened}
+									/>
+								))}
+								{here && (
+									<div className="space-y-2 rounded border bg-white p-2 shadow">
+										<p className="text-sm italic">Comment on “{here.quote}”</p>
+										<textarea
+											aria-label="Comment"
+											className="w-full rounded border p-1"
+											value={text}
+											onChange={(e) => setText(e.target.value)}
+										/>
+										<div className="flex gap-2">
+											<button
+												type="button"
+												className="rounded border px-3 py-1"
+												onClick={submit}
+											>
+												Add comment
+											</button>
+											<button
+												type="button"
+												className="rounded border px-3 py-1"
+												onClick={() => setPending(undefined)}
+											>
+												Cancel
+											</button>
+										</div>
+									</div>
+								)}
+							</div>
 						</div>
-						<div className="space-y-2">
-							{b.threads.map((t) => (
-								<ThreadView
-									key={`${t.start}:${t.unread}`}
-									thread={t}
-									onOpen={opened}
-								/>
-							))}
-						</div>
-					</div>
-				))}
+					);
+				})}
 			</div>
 		</div>
 	);

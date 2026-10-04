@@ -174,3 +174,38 @@ export function markRead(content: string, thread: Thread): string {
 	}
 	return lines.join("\n");
 }
+
+export type Segment = { text: string; mark: boolean };
+
+/** Splits `text` so the first occurrence of each quote is marked: what a comment is on. */
+export function markQuotes(text: string, quotes: string[]): Segment[] {
+	const spans = quotes
+		.filter((q) => q !== "")
+		.map((q) => ({ at: text.indexOf(q), len: q.length }))
+		.filter((s) => s.at >= 0)
+		.sort((a, b) => a.at - b.at);
+	const out: Segment[] = [];
+	let pos = 0;
+	for (const s of spans) {
+		if (s.at < pos) continue; // overlaps an earlier quote
+		if (s.at > pos) out.push({ text: text.slice(pos, s.at), mark: false });
+		out.push({ text: text.slice(s.at, s.at + s.len), mark: true });
+		pos = s.at + s.len;
+	}
+	if (pos < text.length) out.push({ text: text.slice(pos), mark: false });
+	return out.length ? out : [{ text, mark: false }];
+}
+
+/**
+ * What Open opens: a typed repo path as is, otherwise the best search match (the gateway ranks
+ * an exact ticket ID first, then open tickets), so a pasted bare ID works.
+ */
+export function resolveOpen(
+	typed: string,
+	matches: string[],
+): string | undefined {
+	const t = typed.trim();
+	if (!t) return undefined;
+	if (t.includes("/") || t.endsWith(".md")) return t;
+	return matches[0];
+}

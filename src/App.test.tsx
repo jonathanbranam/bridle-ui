@@ -109,15 +109,19 @@ test("an unknown path goes to the default tab", async () => {
 test("the open document comes from the query, and Open puts it there", async () => {
 	route({
 		...live,
+		"/api/v1/projects": () =>
+			json(200, { projects: [{ project: "p", reachable: true }] }),
+		"/api/v1/projects/p/documents?q=docs%2Fa.md": () =>
+			json(200, { project: "p", paths: ["docs/a.md"] }),
 		"/api/v1/projects/p/documents/docs/a.md": stubDoc,
 	});
 	const user = userEvent.setup();
 	at("/document?project=p&path=docs%2Fa.md");
 	expect(await screen.findByText(/on feature/)).toBeInTheDocument();
-	expect(screen.getByLabelText("Path")).toHaveValue("docs/a.md");
+	expect(screen.getByLabelText("Document")).toHaveValue("docs/a.md");
 	// Open writes the query, so a refresh reopens the same document.
-	await user.clear(screen.getByLabelText("Path"));
-	await user.type(screen.getByLabelText("Path"), "docs/a.md");
+	await user.clear(screen.getByLabelText("Document"));
+	await user.type(screen.getByLabelText("Document"), "docs/a.md");
 	await user.click(screen.getByRole("button", { name: "Open" }));
 	expect(await screen.findByText(/on feature/)).toBeInTheDocument();
 });

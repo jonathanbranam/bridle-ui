@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Navigate, NavLink, Route, Routes } from "react-router";
+import { Navigate, NavLink, Route, Routes, useLocation } from "react-router";
 import { logout, session } from "./api/client";
 import type { SessionInfo } from "./api/generated/SessionInfo";
 import { DocumentView } from "./Document";
@@ -9,6 +9,8 @@ import { TimeView } from "./Time";
 
 // undefined while the first /session probe is in flight, null once known to be logged out.
 export function App() {
+	// The document page uses the browser's width: the margin needs it.
+	const wide = useLocation().pathname === "/document";
 	const [user, setUser] = useState<SessionInfo | null>();
 	const [error, setError] = useState<string>();
 
@@ -24,7 +26,7 @@ export function App() {
 	}, []);
 
 	return (
-		<main className="mx-auto max-w-3xl space-y-4 p-4">
+		<main className={`mx-auto space-y-4 p-4 ${wide ? "" : "max-w-3xl"}`}>
 			<h1 className="text-2xl font-semibold">bridle</h1>
 			{error && <p role="alert">{error}</p>}
 			{user === null && <Login onLogin={setUser} />}

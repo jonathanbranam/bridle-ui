@@ -3,6 +3,7 @@ import type { ActionResult } from "./generated/ActionResult";
 import type { Credentials } from "./generated/Credentials";
 import type { DayReport } from "./generated/DayReport";
 import type { Document } from "./generated/Document";
+import type { DocumentMatches } from "./generated/DocumentMatches";
 import type { DocumentSaved } from "./generated/DocumentSaved";
 import type { DocumentWrite } from "./generated/DocumentWrite";
 import type { HoursReport } from "./generated/HoursReport";
@@ -92,6 +93,12 @@ export const interactionHours = (from: string, to: string, days: string) =>
 	call<HoursReport>(`/interactions/hours?${qs({ from, to, days })}`);
 
 export const projects = () => call<Projects>("/projects");
+
+/** Repo-relative paths matching `q`, best first (an exact ticket ID, then open tickets). */
+export const searchDocuments = (project: string, q: string) =>
+	call<DocumentMatches>(
+		`/projects/${encodeURIComponent(project)}/documents?${qs({ q })}`,
+	);
 
 // The path keeps its slashes: the gateway route is a catch-all.
 const documentPath = (project: string, path: string) =>

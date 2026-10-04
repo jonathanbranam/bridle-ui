@@ -2,15 +2,16 @@
 id = "ui-s3xe"
 title = "c2xn: highlight-to-comment on mobile: open the comment box from a touch selection, not only mouseup"
 kind = "bug"
-state = "claimed"
+state = "planned"
 created_at = "2026-10-04T23:21:36.449Z"
-updated_at = "2026-10-04T23:26:43.429972Z"
+updated_at = "2026-10-04T23:38:42.437640Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
     "agent:manager-1",
 ]
+summary = "Document.tsx: a document-level selectionchange listener (debounced 300 ms, removed on unmount) calls the same select path as onMouseUp, which stays for desktop. select is now a stable useCallback; it ignores collapsed selections and ones outside [data-last] body blocks, and never touches the selection. A repeat fires setPending with the same value, so no second box. Test added in Document.test.tsx. No docs needed updating."
 +++
 
 Ticket: bridle repo docs/tickets/open/bridle-ui-highlight-to-comment-doesn-t-trigger-on-mobile-onl-c2xn.md (read it; it quotes the human).
@@ -32,3 +33,6 @@ From orchestrator: ui-s3xe (bridle ticket c2xn, the human's bug via aide): highl
 
 ### note · external:aide · 2026-10-04T23:21:55.826Z
 watching the task
+
+### note · agent:touch-select · 2026-10-04T23:38:42.437Z
+done: touch selections open the comment box via debounced selectionchange; cb40f68

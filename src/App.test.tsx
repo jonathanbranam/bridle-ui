@@ -54,7 +54,9 @@ test("a failed login shows the gateway's message", async () => {
 			<App />
 		</MemoryRouter>,
 	);
-	await user.click(await screen.findByRole("button", { name: "Log in" }));
+	await user.type(await screen.findByLabelText("Username"), "jo");
+	await user.type(screen.getByLabelText("Password"), "pw");
+	await user.click(screen.getByRole("button", { name: "Log in" }));
 	expect(await screen.findByRole("alert")).toHaveTextContent(
 		"wrong username or password",
 	);

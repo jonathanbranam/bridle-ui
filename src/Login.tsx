@@ -17,23 +17,30 @@ export function Login({ onLogin }: { onLogin: (s: SessionInfo) => void }) {
 
 	return (
 		<form onSubmit={submit} className="flex max-w-xs flex-col gap-3">
-			<label className="flex flex-col gap-1">
+			<label htmlFor="username" className="flex flex-col gap-1">
 				Username
 				<input
+					id="username"
+					name="username"
 					className="rounded border px-2 py-1"
+					type="text"
 					value={username}
 					onChange={(e) => setUsername(e.target.value)}
 					autoComplete="username"
+					required
 				/>
 			</label>
-			<label className="flex flex-col gap-1">
+			<label htmlFor="password" className="flex flex-col gap-1">
 				Password
 				<input
+					id="password"
+					name="password"
 					className="rounded border px-2 py-1"
 					type="password"
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
 					autoComplete="current-password"
+					required
 				/>
 			</label>
 			{error && <p role="alert">{error}</p>}

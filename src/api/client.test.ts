@@ -7,7 +7,9 @@ import {
 	items,
 	login,
 	logout,
+	readDocument,
 	session,
+	writeDocument,
 } from "./client";
 
 function mockFetch(status: number, body?: unknown) {
@@ -94,4 +96,30 @@ test("interaction reports use the gateway's paths and query names", async () => 
 		"/api/v1/interactions/day?date=2026-10-01",
 		"/api/v1/interactions/hours?from=2026-10-01&to=2026-10-07&days=mon%2Cwed",
 	]);
+});
+
+test("readDocument encodes each path segment and keeps the slashes", async () => {
+	const fn = mockFetch(200, { content: "x", hash: "h" });
+	const r = await readDocument("my proj", "docs/a b.md");
+	expect(r.ok).toBe(true);
+	expect((fn.mock.calls[0] as unknown as [string])[0]).toBe(
+		"/api/v1/projects/my%20proj/documents/docs/a%20b.md",
+	);
+});
+
+test("writeDocument puts content and hash; a 409 is a failure with the message", async () => {
+	const fn = mockFetch(409, { error: "the file changed" });
+	const r = await writeDocument("p", "a.md", "new", "h1");
+	expect(r).toEqual({
+		ok: false,
+		notLoggedIn: false,
+		status: 409,
+		error: "the file changed",
+	});
+	const [, init] = fn.mock.calls[0] as unknown as [string, RequestInit];
+	expect(init.method).toBe("PUT");
+	expect(JSON.parse(init.body as string)).toEqual({
+		content: "new",
+		hash: "h1",
+	});
 });

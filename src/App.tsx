@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { logout, session } from "./api/client";
 import type { SessionInfo } from "./api/generated/SessionInfo";
+import { DocumentView } from "./Document";
 import { ItemsView } from "./Items";
 import { Login } from "./Login";
 import { TimeView } from "./Time";
@@ -9,7 +10,7 @@ import { TimeView } from "./Time";
 export function App() {
 	const [user, setUser] = useState<SessionInfo | null>();
 	const [error, setError] = useState<string>();
-	const [page, setPage] = useState<"todo" | "time">("todo");
+	const [page, setPage] = useState<"todo" | "time" | "doc">("todo");
 
 	// Stable, or ItemsView would refetch on every App render.
 	const loggedOut = useCallback(() => setUser(null), []);
@@ -44,7 +45,7 @@ export function App() {
 			)}
 			{user && (
 				<nav className="flex gap-2">
-					{(["todo", "time"] as const).map((p) => (
+					{(["todo", "time", "doc"] as const).map((p) => (
 						<button
 							key={p}
 							type="button"
@@ -52,12 +53,13 @@ export function App() {
 							className={`rounded border px-3 py-1 ${page === p ? "bg-gray-900 text-white" : ""}`}
 							onClick={() => setPage(p)}
 						>
-							{p === "todo" ? "To-dos" : "Time"}
+							{{ todo: "To-dos", time: "Time", doc: "Document" }[p]}
 						</button>
 					))}
 				</nav>
 			)}
 			{user && page === "todo" && <ItemsView onLoggedOut={loggedOut} />}
+			{user && page === "doc" && <DocumentView onLoggedOut={loggedOut} />}
 			{user && page === "time" && <TimeView onLoggedOut={loggedOut} />}
 		</main>
 	);

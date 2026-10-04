@@ -2,11 +2,15 @@ import type { ActionRequest } from "./generated/ActionRequest";
 import type { ActionResult } from "./generated/ActionResult";
 import type { Credentials } from "./generated/Credentials";
 import type { DayReport } from "./generated/DayReport";
+import type { Document } from "./generated/Document";
+import type { DocumentSaved } from "./generated/DocumentSaved";
+import type { DocumentWrite } from "./generated/DocumentWrite";
 import type { HoursReport } from "./generated/HoursReport";
 import type { InteractionBucket } from "./generated/InteractionBucket";
 import type { InteractionGroup } from "./generated/InteractionGroup";
 import type { InteractionReport } from "./generated/InteractionReport";
 import type { Items } from "./generated/Items";
+import type { Projects } from "./generated/Projects";
 import type { SessionInfo } from "./generated/SessionInfo";
 
 const BASE = "/api/v1";
@@ -84,3 +88,26 @@ export const interactionDay = (date: string) =>
 /** `days` is `weekday`, `weekend` or a comma list like `mon,wed`. */
 export const interactionHours = (from: string, to: string, days: string) =>
 	call<HoursReport>(`/interactions/hours?${qs({ from, to, days })}`);
+
+export const projects = () => call<Projects>("/projects");
+
+// The path keeps its slashes: the gateway route is a catch-all.
+const documentPath = (project: string, path: string) =>
+	`/projects/${encodeURIComponent(project)}/documents/${path.split("/").map(encodeURIComponent).join("/")}`;
+
+export const readDocument = (project: string, path: string) =>
+	call<Document>(documentPath(project, path));
+
+/** `hash` is the one the document was read with; the gateway answers 409 if the file moved on. */
+export const writeDocument = (
+	project: string,
+	path: string,
+	content: string,
+	hash: string,
+) => {
+	const body: DocumentWrite = { content, hash };
+	return call<DocumentSaved>(documentPath(project, path), {
+		method: "PUT",
+		body,
+	});
+};

@@ -2,11 +2,14 @@
 id = "ui-pmkd"
 title = "bnhn + a3yd: render markdown and front matter; link wiki links, docs paths, URLs and ticket IDs everywhere"
 kind = "feature"
-state = "pending"
+state = "planned"
 created_at = "2026-10-04T22:32:12.091Z"
-updated_at = "2026-10-04T22:32:12.091Z"
+updated_at = "2026-10-04T22:32:44.519003Z"
 created_by = "external:orchestrator"
-watchers = ["external:orchestrator"]
+watchers = [
+    "external:orchestrator",
+    "external:aide",
+]
 size = "M"
 +++
 
@@ -24,3 +27,11 @@ Acceptance: npm run check green; tests for front matter table, URL autolink, wik
 Model: sonnet.
 Blocked on: bridle br-bnhn and br-a3yd merged to bridle main (the orchestrator readies this task's start when they land; build against the API described in docs/design/human-web-ui.md meanwhile is fine but do not start before br-bnhn lands).
 Deferred: cross-project links and project identifiers on ticket IDs, until question j28f decides; links for non-ticket task IDs, until bridle-ui has a task view.
+
+## Thread
+
+### note · external:aide · 2026-10-04T22:32:34.021Z
+watching the task
+
+### note · external:orchestrator · 2026-10-04T22:32:44.519Z
+From orchestrator: please don't queue or start ui-pmkd yet. It needs bridle's br-bnhn and br-a3yd on bridle main first (bridle main is red now; bnhn is waiting). I'll tell you when they land.

@@ -19,6 +19,11 @@ function route(handlers: Record<string, () => Response>) {
 const json = (status: number, body: unknown) =>
 	new Response(JSON.stringify(body), { status });
 
+const live = {
+	"/api/v1/session": () => json(200, { username: "jo" }),
+	"/api/v1/items": () => json(200, { projects: [], unreachable: [] }),
+};
+
 test("shows the login form on 401, then the user and a logout button", async () => {
 	route({
 		"/api/v1/session": () => json(401, { error: "login required" }),
@@ -56,7 +61,7 @@ test("a failed login shows the gateway's message", async () => {
 });
 
 test("a live session skips the form", async () => {
-	route({ "/api/v1/session": () => json(200, { username: "jo" }) });
+	route(live);
 	render(
 		<MemoryRouter>
 			<App />
@@ -68,7 +73,6 @@ test("a live session skips the form", async () => {
 	expect(screen.queryByLabelText("Username")).toBeNull();
 });
 
-const live = { "/api/v1/session": () => json(200, { username: "jo" }) };
 const stubDoc = () =>
 	json(200, {
 		project: "p",
@@ -93,7 +97,7 @@ test("the tab comes from the URL", async () => {
 });
 
 test("an unknown path goes to the default tab", async () => {
-	route({ ...live, "/api/v1/items": () => json(200, []) });
+	route(live);
 	at("/nope");
 	await waitFor(() =>
 		expect(screen.getByRole("link", { name: "To-dos" })).toHaveClass(
@@ -119,7 +123,7 @@ test("the open document comes from the query, and Open puts it there", async () 
 });
 
 test("navigating between tabs works", async () => {
-	route({ ...live, "/api/v1/items": () => json(200, []) });
+	route(live);
 	const user = userEvent.setup();
 	at("/time");
 	await user.click(await screen.findByRole("link", { name: "Document" }));

@@ -2,14 +2,16 @@
 id = "ui-nprk"
 title = "jrm2 part B: document view: project dropdown, ticket search by ID, comment box at the highlight, Google-Docs margin, full width"
 kind = "feature"
-state = "claimed"
+state = "integrated"
 created_at = "2026-10-04T17:44:55.991Z"
-updated_at = "2026-10-04T18:42:58.347314Z"
+updated_at = "2026-10-04T18:43:22.375711Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "agent:manager-1",
 ]
+branch = "bridle/doc-ui-b"
+commit = "873be8c0f18f5a23dc66b012a3dfc9affef03509"
 summary = """jrm2 part B. Document page: Project is a <select> from GET /projects; the path box is a "Document" input with a native <datalist> fed by GET /projects/{p}/documents?q= (synced DocumentMatches type); Open re-searches and opens the typed path, or for a bare ID the first match (gateway ranks exact ID, then open tickets) via pure resolveOpen. The page drops max-w-3xl on /document. Each block is a row: on lg+ a document column plus a right margin where threads and the new-comment box sit level with their block; below lg they stack under the block (the comment box opens right below the highlight). Commented text is highlighted (<mark>, pure markQuotes). No new dependencies; datalist chosen over a custom combobox (YAGNI). Auto-review is gateway-side, nothing changed in the UI. Caveat: highlight uses the first literal match of the quote in the block's source text, so quotes crossing markup aren't highlighted."""
 +++
 
@@ -25,3 +27,9 @@ Out of scope: br-ehv6 (comment-thread status, thread IDs, resolve), which comes 
 
 ### note · agent:doc-ui-b · 2026-10-04T18:42:58.347Z
 done: project select, ID-resolving search (datalist), full-width doc view, comment box + threads in right margin with highlights; npm run check green (53 tests); d89b132
+
+### note · agent:manager-1 · 2026-10-04T18:43:13.860Z
+integrated: 873be8c0f18f5a23dc66b012a3dfc9affef03509 (branch bridle/doc-ui-b)
+
+### note · agent:manager-1 · 2026-10-04T18:43:22.375Z
+cleanup: removed agent doc-ui-b, branch bridle/doc-ui-b

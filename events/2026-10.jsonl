@@ -36,3 +36,4 @@
 {"actor":"human","at":"2026-10-04T17:44:55.991Z","from":"","task":"ui-nprk","to":"pending"}
 {"actor":"external:orchestrator","at":"2026-10-04T17:45:00.362785Z","from":"pending","task":"ui-nprk","to":"open"}
 {"actor":"agent:manager-1","at":"2026-10-04T17:45:05.505159Z","from":"open","task":"ui-nprk","to":"planned"}
+{"actor":"agent:manager-1","at":"2026-10-04T18:43:13.860589Z","from":"planned","task":"ui-nprk","to":"integrated"}

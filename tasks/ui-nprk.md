@@ -2,11 +2,14 @@
 id = "ui-nprk"
 title = "jrm2 part B: document view: project dropdown, ticket search by ID, comment box at the highlight, Google-Docs margin, full width"
 kind = "feature"
-state = "planned"
+state = "claimed"
 created_at = "2026-10-04T17:44:55.991Z"
-updated_at = "2026-10-04T17:45:05.505159Z"
+updated_at = "2026-10-04T18:35:46.681051Z"
 created_by = "external:orchestrator"
-watchers = ["external:orchestrator"]
+watchers = [
+    "external:orchestrator",
+    "agent:manager-1",
+]
 +++
 
 Part B of bridle task br-jrm2 (the human approved jrm2 and added scope through advisor doc-review on 2026-10-04: item 7, and item 4 "should look exactly like Google Docs looks"; quotes on br-jrm2's thread). Spec: bridle ticket jrm2, docs/tickets/open/document-view-project-dropdown-ticket-search-by-id-comment-b-jrm2.md in /Volumes/Data/work/bridle/bridle (read it and br-jrm2's thread: bridle --project bridle task show br-jrm2).

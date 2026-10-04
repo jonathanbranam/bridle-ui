@@ -12,6 +12,8 @@ export type Thread = {
 	quote: string;
 	/** The callout's lines with the `> ` prefix removed, header excluded. */
 	body: string[];
+	/** The `· sent` stamp on the header line, "" when the first comment isn't marked sent. */
+	sent: string;
 	/** An `@human` tag not yet marked `(read)`. */
 	unread: boolean;
 };
@@ -31,6 +33,9 @@ export type Block = {
 
 const HEADER = /^> \[!comment\]\s*(.*)$/;
 const HEADER_PARTS = /^(.*?),\s*(.*?),\s*on "(.*)"\s*$/;
+// bridle appends `· sent YYYY-MM-DD HH:MM` to the line of a thread's newest human entry,
+// which can be the header: it must not end up in the quote.
+const SENT_MARK = /\s*·\s*sent\s+(\d{4}-\d\d-\d\d \d\d:\d\d)\s*$/;
 const UNREAD_TAG = /(\*\*[^*]+\*\*\s*)@human(?![\w-])(?!\s*\(read\))/;
 
 const isBlank = (l: string) => l.trim() === "";
@@ -42,7 +47,9 @@ const isCallout = (l: string) => HEADER.test(l);
 function readThread(lines: string[], start: number): Thread {
 	let end = start;
 	while (end + 1 < lines.length && lines[end + 1].startsWith(">")) end++;
-	const head = (lines[start].match(HEADER)?.[1] ?? "").trim();
+	const rawHead = (lines[start].match(HEADER)?.[1] ?? "").trim();
+	const sent = rawHead.match(SENT_MARK)?.[1] ?? "";
+	const head = rawHead.replace(SENT_MARK, "");
 	const parts = head.match(HEADER_PARTS);
 	const body = lines
 		.slice(start + 1, end + 1)
@@ -54,6 +61,7 @@ function readThread(lines: string[], start: number): Thread {
 		when: parts ? parts[2] : "",
 		quote: parts ? parts[3] : "",
 		body,
+		sent,
 		unread: body.some((l) => UNREAD_TAG.test(l)),
 	};
 }

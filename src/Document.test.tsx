@@ -84,3 +84,55 @@ test("a selection becomes a comment in the approved format; errors are shown", a
 		/doesn't commit/,
 	);
 });
+
+test("Request review posts the path with the resend choice, shows the result, and reloads", async () => {
+	const posts: { path: string; resend: boolean }[] = [];
+	let reads = 0;
+	vi.stubGlobal(
+		"fetch",
+		vi.fn(async (url: string, init?: RequestInit) => {
+			if (init?.method === "POST") {
+				posts.push(JSON.parse(init.body as string));
+				return url.endsWith("/review") && posts.length === 3
+					? new Response(JSON.stringify({ error: "no agent for a.md" }), {
+							status: 409,
+						})
+					: new Response(
+							JSON.stringify({
+								project: "p",
+								path: "a.md",
+								agent: "docs",
+								threads: 1,
+							}),
+						);
+			}
+			reads++;
+			return new Response(
+				JSON.stringify({
+					project: "p",
+					path: "a.md",
+					content: original.replace(
+						'on "Hello"',
+						reads > 1 ? 'on "Hello" · sent 2026-10-04 21:14' : 'on "Hello"',
+					),
+					hash: `h${reads}`,
+					branch: "feature",
+				}),
+			);
+		}),
+	);
+	const user = await openDoc();
+	await user.click(screen.getByRole("button", { name: "Request review" }));
+	expect((await screen.findByRole("status")).textContent).toBe(
+		"Sent 1 thread to docs.",
+	);
+	expect(posts[0]).toEqual({ path: "a.md", resend: false });
+	expect(await screen.findByText(/· sent 2026-10-04 21:14/)).toBeTruthy();
+	await user.click(screen.getByLabelText(/Resend/));
+	await user.click(screen.getByRole("button", { name: "Request review" }));
+	await waitFor(() => expect(posts[1]).toEqual({ path: "a.md", resend: true }));
+	await user.click(screen.getByRole("button", { name: "Request review" }));
+	expect((await screen.findByRole("alert")).textContent).toBe(
+		"no agent for a.md",
+	);
+});

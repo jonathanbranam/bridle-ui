@@ -1,5 +1,5 @@
 import { type ReactNode, useCallback, useEffect, useState } from "react";
-import { readDocument, writeDocument } from "./api/client";
+import { readDocument, requestReview, writeDocument } from "./api/client";
 import type { Document } from "./api/generated/Document";
 import {
 	addComment,
@@ -76,6 +76,9 @@ function ThreadView({
 			>
 				<span className="font-medium">{thread.who}</span>
 				<span className="ml-2 text-gray-500">{thread.when}</span>
+				{thread.sent && (
+					<span className="ml-2 text-gray-500">· sent {thread.sent}</span>
+				)}
 				{thread.unread && (
 					<span className="ml-2 rounded bg-red-600 px-1 text-white">
 						@human
@@ -105,6 +108,8 @@ export function DocumentView({ onLoggedOut }: Props) {
 	const [error, setError] = useState<string>();
 	const [pending, setPending] = useState<Pending>();
 	const [text, setText] = useState("");
+	const [resend, setResend] = useState(false);
+	const [reviewed, setReviewed] = useState<string>();
 
 	const fail = useCallback(
 		(r: { notLoggedIn: boolean; error: string }) => {
@@ -145,6 +150,26 @@ export function DocumentView({ onLoggedOut }: Props) {
 		setDoc({ ...doc, content, hash: r.value.hash });
 		setError(undefined);
 		return true;
+	};
+
+	// The daemon marks the threads sent in the file, so reload to show the marks and the new hash.
+	const review = async () => {
+		if (!doc) return;
+		const r = await requestReview(doc.project, doc.path, resend);
+		if (!r.ok) {
+			setReviewed(undefined);
+			fail(r);
+			return;
+		}
+		setError(undefined);
+		setReviewed(
+			r.value.threads === 0
+				? "Nothing to send."
+				: `Sent ${r.value.threads} thread${r.value.threads === 1 ? "" : "s"} to ${r.value.agent}.`,
+		);
+		const d = await readDocument(doc.project, doc.path);
+		if (d.ok) setDoc(d.value);
+		else fail(d);
 	};
 
 	const select = () => {
@@ -203,9 +228,27 @@ export function DocumentView({ onLoggedOut }: Props) {
 				</p>
 			)}
 			{doc && (
-				<p className="text-sm text-gray-500">
-					{doc.path} on {doc.branch}. Select text to comment on it.
-				</p>
+				<div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
+					<p>
+						{doc.path} on {doc.branch}. Select text to comment on it.
+					</p>
+					<button
+						type="button"
+						className="rounded border px-3 py-1 text-black"
+						onClick={review}
+					>
+						Request review
+					</button>
+					<label className="flex items-center gap-1">
+						<input
+							type="checkbox"
+							checked={resend}
+							onChange={(e) => setResend(e.target.checked)}
+						/>
+						Resend comments already sent
+					</label>
+					{reviewed && <span role="status">{reviewed}</span>}
+				</div>
 			)}
 			{pending && (
 				<div className="space-y-2 rounded border p-2">

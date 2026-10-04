@@ -8,6 +8,7 @@ import {
 	login,
 	logout,
 	readDocument,
+	requestReview,
 	session,
 	writeDocument,
 } from "./client";
@@ -122,4 +123,31 @@ test("writeDocument puts content and hash; a 409 is a failure with the message",
 		content: "new",
 		hash: "h1",
 	});
+});
+
+test.each([false, true])(
+	"requestReview posts the path and resend=%s to the project's review route",
+	async (resend) => {
+		const fn = mockFetch(200, {
+			project: "my proj",
+			path: "docs/a.md",
+			agent: "docs",
+			threads: 2,
+		});
+		const r = await requestReview("my proj", "docs/a.md", resend);
+		const [url, init] = fn.mock.calls[0] as unknown as [string, RequestInit];
+		expect(url).toBe("/api/v1/projects/my%20proj/review");
+		expect(init.method).toBe("POST");
+		expect(JSON.parse(init.body as string)).toEqual({
+			path: "docs/a.md",
+			resend,
+		});
+		expect(r.ok && r.value.threads).toBe(2);
+	},
+);
+
+test("requestReview failures carry the gateway's message", async () => {
+	mockFetch(409, { error: "no agent is assigned to docs/a.md" });
+	const r = await requestReview("p", "docs/a.md", false);
+	expect(!r.ok && r.error).toBe("no agent is assigned to docs/a.md");
 });

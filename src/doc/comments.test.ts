@@ -77,3 +77,24 @@ test("a tag to someone else, or mid-sentence, is not unread", () => {
 		'> [!comment] human, w, on "q"\n> **a, 1:** @docs-agent hi\n> tell @human later';
 	expect(parseDocument(d)[0].threads[0].unread).toBe(false);
 });
+
+test("a sent mark on the header is not part of the quote; on a reply it leaves (read) alone", () => {
+	const t = parseDocument(`Para.
+
+> [!comment] human, 2026-10-02 14:05, on "Para" · sent 2026-10-04 21:14
+> Why?
+>
+> **docs agent, 14:06:** @human Done.
+> **human, 14:07:** Thanks. · sent 2026-10-04 21:15
+`)[0].threads[0];
+	expect(t.quote).toBe("Para");
+	expect(t.when).toBe("2026-10-02 14:05");
+	expect(t.sent).toBe("2026-10-04 21:14");
+	expect(t.unread).toBe(true);
+	const read = markRead(
+		'> [!comment] human, 2026-10-02 14:05, on "Para" · sent 2026-10-04 21:14\n> **a:** @human Done. · sent 2026-10-04 21:15\n',
+		{ ...t, start: 0, end: 1 },
+	);
+	expect(read).toContain("@human (read) Done. · sent 2026-10-04 21:15");
+	expect(parseDocument(read)[0].threads[0].unread).toBe(false);
+});

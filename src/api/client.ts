@@ -11,6 +11,8 @@ import type { InteractionGroup } from "./generated/InteractionGroup";
 import type { InteractionReport } from "./generated/InteractionReport";
 import type { Items } from "./generated/Items";
 import type { Projects } from "./generated/Projects";
+import type { ReviewRequest } from "./generated/ReviewRequest";
+import type { ReviewResult } from "./generated/ReviewResult";
 import type { SessionInfo } from "./generated/SessionInfo";
 
 const BASE = "/api/v1";
@@ -108,6 +110,19 @@ export const writeDocument = (
 	const body: DocumentWrite = { content, hash };
 	return call<DocumentSaved>(documentPath(project, path), {
 		method: "PUT",
+		body,
+	});
+};
+
+/** Sends the document's unsent threads to its agent now; `resend` includes the ones marked sent. */
+export const requestReview = (
+	project: string,
+	path: string,
+	resend: boolean,
+) => {
+	const body: ReviewRequest = { path, resend };
+	return call<ReviewResult>(`/projects/${encodeURIComponent(project)}/review`, {
+		method: "POST",
 		body,
 	});
 };

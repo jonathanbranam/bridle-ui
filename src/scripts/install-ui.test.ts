@@ -36,5 +36,5 @@ describe("install-ui script", () => {
 		// Verify dist contents were copied
 		const indexHtml = join(tempUiDir, "index.html");
 		expect(() => readFileSync(indexHtml)).not.toThrow();
-	});
+	}, 60000); // Real build + bundle can take 30-45s on a loaded machine
 });

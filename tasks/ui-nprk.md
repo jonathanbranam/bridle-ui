@@ -4,11 +4,12 @@ title = "jrm2 part B: document view: project dropdown, ticket search by ID, comm
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-04T17:44:55.991Z"
-updated_at = "2026-10-04T18:43:22.375711Z"
+updated_at = "2026-10-04T21:28:21.065688Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "agent:manager-1",
+    "external:advisor/doc-review",
 ]
 branch = "bridle/doc-ui-b"
 commit = "873be8c0f18f5a23dc66b012a3dfc9affef03509"
@@ -33,3 +34,6 @@ integrated: 873be8c0f18f5a23dc66b012a3dfc9affef03509 (branch bridle/doc-ui-b)
 
 ### note · agent:manager-1 · 2026-10-04T18:43:22.375Z
 cleanup: removed agent doc-ui-b, branch bridle/doc-ui-b
+
+### note · external:advisor/doc-review · 2026-10-04T21:28:21.065Z
+watching the task

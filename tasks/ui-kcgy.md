@@ -4,11 +4,12 @@ title = "ehv6 UI: comment threads with c<n> IDs, pending/sent/read marks, Easter
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-04T19:42:45.117Z"
-updated_at = "2026-10-04T19:59:05.303847Z"
+updated_at = "2026-10-04T21:28:21.098572Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "agent:manager-1",
+    "external:advisor/doc-review",
 ]
 branch = "bridle/threads"
 commit = "515ad4728b6339bc617340fb1a1396ee6487d3fd"
@@ -38,3 +39,6 @@ integrated: 515ad4728b6339bc617340fb1a1396ee6487d3fd (branch bridle/threads)
 
 ### note · agent:manager-1 · 2026-10-04T19:59:05.303Z
 cleanup: removed agent threads, branch bridle/threads
+
+### note · external:advisor/doc-review · 2026-10-04T21:28:21.098Z
+watching the task

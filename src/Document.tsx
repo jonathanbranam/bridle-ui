@@ -277,14 +277,30 @@ export function DocumentView({ onLoggedOut }: Props) {
 		else fail(d);
 	};
 
-	const select = () => {
+	// Stable (only reads the DOM and sets state) so the selectionchange effect can depend on it.
+	const select = useCallback(() => {
 		const sel = window.getSelection();
 		const el =
 			sel?.anchorNode?.parentElement?.closest<HTMLElement>("[data-last]");
 		if (!sel || sel.isCollapsed || !el) return;
 		const quote = quoteOf(sel.toString());
 		if (quote) setPending({ after: Number(el.dataset.last), quote });
-	};
+	}, []);
+
+	// Native touch selection (iOS, Android) fires no mouseup, only selectionchange. Debounced so
+	// the box opens once the handles settle; the selection itself is never touched.
+	useEffect(() => {
+		let timer: ReturnType<typeof setTimeout> | undefined;
+		const onChange = () => {
+			clearTimeout(timer);
+			timer = setTimeout(select, 300);
+		};
+		document.addEventListener("selectionchange", onChange);
+		return () => {
+			clearTimeout(timer);
+			document.removeEventListener("selectionchange", onChange);
+		};
+	}, [select]);
 
 	const submit = async () => {
 		if (!doc || !pending || !text.trim()) return;

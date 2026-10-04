@@ -111,6 +111,28 @@ test("a selection becomes a comment in the approved format; errors are shown", a
 	);
 });
 
+test("a touch selection (selectionchange, no mouseup) opens the comment box only inside the body", async () => {
+	stub("unused");
+	await openDoc();
+	const text = screen.getByText("world.");
+	const spy = vi.spyOn(window, "getSelection");
+	spy.mockReturnValue({
+		isCollapsed: false,
+		anchorNode: screen.getByLabelText("Project"),
+		toString: () => "outside",
+	} as unknown as Selection);
+	document.dispatchEvent(new Event("selectionchange"));
+	await new Promise((r) => setTimeout(r, 450));
+	expect(screen.queryByLabelText("Comment")).toBeNull();
+	spy.mockReturnValue({
+		isCollapsed: false,
+		anchorNode: text.firstChild,
+		toString: () => "world",
+	} as unknown as Selection);
+	document.dispatchEvent(new Event("selectionchange"));
+	expect(await screen.findByLabelText("Comment")).toBeTruthy();
+});
+
 test("Request review posts the path with the resend choice, shows the result, and reloads", async () => {
 	const posts: { path: string; resend: boolean }[] = [];
 	let reads = 0;

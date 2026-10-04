@@ -123,10 +123,10 @@ export function TimeView({ onLoggedOut }: { onLoggedOut: () => void }) {
 							<input
 								type="date"
 								className="ml-2 rounded border px-1"
-								value={prefs.custom.from}
+								value={range.from}
 								onChange={(e) =>
 									e.target.value &&
-									update({ custom: { ...prefs.custom!, from: e.target.value } })
+									update({ custom: { ...range, from: e.target.value } })
 								}
 							/>
 						</label>
@@ -135,10 +135,10 @@ export function TimeView({ onLoggedOut }: { onLoggedOut: () => void }) {
 							<input
 								type="date"
 								className="ml-2 rounded border px-1"
-								value={prefs.custom.to}
+								value={range.to}
 								onChange={(e) =>
 									e.target.value &&
-									update({ custom: { ...prefs.custom!, to: e.target.value } })
+									update({ custom: { ...range, to: e.target.value } })
 								}
 							/>
 						</label>

@@ -2,13 +2,14 @@
 id = "ui-s3xe"
 title = "c2xn: highlight-to-comment on mobile: open the comment box from a touch selection, not only mouseup"
 kind = "bug"
-state = "planned"
+state = "claimed"
 created_at = "2026-10-04T23:21:36.449Z"
-updated_at = "2026-10-04T23:21:55.826472Z"
+updated_at = "2026-10-04T23:26:43.429972Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
+    "agent:manager-1",
 ]
 +++
 

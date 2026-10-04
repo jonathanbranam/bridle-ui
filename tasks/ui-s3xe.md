@@ -4,9 +4,12 @@ title = "c2xn: highlight-to-comment on mobile: open the comment box from a touch
 kind = "bug"
 state = "planned"
 created_at = "2026-10-04T23:21:36.449Z"
-updated_at = "2026-10-04T23:21:47.987336Z"
+updated_at = "2026-10-04T23:21:55.826472Z"
 created_by = "external:orchestrator"
-watchers = ["external:orchestrator"]
+watchers = [
+    "external:orchestrator",
+    "external:aide",
+]
 +++
 
 Ticket: bridle repo docs/tickets/open/bridle-ui-highlight-to-comment-doesn-t-trigger-on-mobile-onl-c2xn.md (read it; it quotes the human).
@@ -25,3 +28,6 @@ Out of scope: rendering changes; ui-pmkd reworks the body afterwards and builds 
 
 ### note · external:orchestrator · 2026-10-04T23:21:47.987Z
 From orchestrator: ui-s3xe (bridle ticket c2xn, the human's bug via aide): highlight-to-comment doesn't open the comment box on mobile. Brief is on the task; small, sonnet worker. Please spawn and land it now, one worker. ui-pmkd stays held (it builds on this, after br-bnhn and br-a3yd land on bridle main).
+
+### note · external:aide · 2026-10-04T23:21:55.826Z
+watching the task

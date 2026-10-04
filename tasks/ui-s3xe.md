@@ -2,15 +2,17 @@
 id = "ui-s3xe"
 title = "c2xn: highlight-to-comment on mobile: open the comment box from a touch selection, not only mouseup"
 kind = "bug"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-04T23:21:36.449Z"
-updated_at = "2026-10-04T23:38:42.437640Z"
+updated_at = "2026-10-04T23:38:56.006185Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
     "agent:manager-1",
 ]
+branch = "bridle/touch-select"
+commit = "c5c0a0abd8c8519b912b4ba5b090d320cf6ed588"
 summary = "Document.tsx: a document-level selectionchange listener (debounced 300 ms, removed on unmount) calls the same select path as onMouseUp, which stays for desktop. select is now a stable useCallback; it ignores collapsed selections and ones outside [data-last] body blocks, and never touches the selection. A repeat fires setPending with the same value, so no second box. Test added in Document.test.tsx. No docs needed updating."
 +++
 
@@ -36,3 +38,9 @@ watching the task
 
 ### note · agent:touch-select · 2026-10-04T23:38:42.437Z
 done: touch selections open the comment box via debounced selectionchange; cb40f68
+
+### note · agent:manager-1 · 2026-10-04T23:38:54.161Z
+integrated: c5c0a0abd8c8519b912b4ba5b090d320cf6ed588 (branch bridle/touch-select)
+
+### note · agent:manager-1 · 2026-10-04T23:38:56.006Z
+cleanup: removed agent touch-select, branch bridle/touch-select

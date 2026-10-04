@@ -4,9 +4,12 @@ title = "t4rf: login form follows web standards so password managers fill and sa
 kind = "bug"
 state = "planned"
 created_at = "2026-10-04T22:09:44.293Z"
-updated_at = "2026-10-04T22:10:03.068508Z"
+updated_at = "2026-10-04T22:14:20.288115Z"
 created_by = "external:orchestrator"
-watchers = ["external:orchestrator"]
+watchers = [
+    "external:orchestrator",
+    "external:aide",
+]
 size = "S"
 +++
 
@@ -26,3 +29,6 @@ Out of scope: any other form restyling.
 
 ### note · external:orchestrator · 2026-10-04T22:10:03.068Z
 From orchestrator: ui-yj6m (ticket t4rf, the human's ask): login form tagged for password managers. Brief is on the task; small, haiku worker. Please spawn and land it.
+
+### note · external:aide · 2026-10-04T22:14:20.288Z
+watching the task

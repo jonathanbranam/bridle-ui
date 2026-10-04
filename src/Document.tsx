@@ -10,22 +10,20 @@ import {
 import type { Document } from "./api/generated/Document";
 import {
 	addComment,
+	addReply,
 	type Block,
+	easternStamp,
+	type Mark,
 	markQuotes,
 	markRead,
 	parseDocument,
 	quoteOf,
 	resolveOpen,
+	resolveThread,
 	type Thread,
 } from "./doc/comments";
 
 type Props = { onLoggedOut: () => void };
-
-const stamp = () => {
-	const d = new Date();
-	const p = (n: number) => String(n).padStart(2, "0");
-	return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
-};
 
 // Only what the documents use: `code` and **bold**. A real markdown library isn't worth it yet.
 function inline(text: string): ReactNode[] {
@@ -79,17 +77,34 @@ function BlockText({ block, quotes }: { block: Block; quotes: string[] }) {
 	}
 }
 
+function MarkView({ mark }: { mark?: Mark }) {
+	return mark ? (
+		<span className="ml-2 text-gray-500">
+			[{mark.state} {mark.stamp}]
+		</span>
+	) : null;
+}
+
+type ThreadActions = {
+	onOpen: (t: Thread) => void;
+	onReply: (t: Thread, text: string) => Promise<boolean>;
+	onResolve: (t: Thread) => void;
+};
+
 function ThreadView({
 	thread,
 	onOpen,
-}: {
-	thread: Thread;
-	onOpen: (t: Thread) => void;
-}) {
-	// An unread tag stays folded until the human opens the thread; opening is what reads it.
-	const [open, setOpen] = useState(!thread.unread);
+	onReply,
+	onResolve,
+}: { thread: Thread } & ThreadActions) {
+	// An unread agent entry stays folded until the human opens the thread, which reads it;
+	// a resolved thread stays collapsed to its header.
+	const [open, setOpen] = useState(!thread.unread && !thread.resolved);
+	const [reply, setReply] = useState("");
 	return (
-		<aside className="rounded border border-amber-300 bg-amber-50 p-2 text-sm">
+		<aside
+			className={`rounded border p-2 text-sm ${thread.resolved ? "border-gray-300 bg-gray-50 text-gray-500" : "border-amber-300 bg-amber-50"}`}
+		>
 			<button
 				type="button"
 				className="w-full text-left"
@@ -99,15 +114,13 @@ function ThreadView({
 					if (thread.unread) onOpen(thread);
 				}}
 			>
+				{thread.id && <span className="mr-2 text-gray-500">{thread.id}</span>}
 				<span className="font-medium">{thread.who}</span>
 				<span className="ml-2 text-gray-500">{thread.when}</span>
-				{thread.sent && (
-					<span className="ml-2 text-gray-500">· sent {thread.sent}</span>
-				)}
+				<MarkView mark={thread.mark} />
+				{thread.resolved && <span className="ml-2">resolved</span>}
 				{thread.unread && (
-					<span className="ml-2 rounded bg-red-600 px-1 text-white">
-						@human
-					</span>
+					<span className="ml-2 rounded bg-red-600 px-1 text-white">new</span>
 				)}
 				{thread.quote && (
 					<span className="block italic text-gray-600">“{thread.quote}”</span>
@@ -117,9 +130,39 @@ function ThreadView({
 				thread.body.map((l, i) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: lines have no identity
 					<p key={i} className="min-h-2">
-						{inline(l)}
+						{inline(l.text)}
+						<MarkView mark={l.mark} />
 					</p>
 				))}
+			{open && !thread.resolved && (
+				<div className="mt-2 space-y-1">
+					<textarea
+						aria-label="Reply"
+						className="w-full rounded border bg-white p-1"
+						value={reply}
+						onChange={(e) => setReply(e.target.value)}
+					/>
+					<div className="flex gap-2">
+						<button
+							type="button"
+							className="rounded border px-2 py-0.5"
+							disabled={!reply.trim()}
+							onClick={async () => {
+								if (await onReply(thread, reply)) setReply("");
+							}}
+						>
+							Reply
+						</button>
+						<button
+							type="button"
+							className="rounded border px-2 py-0.5"
+							onClick={() => onResolve(thread)}
+						>
+							Resolve
+						</button>
+					</div>
+				</div>
+			)}
 		</aside>
 	);
 }
@@ -249,7 +292,7 @@ export function DocumentView({ onLoggedOut }: Props) {
 			doc.content,
 			pending.after,
 			"human",
-			stamp(),
+			easternStamp(),
 			pending.quote,
 			text,
 		);
@@ -260,7 +303,16 @@ export function DocumentView({ onLoggedOut }: Props) {
 	};
 
 	const opened = async (t: Thread) => {
-		if (doc) await save(markRead(doc.content, t));
+		if (doc) await save(markRead(doc.content, t, easternStamp()));
+	};
+
+	const replied = async (t: Thread, reply: string) =>
+		doc
+			? save(addReply(doc.content, t, "human", easternStamp(), reply))
+			: false;
+
+	const resolved = async (t: Thread) => {
+		if (doc) await save(resolveThread(doc.content, t, "human", easternStamp()));
 	};
 
 	const blocks = doc ? parseDocument(doc.content) : [];
@@ -351,9 +403,11 @@ export function DocumentView({ onLoggedOut }: Props) {
 							<div className="space-y-2">
 								{b.threads.map((t) => (
 									<ThreadView
-										key={`${t.start}:${t.unread}`}
+										key={`${t.start}:${t.unread}:${t.resolved}`}
 										thread={t}
 										onOpen={opened}
+										onReply={replied}
+										onResolve={resolved}
 									/>
 								))}
 								{here && (

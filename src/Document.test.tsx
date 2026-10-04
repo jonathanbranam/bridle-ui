@@ -10,10 +10,10 @@ const original = `# T
 
 Hello world.
 
-> [!comment] human, 2026-10-02 14:05, on "Hello"
+> [!comment] c1 human, 2026-10-02 14:05 EDT, on "Hello" [sent 2026-10-02 14:06 EDT]
 > Why?
 >
-> **docs agent, 14:06:** @human Done.
+> **docs agent, 2026-10-02 14:06 EDT:** Done.
 `;
 
 // The project list and the search, which every test needs; null for the document routes.
@@ -74,7 +74,7 @@ async function openDoc() {
 	return user;
 }
 
-test("opening an unread thread writes (read) back with the hash", async () => {
+test("opening an unread thread writes [read] back with the hash", async () => {
 	const puts = stub();
 	const user = await openDoc();
 	expect(screen.queryByText("Why?")).toBeNull();
@@ -82,7 +82,9 @@ test("opening an unread thread writes (read) back with the hash", async () => {
 	expect(screen.getByText("Why?")).toBeTruthy();
 	await waitFor(() => expect(puts).toHaveLength(1));
 	expect(puts[0].hash).toBe("h1");
-	expect(puts[0].content).toContain("@human (read) Done.");
+	expect(puts[0].content).toMatch(
+		/Done\. \[read \d{4}-\d\d-\d\d \d\d:\d\d E[SD]T\]\n/,
+	);
 });
 
 test("a selection becomes a comment in the approved format; errors are shown", async () => {
@@ -102,7 +104,7 @@ test("a selection becomes a comment in the approved format; errors are shown", a
 	await waitFor(() => expect(puts).toHaveLength(1));
 	// After the thread already on that line, not between the line and it.
 	expect(puts[0].content).toMatch(
-		/Hello world\.\n\n> \[!comment\] human, 2026-10-02[\s\S]*Done\.\n\n> \[!comment\] human, \d{4}-\d\d-\d\d \d\d:\d\d, on "world"\n> Say more\n$/,
+		/Hello world\.\n\n> \[!comment\] c1 human, 2026-10-02[\s\S]*Done\.\n\n> \[!comment\] c2 human, (\d{4}-\d\d-\d\d \d\d:\d\d E[SD]T), on "world" \[pending \1\]\n> Say more\n$/,
 	);
 	expect((await screen.findByRole("alert")).textContent).toMatch(
 		/doesn't commit/,
@@ -138,8 +140,10 @@ test("Request review posts the path with the resend choice, shows the result, an
 					project: "p",
 					path: "a.md",
 					content: original.replace(
-						'on "Hello"',
-						reads > 1 ? 'on "Hello" · sent 2026-10-04 21:14' : 'on "Hello"',
+						"[sent 2026-10-02 14:06 EDT]",
+						reads > 1
+							? "[sent 2026-10-04 21:14 EDT]"
+							: "[pending 2026-10-02 14:05 EDT]",
 					),
 					hash: `h${reads}`,
 					branch: "feature",
@@ -153,7 +157,7 @@ test("Request review posts the path with the resend choice, shows the result, an
 		"Sent 1 thread to docs.",
 	);
 	expect(posts[0]).toEqual({ path: "a.md", resend: false });
-	expect(await screen.findByText(/· sent 2026-10-04 21:14/)).toBeTruthy();
+	expect(await screen.findByText(/\[sent 2026-10-04 21:14 EDT\]/)).toBeTruthy();
 	await user.click(screen.getByLabelText(/Resend/));
 	await user.click(screen.getByRole("button", { name: "Request review" }));
 	await waitFor(() => expect(posts[1]).toEqual({ path: "a.md", resend: true }));

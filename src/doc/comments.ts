@@ -1,21 +1,37 @@
-// The document format from bridle ticket x8jt: comments are `> [!comment] who, when, on "quote"`
-// callouts right after the line they are on, replies are bold names inside the callout, and a
-// tag is `@human` at the start of a reply, marked read by appending `(read)`. Pure functions on
-// the file's text; the view never keeps any other copy of a comment.
+// The document format from bridle tickets x8jt and ehv6: comments are
+// `> [!comment] c<n> who, when, on "quote" [state when]` callouts right after the line they are
+// on; replies are `**who, when:** text [state when]` lines inside the callout; a closing line is
+// `**resolved by who, when**`. The mark at the end of an entry's first line is its latest status.
+// Pure functions on the file's text, matching the daemon's parser (doc_watch.rs); the view never
+// keeps any other copy of a comment. Nothing here compares times: state is which mark is present.
+
+export type MarkState = "pending" | "sent" | "read";
+export type Mark = { state: MarkState; stamp: string };
+
+export type BodyLine = {
+	/** The line with the `> ` prefix and any status mark removed. */
+	text: string;
+	/** The status mark on an entry's first line. */
+	mark?: Mark;
+};
 
 export type Thread = {
 	/** First and last line (0-based, inclusive) of the callout in the file. */
 	start: number;
 	end: number;
+	/** `c3`, "" for a hand-typed thread the daemon hasn't numbered yet. */
+	id: string;
 	who: string;
 	when: string;
 	quote: string;
-	/** The callout's lines with the `> ` prefix removed, header excluded. */
-	body: string[];
-	/** The `· sent` stamp on the header line, "" when the first comment isn't marked sent. */
-	sent: string;
-	/** An `@human` tag not yet marked `(read)`. */
+	/** The status mark on the header line. */
+	mark?: Mark;
+	/** The callout's lines, header excluded. */
+	body: BodyLine[];
+	/** An agent's entry the human hasn't opened yet (no `[read]` mark). */
 	unread: boolean;
+	/** The thread has a `**resolved by` line. */
+	resolved: boolean;
 };
 
 export type Block = {
@@ -32,11 +48,13 @@ export type Block = {
 };
 
 const HEADER = /^> \[!comment\]\s*(.*)$/;
+const HEADER_ID = /^(c\d+)\s+/;
 const HEADER_PARTS = /^(.*?),\s*(.*?),\s*on "(.*)"\s*$/;
-// bridle appends `· sent YYYY-MM-DD HH:MM` to the line of a thread's newest human entry,
-// which can be the header: it must not end up in the quote.
-const SENT_MARK = /\s*·\s*sent\s+(\d{4}-\d\d-\d\d \d\d:\d\d)\s*$/;
-const UNREAD_TAG = /(\*\*[^*]+\*\*\s*)@human(?![\w-])(?!\s*\(read\))/;
+// `[pending|sent|read 2026-10-04 21:14 EDT]`: the stamp is exactly 20 characters, as in the daemon.
+const MARK = /\s\[(pending|sent|read) (.{20})\]$/;
+// The old mark, with a U+00B7 middle dot and no zone: read as `sent`.
+const LEGACY_MARK = /\s\u00b7 sent (\d{4}-\d\d-\d\d \d\d:\d\d)$/;
+const ENTRY = /^\*\*([^,*]+)[,:]/;
 
 const isBlank = (l: string) => l.trim() === "";
 const isFence = (l: string) => /^\s*(```|~~~)/.test(l);
@@ -44,25 +62,62 @@ const isHeading = (l: string) => /^#{1,6}\s/.test(l);
 const isItem = (l: string) => /^\s*([-*+]|\d+[.)])\s/.test(l);
 const isCallout = (l: string) => HEADER.test(l);
 
+export const isHuman = (who: string) => {
+	const w = who.trim().toLowerCase();
+	return w === "human" || w.startsWith("human via ");
+};
+
+function splitMark(line: string): { text: string; mark?: Mark } {
+	const m = line.match(MARK);
+	if (m)
+		return {
+			text: line.slice(0, m.index),
+			mark: { state: m[1] as MarkState, stamp: m[2] },
+		};
+	const l = line.match(LEGACY_MARK);
+	if (l)
+		return {
+			text: line.slice(0, l.index),
+			mark: { state: "sent", stamp: l[1] },
+		};
+	return { text: line };
+}
+
+/** What a callout body line is: a closing line, an entry's first line (with its author), or text. */
+function classify(line: string) {
+	if (line.startsWith("**resolved by ")) return { resolved: true, author: "" };
+	const author = line.match(ENTRY)?.[1];
+	return { resolved: false, author };
+}
+
+const isUnreadEntry = (line: string) => {
+	const c = classify(line);
+	return c.author !== undefined && !isHuman(c.author) && !splitMark(line).mark;
+};
+
 function readThread(lines: string[], start: number): Thread {
 	let end = start;
 	while (end + 1 < lines.length && lines[end + 1].startsWith(">")) end++;
 	const rawHead = (lines[start].match(HEADER)?.[1] ?? "").trim();
-	const sent = rawHead.match(SENT_MARK)?.[1] ?? "";
-	const head = rawHead.replace(SENT_MARK, "");
+	const { text, mark } = splitMark(rawHead);
+	const id = text.match(HEADER_ID)?.[1] ?? "";
+	const head = text.replace(HEADER_ID, "");
 	const parts = head.match(HEADER_PARTS);
-	const body = lines
-		.slice(start + 1, end + 1)
-		.map((l) => l.replace(/^> ?/, ""));
+	const raw = lines.slice(start + 1, end + 1).map((l) => l.replace(/^> ?/, ""));
+	const resolved = raw.some((l) => classify(l).resolved);
 	return {
 		start,
 		end,
+		id,
 		who: parts ? parts[1] : head,
 		when: parts ? parts[2] : "",
 		quote: parts ? parts[3] : "",
-		body,
-		sent,
-		unread: body.some((l) => UNREAD_TAG.test(l)),
+		mark,
+		body: raw.map((l) =>
+			classify(l).author !== undefined ? splitMark(l) : { text: l },
+		),
+		unread: !resolved && raw.some(isUnreadEntry),
+		resolved,
 	};
 }
 
@@ -140,6 +195,23 @@ export function parseDocument(content: string): Block[] {
 export const quoteOf = (selected: string) =>
 	selected.trim().replace(/\s+/g, " ");
 
+/** The next thread ID: the highest `c<n>` in any header, plus one. */
+export function nextId(content: string): string {
+	let max = 0;
+	for (const l of content.split("\n")) {
+		const n = l.match(HEADER)?.[1].match(/^c(\d+)\s/)?.[1];
+		if (n) max = Math.max(max, Number(n));
+	}
+	return `c${max + 1}`;
+}
+
+/** Text lines for inside a callout: blank lines stay quoted so the callout doesn't break. */
+const quoted = (text: string) =>
+	text
+		.trim()
+		.split("\n")
+		.map((l) => (l.trim() === "" ? ">" : `> ${l}`));
+
 /** Inserts a comment callout after line `after` (a block's `last`), blank-line separated. */
 export function addComment(
 	content: string,
@@ -150,12 +222,11 @@ export function addComment(
 	text: string,
 ): string {
 	const lines = content.split("\n");
+	const [first, ...rest] = quoted(text);
 	const callout = [
-		`> [!comment] ${who}, ${when}, on "${quoteOf(quote)}"`,
-		...text
-			.trim()
-			.split("\n")
-			.map((l) => (l.trim() === "" ? ">" : `> ${l}`)),
+		`> [!comment] ${nextId(content)} ${who}, ${when}, on "${quoteOf(quote)}" [pending ${when}]`,
+		first,
+		...rest,
 	];
 	const insert = ["", ...callout];
 	if (after + 1 < lines.length && !isBlank(lines[after + 1])) insert.push("");
@@ -163,16 +234,66 @@ export function addComment(
 	return lines.join("\n");
 }
 
-/** Appends `(read)` to every unread `@human` tag in the thread at lines start..end. */
-export function markRead(content: string, thread: Thread): string {
+/** Appends a reply entry to the thread, its first line marked `[pending]`. */
+export function addReply(
+	content: string,
+	thread: Thread,
+	who: string,
+	when: string,
+	text: string,
+): string {
+	const lines = content.split("\n");
+	const [first, ...rest] = text.trim().split("\n");
+	lines.splice(
+		thread.end + 1,
+		0,
+		">",
+		`> **${who}, ${when}:** ${first} [pending ${when}]`,
+		...rest.map((l) => (l.trim() === "" ? ">" : `> ${l}`)),
+	);
+	return lines.join("\n");
+}
+
+/** Marks every unmarked agent entry in the thread `[read stamp]`: the human opened it. */
+export function markRead(
+	content: string,
+	thread: Thread,
+	stamp: string,
+): string {
 	const lines = content.split("\n");
 	for (let i = thread.start + 1; i <= thread.end; i++) {
-		lines[i] = lines[i].replace(
-			new RegExp(UNREAD_TAG.source, "g"),
-			"$1@human (read)",
-		);
+		const body = lines[i].replace(/^> ?/, "");
+		if (isUnreadEntry(body)) lines[i] = `${lines[i].trimEnd()} [read ${stamp}]`;
 	}
 	return lines.join("\n");
+}
+
+/** Closes the thread the way `bridle review resolve` does. */
+export function resolveThread(
+	content: string,
+	thread: Thread,
+	by: string,
+	stamp: string,
+): string {
+	const lines = content.split("\n");
+	lines.splice(thread.end + 1, 0, ">", `> **resolved by ${by}, ${stamp}**`);
+	return lines.join("\n");
+}
+
+/** `YYYY-MM-DD HH:MM EDT`: US Eastern with its zone abbreviation, ASCII, as the daemon writes it. */
+export function easternStamp(at: Date = new Date()): string {
+	const parts = new Intl.DateTimeFormat("en-US", {
+		timeZone: "America/New_York",
+		hourCycle: "h23",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		hour: "2-digit",
+		minute: "2-digit",
+		timeZoneName: "short",
+	}).formatToParts(at);
+	const v = (t: string) => parts.find((p) => p.type === t)?.value ?? "";
+	return `${v("year")}-${v("month")}-${v("day")} ${v("hour")}:${v("minute")} ${v("timeZoneName")}`;
 }
 
 export type Segment = { text: string; mark: boolean };

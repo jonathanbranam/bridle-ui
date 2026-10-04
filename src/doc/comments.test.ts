@@ -1,20 +1,23 @@
 import { expect, test } from "vitest";
 import {
 	addComment,
+	addReply,
+	easternStamp,
 	markQuotes,
 	markRead,
 	parseDocument,
 	resolveOpen,
+	resolveThread,
 } from "./comments";
 
 const doc = `# Title
 
 Some text with **bold**.
 
-> [!comment] human, 2026-10-02 14:05, on "Some text"
+> [!comment] c2 human, 2026-10-02 14:05 EDT, on "Some text" [sent 2026-10-02 14:06 EDT]
 > Why?
 >
-> **docs agent, 14:06:** @human Rewrote it.
+> **doc-3haz, 2026-10-02 14:06 EDT:** Rewrote it.
 
 - one
   continued
@@ -36,73 +39,120 @@ test("parses blocks and attaches threads to the block they follow", () => {
 	]);
 	const t = blocks[1].threads[0];
 	expect(t).toMatchObject({
+		id: "c2",
 		who: "human",
-		when: "2026-10-02 14:05",
+		when: "2026-10-02 14:05 EDT",
 		quote: "Some text",
+		mark: { state: "sent", stamp: "2026-10-02 14:06 EDT" },
 		unread: true,
+		resolved: false,
 		start: 4,
 		end: 7,
 	});
+	expect(t.body[2].text).toBe(
+		"**doc-3haz, 2026-10-02 14:06 EDT:** Rewrote it.",
+	);
 	expect(blocks[1].last).toBe(7);
 	expect(blocks[0].threads).toEqual([]);
 });
 
-test("addComment writes the approved format after the line", () => {
+test("addComment writes a numbered, pending header after the line", () => {
 	const out = addComment(
-		"a\nb",
+		'a\n\n> [!comment] c4 human, w, on "a"\n> x\n\nb',
 		0,
 		"human",
-		"2026-10-03 09:00",
+		"2026-10-03 09:00 EDT",
 		"x  y",
 		"hi\n\nthere",
 	);
-	expect(out).toBe(
-		'a\n\n> [!comment] human, 2026-10-03 09:00, on "x y"\n> hi\n>\n> there\n\nb',
+	expect(out).toContain(
+		'a\n\n> [!comment] c5 human, 2026-10-03 09:00 EDT, on "x y" [pending 2026-10-03 09:00 EDT]\n> hi\n>\n> there\n\n> [!comment] c4',
 	);
-	const again = parseDocument(out);
-	expect(again[0].threads[0]).toMatchObject({ quote: "x y", who: "human" });
-	expect(again[1].text).toBe("b");
+	const t = parseDocument(out)[0].threads[0];
+	expect(t).toMatchObject({
+		id: "c5",
+		quote: "x y",
+		who: "human",
+		mark: { state: "pending" },
+	});
 });
 
-test("addComment after the last line adds no trailing blank", () => {
+test("addComment after the last line adds no trailing blank, first thread is c1", () => {
 	expect(addComment("a", 0, "human", "w", "q", "c")).toBe(
-		'a\n\n> [!comment] human, w, on "q"\n> c',
+		'a\n\n> [!comment] c1 human, w, on "q" [pending w]\n> c',
 	);
 });
 
-test("markRead appends (read) to unread tags only, in that thread", () => {
+test("addReply appends a pending human entry", () => {
 	const t = parseDocument(doc)[1].threads[0];
-	const out = markRead(doc, t);
-	expect(out).toContain("**docs agent, 14:06:** @human (read) Rewrote it.");
-	expect(parseDocument(out)[1].threads[0].unread).toBe(false);
-	expect(markRead(out, parseDocument(out)[1].threads[0])).toBe(out);
-});
-
-test("a tag to someone else, or mid-sentence, is not unread", () => {
-	const d =
-		'> [!comment] human, w, on "q"\n> **a, 1:** @docs-agent hi\n> tell @human later';
-	expect(parseDocument(d)[0].threads[0].unread).toBe(false);
-});
-
-test("a sent mark on the header is not part of the quote; on a reply it leaves (read) alone", () => {
-	const t = parseDocument(`Para.
-
-> [!comment] human, 2026-10-02 14:05, on "Para" · sent 2026-10-04 21:14
-> Why?
->
-> **docs agent, 14:06:** @human Done.
-> **human, 14:07:** Thanks. · sent 2026-10-04 21:15
-`)[0].threads[0];
-	expect(t.quote).toBe("Para");
-	expect(t.when).toBe("2026-10-02 14:05");
-	expect(t.sent).toBe("2026-10-04 21:14");
-	expect(t.unread).toBe(true);
-	const read = markRead(
-		'> [!comment] human, 2026-10-02 14:05, on "Para" · sent 2026-10-04 21:14\n> **a:** @human Done. · sent 2026-10-04 21:15\n',
-		{ ...t, start: 0, end: 1 },
+	const out = addReply(doc, t, "human", "2026-10-02 15:00 EDT", "thanks\nmore");
+	expect(out).toContain(
+		"> **doc-3haz, 2026-10-02 14:06 EDT:** Rewrote it.\n>\n> **human, 2026-10-02 15:00 EDT:** thanks [pending 2026-10-02 15:00 EDT]\n> more\n",
 	);
-	expect(read).toContain("@human (read) Done. · sent 2026-10-04 21:15");
-	expect(parseDocument(read)[0].threads[0].unread).toBe(false);
+	const body = parseDocument(out)[1].threads[0].body;
+	expect(body[4]).toEqual({
+		text: "**human, 2026-10-02 15:00 EDT:** thanks",
+		mark: { state: "pending", stamp: "2026-10-02 15:00 EDT" },
+	});
+});
+
+test("markRead marks unmarked agent entries read, in that thread only", () => {
+	const t = parseDocument(doc)[1].threads[0];
+	const out = markRead(doc, t, "2026-10-02 15:00 EDT");
+	expect(out).toContain("Rewrote it. [read 2026-10-02 15:00 EDT]");
+	expect(out).not.toContain("Why? [read");
+	const again = parseDocument(out)[1].threads[0];
+	expect(again.unread).toBe(false);
+	expect(markRead(out, again, "later")).toBe(out);
+});
+
+test("human and human via <agent> entries are not unread; other names are agents", () => {
+	const d = [
+		'> [!comment] c1 human, w, on "q"',
+		"> **human via doc-3haz, w:** thanks",
+		"> **Human, w:** hi",
+		"> **advisor, w:** hi",
+	].join("\n");
+	const [t] = parseDocument(d)[0].threads;
+	expect(t.unread).toBe(true);
+	const out = markRead(d, t, "s");
+	expect(out.split("\n").filter((l) => l.endsWith("[read s]"))).toEqual([
+		"> **advisor, w:** hi [read s]",
+	]);
+});
+
+test("the old middle-dot sent mark is read as sent and kept out of the quote", () => {
+	const t = parseDocument(
+		'Para.\n\n> [!comment] human, 2026-10-02 14:05, on "Para" \u00b7 sent 2026-10-04 21:14\n> Why?\n',
+	)[0].threads[0];
+	expect(t.quote).toBe("Para");
+	expect(t.id).toBe("");
+	expect(t.mark).toEqual({ state: "sent", stamp: "2026-10-04 21:14" });
+});
+
+test("a thread with a resolved by line is resolved, never unread", () => {
+	const d =
+		'> [!comment] c1 human, w, on "q"\n> **a, w:** hi\n>\n> **resolved by human via a, 2026-10-04 11:17 EDT**';
+	const t = parseDocument(d)[0].threads[0];
+	expect(t).toMatchObject({ resolved: true, unread: false });
+});
+
+test("resolveThread appends the closing lines like bridle review resolve", () => {
+	const t = parseDocument(doc)[1].threads[0];
+	const out = resolveThread(doc, t, "human", "2026-10-04 11:17 EDT");
+	expect(out).toContain(
+		"Rewrote it.\n>\n> **resolved by human, 2026-10-04 11:17 EDT**\n\n- one",
+	);
+	expect(parseDocument(out)[1].threads[0].resolved).toBe(true);
+});
+
+test("easternStamp is ASCII Eastern with the zone", () => {
+	expect(easternStamp(new Date("2026-10-04T15:00:00Z"))).toBe(
+		"2026-10-04 11:00 EDT",
+	);
+	expect(easternStamp(new Date("2026-12-04T05:30:00Z"))).toBe(
+		"2026-12-04 00:30 EST",
+	);
 });
 
 test("markQuotes marks the quote and keeps the rest", () => {

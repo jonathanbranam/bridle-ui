@@ -4,7 +4,7 @@ title = "t4rf: login form follows web standards so password managers fill and sa
 kind = "bug"
 state = "integrated"
 created_at = "2026-10-04T22:09:44.293Z"
-updated_at = "2026-10-04T22:18:45.036517Z"
+updated_at = "2026-10-04T22:19:00.145204Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -42,3 +42,6 @@ done: login form now recognised by password managers; 9c562dbeccf3565349466f7824
 
 ### note · agent:manager-1 · 2026-10-04T22:18:45.036Z
 integrated: 5ff435495328bced3d097648e19eb8d97bfaf0de (branch bridle/login-fields)
+
+### note · agent:manager-1 · 2026-10-04T22:19:00.145Z
+cleanup: removed agent login-fields, branch bridle/login-fields

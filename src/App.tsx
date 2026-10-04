@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Navigate, NavLink, Route, Routes } from "react-router";
 import { logout, session } from "./api/client";
 import type { SessionInfo } from "./api/generated/SessionInfo";
 import { DocumentView } from "./Document";
@@ -10,7 +11,6 @@ import { TimeView } from "./Time";
 export function App() {
 	const [user, setUser] = useState<SessionInfo | null>();
 	const [error, setError] = useState<string>();
-	const [page, setPage] = useState<"todo" | "time" | "doc">("todo");
 
 	// Stable, or ItemsView would refetch on every App render.
 	const loggedOut = useCallback(() => setUser(null), []);
@@ -45,22 +45,37 @@ export function App() {
 			)}
 			{user && (
 				<nav className="flex gap-2">
-					{(["todo", "time", "doc"] as const).map((p) => (
-						<button
-							key={p}
-							type="button"
-							aria-pressed={page === p}
-							className={`rounded border px-3 py-1 ${page === p ? "bg-gray-900 text-white" : ""}`}
-							onClick={() => setPage(p)}
+					{(
+						[
+							["/", "To-dos"],
+							["/time", "Time"],
+							["/document", "Document"],
+						] as const
+					).map(([to, label]) => (
+						<NavLink
+							key={to}
+							to={to}
+							end
+							className={({ isActive }) =>
+								`rounded border px-3 py-1 ${isActive ? "bg-gray-900 text-white" : ""}`
+							}
 						>
-							{{ todo: "To-dos", time: "Time", doc: "Document" }[p]}
-						</button>
+							{label}
+						</NavLink>
 					))}
 				</nav>
 			)}
-			{user && page === "todo" && <ItemsView onLoggedOut={loggedOut} />}
-			{user && page === "doc" && <DocumentView onLoggedOut={loggedOut} />}
-			{user && page === "time" && <TimeView onLoggedOut={loggedOut} />}
+			{user && (
+				<Routes>
+					<Route path="/" element={<ItemsView onLoggedOut={loggedOut} />} />
+					<Route path="/time" element={<TimeView onLoggedOut={loggedOut} />} />
+					<Route
+						path="/document"
+						element={<DocumentView onLoggedOut={loggedOut} />}
+					/>
+					<Route path="*" element={<Navigate to="/" replace />} />
+				</Routes>
+			)}
 		</main>
 	);
 }

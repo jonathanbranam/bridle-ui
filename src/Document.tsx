@@ -1,4 +1,5 @@
 import { type ReactNode, useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "react-router";
 import { readDocument, requestReview, writeDocument } from "./api/client";
 import type { Document } from "./api/generated/Document";
 import {
@@ -119,24 +120,33 @@ export function DocumentView({ onLoggedOut }: Props) {
 		[onLoggedOut],
 	);
 
-	useEffect(() => {
-		// Remember nothing between visits, but let the address bar name a document: ?doc=project:path
-		const q = new URLSearchParams(window.location.search).get("doc");
-		if (q?.includes(":")) {
-			const i = q.indexOf(":");
-			setProject(q.slice(0, i));
-			setPath(q.slice(i + 1));
-		}
-	}, []);
+	// The open document lives in the query (not the path: the gateway 404s paths with an
+	// extension), so a refresh or a shared link reopens it.
+	const [params, setParams] = useSearchParams();
+	const qProject = params.get("project");
+	const qPath = params.get("path");
 
-	const open = async (e: { preventDefault: () => void }) => {
+	useEffect(() => {
+		if (!qProject || !qPath) return;
+		setProject(qProject);
+		setPath(qPath);
+		let stale = false;
+		readDocument(qProject, qPath).then((r) => {
+			if (stale) return;
+			if (r.ok) {
+				setDoc(r.value);
+				setError(undefined);
+				setPending(undefined);
+			} else fail(r);
+		});
+		return () => {
+			stale = true;
+		};
+	}, [qProject, qPath, fail]);
+
+	const open = (e: { preventDefault: () => void }) => {
 		e.preventDefault();
-		const r = await readDocument(project, path);
-		if (r.ok) {
-			setDoc(r.value);
-			setError(undefined);
-			setPending(undefined);
-		} else fail(r);
+		setParams({ project, path });
 	};
 
 	// The write carries the hash we read; on success the new hash is the base for the next edit.

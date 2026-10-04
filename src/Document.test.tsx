@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router";
 import { afterEach, expect, test, vi } from "vitest";
 import { DocumentView } from "./Document";
 
@@ -42,7 +43,11 @@ function stub(error?: string) {
 
 async function openDoc() {
 	const user = userEvent.setup();
-	render(<DocumentView onLoggedOut={() => {}} />);
+	render(
+		<MemoryRouter>
+			<DocumentView onLoggedOut={() => {}} />
+		</MemoryRouter>,
+	);
 	await user.type(screen.getByLabelText("Project"), "p");
 	await user.type(screen.getByLabelText("Path"), "a.md");
 	await user.click(screen.getByRole("button", { name: "Open" }));

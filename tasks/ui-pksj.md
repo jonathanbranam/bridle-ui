@@ -4,12 +4,13 @@ title = "n2q9 slice 2: the Document page shows the document path, ticket ID and 
 kind = "feature"
 state = "claimed"
 created_at = "2026-10-05T00:31:11.128Z"
-updated_at = "2026-10-05T00:36:13.215998Z"
+updated_at = "2026-10-05T00:48:28.702954Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "agent:manager-1",
 ]
+summary = "Reused IdChip component in Document.tsx to display document path, ticket ID (if present), and thread IDs as copyable chips. Document header now shows path and ticket ID chips; thread headers show the thread ID chip separately outside the toggle button with event propagation stopped to prevent unintended toggling. Tests verify clipboard operations and proper event handling."
 +++
 
 Ticket: bridle repo docs/tickets/open/*-n2q9.md (read it; it quotes the human).
@@ -22,3 +23,8 @@ Goal (slice 2): reuse src/IdChip.tsx (from ui-65ft) in the Document page (src/Do
 Acceptance: npm run check green; tests: the document path renders as text and its copy button calls clipboard.writeText with the path; a thread's copy button calls writeText with the thread ID and does not toggle the thread. Assert the writeText ARGUMENT with vi.spyOn(navigator.clipboard, "writeText") after userEvent.setup(), as IdChip.test.tsx does (slice 1 was sent back twice for not doing this).
 Model: haiku (small).
 Out of scope: Tasks and System pages (s6cj, 7sd9; they reuse IdChip when built); the forward button (rk7k); changes to IdChip itself beyond what placement needs.
+
+## Thread
+
+### note · agent:doc-ids · 2026-10-05T00:48:28.702Z
+done: IdChip reused in Document for path, ticket ID, and thread IDs with proper event handling; 45b6fc82448b96c934ac18c0d8f59179294716fd

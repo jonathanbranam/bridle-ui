@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { type Action, act, items } from "./api/client";
 import type { Items as ItemsData } from "./api/generated/Items";
+import { IdChip } from "./IdChip";
 
 type Props = { onLoggedOut: () => void };
 
@@ -61,6 +62,7 @@ export function ItemsView({ onLoggedOut }: Props) {
 								<p className="font-medium">
 									{d.title} <Badge priority={d.priority} />
 								</p>
+								<IdChip id={d.task_id} />
 								<p className="text-sm text-gray-500">asked by {d.asked_by}</p>
 								<p className="my-2 whitespace-pre-wrap">{d.question}</p>
 								<AnswerForm
@@ -74,6 +76,7 @@ export function ItemsView({ onLoggedOut }: Props) {
 								<p className="font-medium">
 									{t.title} <Badge priority={t.priority} />
 								</p>
+								<IdChip id={t.task_id} />
 								{t.body && (
 									<p className="my-2 whitespace-pre-wrap text-sm">{t.body}</p>
 								)}

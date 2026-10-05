@@ -117,3 +117,27 @@ test("answer sends the text and refetches", async () => {
 	expect(posts()[0][0]).toBe("/api/v1/projects/alpha/tasks/a-1/answer");
 	expect(JSON.parse(posts()[0][1]?.body as string)).toEqual({ text: "blue" });
 });
+
+test("to-do and question each render their task ID as text", async () => {
+	setup();
+	await screen.findByText("Buy milk");
+	expect(screen.getByText("a-2")).toBeInTheDocument();
+	expect(screen.getByText("a-1")).toBeInTheDocument();
+});
+
+test("copy button has aria-label with the task ID", async () => {
+	setup();
+	await screen.findByText("Buy milk");
+	expect(screen.getByRole("button", { name: "Copy a-2" })).toBeInTheDocument();
+	expect(screen.getByRole("button", { name: "Copy a-1" })).toBeInTheDocument();
+});
+
+test("copy button for to-do task calls clipboard.writeText with task ID", async () => {
+	setup();
+	const user = userEvent.setup();
+	const writeText = vi.spyOn(navigator.clipboard, "writeText");
+	await screen.findByText("Buy milk");
+	const copyButton = screen.getByRole("button", { name: "Copy a-2" });
+	await user.click(copyButton);
+	expect(writeText).toHaveBeenCalledWith("a-2");
+});

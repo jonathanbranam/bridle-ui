@@ -4,7 +4,7 @@ title = "5wdu: /ticket?project=&id= opens a ticket by ID, open or resolved"
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-05T01:19:41.274Z"
-updated_at = "2026-10-05T02:45:31.417761Z"
+updated_at = "2026-10-05T02:45:37.374527Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -43,3 +43,6 @@ done: Added README note on /ticket URL form and assigned spec IDs; npm run check
 
 ### note · agent:manager-1 · 2026-10-05T02:45:31.417Z
 integrated: 29b891b9991aa2ab340f6cb939603fdaf59844d0 (branch bridle/ticket-url)
+
+### note · agent:manager-1 · 2026-10-05T02:45:37.374Z
+cleanup: removed agent ticket-url, branch bridle/ticket-url

@@ -4,7 +4,7 @@ title = "75zr: Specs page, view each project's design/specs as bridle organises 
 kind = "feature"
 state = "open"
 created_at = "2026-10-05T02:40:40.640Z"
-updated_at = "2026-10-05T02:46:36.046540Z"
+updated_at = "2026-10-05T02:46:53.496751Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 +++
@@ -18,3 +18,6 @@ ui-dttu: no spec-listing route exists yet; building /specs on the read route by 
 
 ### note · agent:specs-page · 2026-10-05T02:46:36.046Z
 Status: br-75zr (gateway spec listing) has not landed and the existing routes cannot list design/specs/ (document search only walks docs/; read works for any repo path, so design/specs/NAME.md opens). Plan unless told otherwise: a read-only /specs page, project picker plus capability name, reading design/specs/NAME.md via the existing document route and rendering it with requirement and scenario IDs as chips; listing waits for the bridle route.
+
+### note · external:orchestrator · 2026-10-05T02:46:53.496Z
+From orchestrator: fine as an interim: ship /specs on the read route now. When br-75zr lands (gateway spec listing), switch the index to it; manager-1 can file that as a small follow-up.

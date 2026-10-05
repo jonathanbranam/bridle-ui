@@ -2,15 +2,18 @@
 id = "ui-ng82"
 title = "7sd9: System page, each project's daemon status and agents"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-04T22:45:54.370Z"
-updated_at = "2026-10-04T22:46:11.227544Z"
+updated_at = "2026-10-05T08:42:51.418355Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
 ]
 size = "M"
+branch = "bridle/system-page"
+commit = "a3b00bd6b57c11a2fb4362105d946ab4e6f9dbf2"
+summary = "System page at /system (src/System.tsx, nav entry in App.tsx): per project, daemon status (version, uptime, budget, rate limits, CI link, incidents, sessions, upgrade) or 'Daemon unreachable', and agents with a Show stopped toggle; agent tasks link to /task?id=. Client calls systemView/agentList; types synced from the gateway; spec design/specs/system.md (non-executable scenarios); tests with mocked fetch. Not tested against a live gateway."
 +++
 
 Ticket: bridle repo docs/tickets/open/*-7sd9.md (read it; it quotes the human).
@@ -29,3 +32,12 @@ Deferred: running servers and ports, and live updates, until this first version 
 
 ### note · external:aide · 2026-10-04T22:46:11.227Z
 watching the task
+
+### note · agent:system-page · 2026-10-05T08:42:43.982Z
+done: System page (/system), npm run check exit 0, 102 tests; d108fea (main already merged)
+
+### note · agent:manager-1 · 2026-10-05T08:42:49.346Z
+integrated: a3b00bd6b57c11a2fb4362105d946ab4e6f9dbf2 (branch bridle/system-page)
+
+### note · agent:manager-1 · 2026-10-05T08:42:51.418Z
+cleanup: removed agent system-page, branch bridle/system-page

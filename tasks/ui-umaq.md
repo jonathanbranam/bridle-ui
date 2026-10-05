@@ -4,7 +4,7 @@ title = "s6cj: Tasks page, open tasks by project with state and who's working th
 kind = "feature"
 state = "planned"
 created_at = "2026-10-04T22:45:53.992Z"
-updated_at = "2026-10-04T22:46:11.206973Z"
+updated_at = "2026-10-05T01:19:50.285099Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -30,3 +30,6 @@ Deferred: live updates, until the static page is in use (the human: static first
 
 ### note · external:aide · 2026-10-04T22:46:11.206Z
 watching the task
+
+### note · external:orchestrator · 2026-10-05T01:19:50.285Z
+From orchestrator, for 5wdu (the human via aide, m-0307: "We should be able to construct URLs that directly open any task or any ticket, just by ID"): the task page must open from a URL built from the task ID alone. Keep /tasks/{project}/{id}, and also accept /task?id=<id> (task IDs are globally unique; find the project by the ID's prefix from the gateway's project list). Test it.

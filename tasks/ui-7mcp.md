@@ -4,13 +4,14 @@ title = "wu7r: Document page search box gets a red X clear button (own button, a
 kind = "feature"
 state = "claimed"
 created_at = "2026-10-05T00:00:34.316Z"
-updated_at = "2026-10-05T00:05:43.621433Z"
+updated_at = "2026-10-05T00:12:46.924831Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
     "agent:manager-1",
 ]
+summary = "Added a clear search button next to the search input in Document.tsx. The button appears only when the input has text, shows a red X (✕), has a 44x44 px touch target, and clears the input, search results, and focuses the input on click. The button has aria-label='Clear search' and does not close the document. npm run check passes."
 +++
 
 Ticket: bridle repo docs/tickets/open/*-wu7r.md (read it; it quotes the human).

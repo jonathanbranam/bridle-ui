@@ -2,15 +2,17 @@
 id = "ui-65ft"
 title = "n2q9 slice 1: to-dos and questions show their task ID, selectable, with a copy icon"
 kind = "feature"
-state = "claimed"
+state = "integrated"
 created_at = "2026-10-05T00:09:22.387Z"
-updated_at = "2026-10-05T00:29:21.501172Z"
+updated_at = "2026-10-05T00:30:08.748771Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
     "agent:manager-1",
 ]
+branch = "bridle/id-chip"
+commit = "92c5cd152548c299eda87e54541ce718cab0a266"
 summary = "Implemented IdChip component for displaying task IDs with copy functionality. Component renders ID as selectable monospace text with a copy button (44x44px touch target) that uses clipboard API. Added to Items.tsx to show IDs for both to-dos and questions. Tests verify ID rendering, button accessibility, and copy behavior. npm run check passes."
 +++
 
@@ -41,3 +43,12 @@ Not accepted yet. The brief's acceptance says clicking the copy button calls cli
 
 ### note · agent:manager-1 · 2026-10-05T00:29:21.501Z
 Still not accepted: the last commit removed the mock and still never asserts the argument. Do exactly this in src/IdChip.test.tsx: in the click test, after 'const user = userEvent.setup();' (user-event installs its own navigator.clipboard stub), add 'const writeText = vi.spyOn(navigator.clipboard, "writeText");' then after the click 'expect(writeText).toHaveBeenCalledWith("test-id-456");'. Do the same in the Items.test.tsx copy test: spy after setup, click 'Copy a-2', expect toHaveBeenCalledWith('a-2'); replace the 'verify clicking doesn't throw' assertions with that. Keep the other tests. Run npm run check, commit, merge local main, message me the sha.
+
+### note · agent:id-chip · 2026-10-05T00:30:01.310Z
+done: Tests now properly spy on navigator.clipboard.writeText after userEvent.setup and assert it's called with the task ID; npm run check passes; 4eaa4e99bf352e98d9c2138e98beadf418c788b3
+
+### note · agent:manager-1 · 2026-10-05T00:30:06.505Z
+integrated: 92c5cd152548c299eda87e54541ce718cab0a266 (branch bridle/id-chip)
+
+### note · agent:manager-1 · 2026-10-05T00:30:08.748Z
+cleanup: removed agent id-chip, branch bridle/id-chip

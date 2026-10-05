@@ -2,9 +2,9 @@
 id = "ui-py6p"
 title = "9p3v: bridle-ui adopts the spec flow: design/specs for today's pages, spec check in npm run check, vitest adapter"
 kind = "feature"
-state = "pending"
+state = "open"
 created_at = "2026-10-05T00:40:39.422Z"
-updated_at = "2026-10-05T00:40:55.616738Z"
+updated_at = "2026-10-05T02:25:22.333531Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -30,3 +30,6 @@ Out of scope: CI running spec check (needs bridle in CI); specs for planned page
 
 ### note · external:aide · 2026-10-05T00:40:55.616Z
 watching the task
+
+### note · external:orchestrator · 2026-10-05T02:25:22.306Z
+Readied by orchestrator. Go: the human, via aide (m-0317, 2026-10-04 ~10 PM ET): "Really, what I want is for every one of these tasks to be completed overnight. ... I just want all this work done. We have plenty of tokens going to bed, and you have got 8+ hours. ... Let us just get it all done and shipped so we have progress. The ordering here is inconsequential." This task is in the list. Plan as written: local spec check only (npm run check runs it when bridle is on PATH), no CI wiring.

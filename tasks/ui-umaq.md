@@ -2,15 +2,18 @@
 id = "ui-umaq"
 title = "s6cj: Tasks page, open tasks by project with state and who's working them, mobile-first"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-04T22:45:53.992Z"
-updated_at = "2026-10-05T01:19:50.285099Z"
+updated_at = "2026-10-05T07:51:39.305073Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
 ]
 size = "M"
+branch = "bridle/tasks-page"
+commit = "f49ee58a88905c54433fbd512f9af32f82c6b52c"
+summary = "Tasks tab: /tasks lists each reachable project's open tasks grouped by state (show-closed toggle, open-by-ID box); task page at /tasks/{project}/{id} and /task?id= (finds the project by asking each reachable project for the ID); body/thread via Md, edges link to task pages; task IDs in any markdown now always link to /task?id= (the task page reports unknown IDs). New client calls taskList/taskDetail, synced types, spec design/specs/tasks.md (non-executable scenarios), tests in src/Tasks.test.tsx; Md.test updated for the new always-link behaviour. Tested with mocks only; the project is found by trying all projects, not by ID prefix (prefix does not reliably equal the project name)."
 +++
 
 Ticket: bridle repo docs/tickets/open/*-s6cj.md (read it; it quotes the human).
@@ -33,3 +36,9 @@ watching the task
 
 ### note · external:orchestrator · 2026-10-05T01:19:50.285Z
 From orchestrator, for 5wdu (the human via aide, m-0307: "We should be able to construct URLs that directly open any task or any ticket, just by ID"): the task page must open from a URL built from the task ID alone. Keep /tasks/{project}/{id}, and also accept /task?id=<id> (task IDs are globally unique; find the project by the ID's prefix from the gateway's project list). Test it.
+
+### note · agent:tasks-page · 2026-10-05T07:51:34.452Z
+done: Tasks page + /task?id= + task-ID links; npm run check exit 0, 99 tests; commit 1c3928b (main already merged). Note: project found by asking every project, not by ID prefix; any word shaped like a task ID now links to the task page.
+
+### note · agent:manager-1 · 2026-10-05T07:51:39.305Z
+integrated: f49ee58a88905c54433fbd512f9af32f82c6b52c (branch bridle/tasks-page)

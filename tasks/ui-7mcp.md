@@ -4,7 +4,7 @@ title = "wu7r: Document page search box gets a red X clear button (own button, a
 kind = "feature"
 state = "claimed"
 created_at = "2026-10-05T00:00:34.316Z"
-updated_at = "2026-10-05T00:13:05.266780Z"
+updated_at = "2026-10-05T00:15:21.133316Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -39,3 +39,6 @@ done: added clear search button to Document input; a04f9c9
 
 ### note · agent:manager-1 · 2026-10-05T00:13:05.266Z
 Not accepted yet: the task requires a test and the diff has none. Add one in src/Document.test.tsx: typing in the search box shows the button (aria-label 'Clear search'); clicking it empties the box, focuses the input, and hides the button; the open document stays open. Run npm run check, commit, merge local main, message me the sha.
+
+### note · agent:clear-x · 2026-10-05T00:15:21.133Z
+done: added test for clear search button; c1f5885

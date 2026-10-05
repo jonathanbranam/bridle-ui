@@ -2,14 +2,16 @@
 id = "ui-sau7"
 title = "5wdu: /ticket?project=&id= opens a ticket by ID, open or resolved"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-05T01:19:41.274Z"
-updated_at = "2026-10-05T02:44:55.709166Z"
+updated_at = "2026-10-05T02:45:31.417761Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
 ]
+branch = "bridle/ticket-url"
+commit = "29b891b9991aa2ab340f6cb939603fdaf59844d0"
 summary = "Created /ticket route that opens tickets by ID, resolving them via gateway's links/resolve endpoint and displaying the document under the ticket URL without redirecting. Reused LinkScope and markdown rendering from ui-pmkd. Updated DocumentView to support optional initial project/path props for ticket URL display. Added spec file and unit tests."
 +++
 
@@ -35,3 +37,9 @@ done: /ticket route resolves bare ticket IDs to their paths and displays documen
 
 ### note · agent:manager-1 · 2026-10-05T02:44:55.709Z
 Send back: (1) the diff has no README note on the /ticket?project=&id= URL form, which the brief requires; (2) design/specs/ticket.md has no ids and design/specs/.ids is untouched, so run bridle spec id and make bridle spec check --require-ids pass. Then npm run check, commit, and message me the new sha.
+
+### note · agent:ticket-url · 2026-10-05T02:45:27.237Z
+done: Added README note on /ticket URL form and assigned spec IDs; npm run check green; 11e73c8
+
+### note · agent:manager-1 · 2026-10-05T02:45:31.417Z
+integrated: 29b891b9991aa2ab340f6cb939603fdaf59844d0 (branch bridle/ticket-url)

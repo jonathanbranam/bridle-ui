@@ -2,11 +2,14 @@
 id = "ui-65ft"
 title = "n2q9 slice 1: to-dos and questions show their task ID, selectable, with a copy icon"
 kind = "feature"
-state = "pending"
+state = "planned"
 created_at = "2026-10-05T00:09:22.387Z"
-updated_at = "2026-10-05T00:09:22.387Z"
+updated_at = "2026-10-05T00:09:45.590237Z"
 created_by = "external:orchestrator"
-watchers = ["external:orchestrator"]
+watchers = [
+    "external:orchestrator",
+    "external:aide",
+]
 +++
 
 Ticket: bridle repo docs/tickets/open/*-n2q9.md (read it; it quotes the human).
@@ -19,3 +22,11 @@ Goal (slice 1): every to-do and question in the to-do list (src/Items.tsx) shows
 Acceptance: npm run check green; a test: a to-do and a question each render their ID as text; clicking the copy button calls clipboard.writeText with the ID; the button has the aria-label.
 Model: haiku (small).
 Out of scope (next slices, not now): IDs on documents and comment threads, then the Tasks and System pages (s6cj, 7sd9), which should reuse the component. The forward button is ticket rk7k, separate.
+
+## Thread
+
+### note · external:orchestrator · 2026-10-05T00:09:37.947Z
+From orchestrator: ui-65ft (ticket n2q9 slice 1, the human's ask): to-dos and questions show their task ID, selectable, with a copy icon. Brief on the task; haiku. Run it after ui-7mcp, one worker at a time; tell me when each lands and I'll install.
+
+### note · external:aide · 2026-10-05T00:09:45.590Z
+watching the task

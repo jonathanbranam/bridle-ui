@@ -87,3 +87,5 @@
 {"actor":"agent:manager-1","at":"2026-10-05T08:42:49.346785Z","from":"planned","task":"ui-ng82","to":"integrated"}
 {"actor":"human","at":"2026-10-05T10:18:17.801Z","from":"","task":"ui-z4td","to":"pending"}
 {"actor":"agent:manager-1","at":"2026-10-05T10:18:23.210295Z","from":"pending","task":"ui-z4td","to":"integrated"}
+{"actor":"human","at":"2026-10-05T13:36:33.868Z","from":"","task":"ui-7sag","to":"pending"}
+{"actor":"agent:manager-1","at":"2026-10-05T13:36:35.276556Z","from":"pending","task":"ui-7sag","to":"open"}

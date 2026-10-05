@@ -5,6 +5,7 @@ import type { SessionInfo } from "./api/generated/SessionInfo";
 import { DocumentView } from "./Document";
 import { ItemsView } from "./Items";
 import { Login } from "./Login";
+import { SpecsView } from "./SpecPage";
 import { TicketView } from "./Ticket";
 import { TimeView } from "./Time";
 
@@ -53,6 +54,7 @@ export function App() {
 							["/", "To-dos"],
 							["/time", "Time"],
 							["/document", "Document"],
+							["/specs", "Specs"],
 						] as const
 					).map(([to, label]) => (
 						<NavLink
@@ -75,6 +77,10 @@ export function App() {
 					<Route
 						path="/document"
 						element={<DocumentView onLoggedOut={loggedOut} />}
+					/>
+					<Route
+						path="/specs"
+						element={<SpecsView onLoggedOut={loggedOut} />}
 					/>
 					<Route
 						path="/ticket"

@@ -11,6 +11,7 @@ import {
 } from "../tools/vitest-bridle/index.mjs";
 import { DocumentView } from "./Document";
 import { IdChip } from "./IdChip";
+import { SpecsView } from "./SpecPage";
 
 function hasBridle() {
 	try {
@@ -69,6 +70,7 @@ function renderDocument() {
 // s-50c7 (IdChip)
 // s-839b (Document)
 // s-8cdc (Document)
+// s-6e3b (Specs)
 const steps = createSteps();
 
 steps.given(/^an ID chip showing the ID "(.+)"$/, (w, id) => {
@@ -123,6 +125,44 @@ steps.when(/^the human selects text inside the body by touch$/, () => {
 });
 steps.then(/^the comment box opens$/, async () => {
 	await waitFor(() => expect(screen.getByLabelText("Comment")).toBeTruthy());
+});
+
+steps.given(/^the Specs page$/, () => {
+	vi.stubGlobal(
+		"fetch",
+		vi.fn(async (url: string) => {
+			if (url.endsWith("/projects"))
+				return new Response(
+					JSON.stringify({ projects: [{ project: "p", reachable: true }] }),
+				);
+			if (url.includes("/links/resolve"))
+				return new Response(JSON.stringify({ links: [] }));
+			return new Response(
+				JSON.stringify({
+					project: "p",
+					path: "design/specs/demo.md",
+					content: "### Requirement: R  {#r-1111}\n",
+					hash: "h",
+					branch: "main",
+				}),
+			);
+		}),
+	);
+});
+steps.when(
+	/^the human opens the capability "(.+)" in project "(.+)"$/,
+	(_w, cap, project) => {
+		render(
+			<MemoryRouter
+				initialEntries={[`/specs?project=${project}&capability=${cap}`]}
+			>
+				<SpecsView onLoggedOut={() => {}} />
+			</MemoryRouter>,
+		);
+	},
+);
+steps.then(/^the requirement ID "(.+)" is shown as a chip$/, async (_w, id) => {
+	expect(await screen.findByText(id)).toBeTruthy();
 });
 
 if (hasBridle()) {

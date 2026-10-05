@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { type Action, act, items } from "./api/client";
 import type { Items as ItemsData } from "./api/generated/Items";
 import { IdChip } from "./IdChip";
+import { LinkScope, Md } from "./Md";
 
 type Props = { onLoggedOut: () => void };
 
@@ -47,50 +48,63 @@ export function ItemsView({ onLoggedOut }: Props) {
 				<p className="text-gray-500">Nothing for you.</p>
 			)}
 			{data?.projects.map((p) => (
-				<section key={`${p.machine}/${p.project}`} className="space-y-3">
-					<h2 className="text-lg font-semibold">
-						{p.project}
-						{p.machine && (
-							<span className="ml-2 text-sm font-normal text-gray-500">
-								{p.machine}
-							</span>
-						)}
-					</h2>
-					<ul className="space-y-3">
-						{p.decisions.map((d) => (
-							<li key={d.task_id} className="rounded border p-3">
-								<p className="font-medium">
-									{d.title} <Badge priority={d.priority} />
-								</p>
-								<IdChip id={d.task_id} />
-								<p className="text-sm text-gray-500">asked by {d.asked_by}</p>
-								<p className="my-2 whitespace-pre-wrap">{d.question}</p>
-								<AnswerForm
-									label={`Answer ${d.title}`}
-									onSubmit={(t) => run(p.project, d.task_id, "answer", t)}
-								/>
-							</li>
-						))}
-						{p.todos.map((t) => (
-							<li key={t.task_id} className="rounded border p-3">
-								<p className="font-medium">
-									{t.title} <Badge priority={t.priority} />
-								</p>
-								<IdChip id={t.task_id} />
-								{t.body && (
-									<p className="my-2 whitespace-pre-wrap text-sm">{t.body}</p>
-								)}
-								<TodoActions
-									title={t.title}
-									onDone={() => run(p.project, t.task_id, "done")}
-									onDecline={(reason) =>
-										run(p.project, t.task_id, "drop", reason)
-									}
-								/>
-							</li>
-						))}
-					</ul>
-				</section>
+				<LinkScope
+					key={`${p.machine}/${p.project}`}
+					project={p.project}
+					texts={[
+						...p.decisions.map((d) => d.question),
+						...p.todos.map((t) => t.body),
+					]}
+				>
+					<section className="space-y-3">
+						<h2 className="text-lg font-semibold">
+							{p.project}
+							{p.machine && (
+								<span className="ml-2 text-sm font-normal text-gray-500">
+									{p.machine}
+								</span>
+							)}
+						</h2>
+						<ul className="space-y-3">
+							{p.decisions.map((d) => (
+								<li key={d.task_id} className="rounded border p-3">
+									<p className="font-medium">
+										{d.title} <Badge priority={d.priority} />
+									</p>
+									<IdChip id={d.task_id} />
+									<p className="text-sm text-gray-500">asked by {d.asked_by}</p>
+									<p className="my-2 whitespace-pre-wrap">
+										<Md text={d.question} />
+									</p>
+									<AnswerForm
+										label={`Answer ${d.title}`}
+										onSubmit={(t) => run(p.project, d.task_id, "answer", t)}
+									/>
+								</li>
+							))}
+							{p.todos.map((t) => (
+								<li key={t.task_id} className="rounded border p-3">
+									<p className="font-medium">
+										{t.title} <Badge priority={t.priority} />
+									</p>
+									<IdChip id={t.task_id} />
+									{t.body && (
+										<p className="my-2 whitespace-pre-wrap text-sm">
+											<Md text={t.body} />
+										</p>
+									)}
+									<TodoActions
+										title={t.title}
+										onDone={() => run(p.project, t.task_id, "done")}
+										onDecline={(reason) =>
+											run(p.project, t.task_id, "drop", reason)
+										}
+									/>
+								</li>
+							))}
+						</ul>
+					</section>
+				</LinkScope>
 			))}
 			{data?.unreachable.map((u) => (
 				<p

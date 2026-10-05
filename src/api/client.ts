@@ -11,7 +11,9 @@ import type { InteractionBucket } from "./generated/InteractionBucket";
 import type { InteractionGroup } from "./generated/InteractionGroup";
 import type { InteractionReport } from "./generated/InteractionReport";
 import type { Items } from "./generated/Items";
+import type { LinkResolveRequest } from "./generated/LinkResolveRequest";
 import type { Projects } from "./generated/Projects";
+import type { ResolvedLinks } from "./generated/ResolvedLinks";
 import type { ReviewRequest } from "./generated/ReviewRequest";
 import type { ReviewResult } from "./generated/ReviewResult";
 import type { SessionInfo } from "./generated/SessionInfo";
@@ -103,6 +105,15 @@ export const searchDocuments = (project: string, q: string) =>
 // The path keeps its slashes: the gateway route is a catch-all.
 const documentPath = (project: string, path: string) =>
 	`/projects/${encodeURIComponent(project)}/documents/${path.split("/").map(encodeURIComponent).join("/")}`;
+
+/** Which link targets (docs paths, ticket stems, IDs) are documents in `project`. */
+export const resolveLinks = (project: string, targets: string[]) => {
+	const body: LinkResolveRequest = { targets };
+	return call<ResolvedLinks>(
+		`/projects/${encodeURIComponent(project)}/links/resolve`,
+		{ method: "POST", body },
+	);
+};
 
 export const readDocument = (project: string, path: string) =>
 	call<Document>(documentPath(project, path));

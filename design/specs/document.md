@@ -81,3 +81,37 @@ The page SHALL offer Request review, posting the path with the human's resend ch
 *Verification*: **non-executable**
 
 Request review posts the path and resend flag, shows the reply, and reloads.
+
+### Requirement: Documents render as markdown with front matter and links  {#r-4ac7}
+
+The page SHALL render a document's markdown (GFM), show a leading `---` front matter block as a key/value table for any file, and link URLs, `[[wiki links]]` (`target` or `target|label`), `docs/...` paths, ticket IDs and ticket-made task IDs, in the document, its threads and the front matter values. A path, wiki link or ID links to the document only when the gateway's `links/resolve` finds it; otherwise it stays plain text. The same linking applies to to-do and question text on the home page.
+
+#### Scenario: Front matter is a table  {#s-6d3e}
+
+*Verification*: **non-executable**
+
+A document starting with `---`, `title: T`, `see: [ab3d]`, `---` shows a table with the rows "title" and "see", and no raw `---` lines.
+
+#### Scenario: A URL is a link  {#s-7a4b}
+
+*Verification*: **non-executable**
+
+The text "see https://example.com/x" shows a link to that URL.
+
+#### Scenario: A resolved wiki link opens the document  {#s-8c5f}
+
+*Verification*: **non-executable**
+
+`[[docs/design/cli|the CLI]]` resolving to docs/design/cli.md shows a link "the CLI" to `/document?project=p&path=docs%2Fdesign%2Fcli.md`; resolving to null shows plain "the CLI".
+
+#### Scenario: A ticket ID is a link when it resolves  {#s-9e6a}
+
+*Verification*: **non-executable**
+
+The ID ab3d, when resolved, links to its ticket; when unresolved it stays plain text.
+
+#### Scenario: Highlighting still works over a link  {#s-2b7c}
+
+*Verification*: **non-executable**
+
+Selecting text in a list item that contains a link opens the comment box at that item.

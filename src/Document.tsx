@@ -1,10 +1,4 @@
-import {
-	type ReactNode,
-	useCallback,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router";
 import {
 	projects as listProjects,
@@ -28,25 +22,15 @@ import {
 	resolveThread,
 	type Thread,
 } from "./doc/comments";
+import { parseFrontMatter } from "./doc/links";
 import { IdChip } from "./IdChip";
+import { LinkScope, Md } from "./Md";
 
 type Props = { onLoggedOut: () => void };
 
 function extractTicketId(path: string): string | null {
 	const match = path.match(/-([abcdefghjkmnpqrstuvwxyz23456789]{4})\.md$/);
 	return match ? match[1] : null;
-}
-
-// Only what the documents use: `code` and **bold**. A real markdown library isn't worth it yet.
-function inline(text: string): ReactNode[] {
-	return text.split(/(`[^`]+`|\*\*[^*]+\*\*)/).map((part, i) => {
-		const key = `${i}:${part}`;
-		if (part.startsWith("`") && part.length > 1)
-			return <code key={key}>{part.slice(1, -1)}</code>;
-		if (part.startsWith("**") && part.length > 4)
-			return <strong key={key}>{part.slice(2, -2)}</strong>;
-		return part;
-	});
 }
 
 // The text a comment is on is highlighted, like Google Docs. Markup spanning a highlight edge
@@ -56,12 +40,34 @@ function Marked({ text, quotes }: { text: string; quotes: string[] }) {
 		const key = `${i}:${s.text}`;
 		return s.mark ? (
 			<mark key={key} className="bg-amber-200">
-				{inline(s.text)}
+				<Md text={s.text} />
 			</mark>
 		) : (
-			<span key={key}>{inline(s.text)}</span>
+			<span key={key}>
+				<Md text={s.text} />
+			</span>
 		);
 	});
+}
+
+function FrontMatterTable({ text }: { text: string }) {
+	const { rows } = parseFrontMatter(text.split("\n"));
+	return (
+		<table className="w-full border-collapse text-sm">
+			<tbody>
+				{rows.map((r) => (
+					<tr key={r.key} className="border-b align-top">
+						<th className="py-1 pr-3 text-left font-medium text-gray-600">
+							{r.key}
+						</th>
+						<td className="py-1">
+							<Md text={r.value} />
+						</td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+	);
 }
 
 function BlockText({ block, quotes }: { block: Block; quotes: string[] }) {
@@ -78,6 +84,8 @@ function BlockText({ block, quotes }: { block: Block; quotes: string[] }) {
 			);
 		case "item":
 			return <p className="pl-4">• {t}</p>;
+		case "frontmatter":
+			return <FrontMatterTable text={block.text} />;
 		case "code":
 			return (
 				<pre className="overflow-x-auto rounded bg-gray-100 p-2 text-sm">
@@ -151,7 +159,7 @@ function ThreadView({
 				thread.body.map((l, i) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: lines have no identity
 					<p key={i} className="min-h-2">
-						{inline(l.text)}
+						<Md text={l.text} />
 						<MarkView mark={l.mark} />
 					</p>
 				))}
@@ -356,154 +364,164 @@ export function DocumentView({ onLoggedOut }: Props) {
 	const blocks = doc ? parseDocument(doc.content) : [];
 
 	return (
-		<div className="space-y-4">
-			<form className="flex flex-wrap items-end gap-2" onSubmit={open}>
-				<label className="flex flex-col text-sm">
-					Project
-					<select
-						className="rounded border px-2 py-1"
-						value={project}
-						onChange={(e) => setProject(e.target.value)}
-					>
-						{[...new Set([...known, project])]
-							.filter((n) => n !== "")
-							.map((n) => (
-								<option key={n}>{n}</option>
+		<LinkScope
+			project={doc?.project ?? ""}
+			texts={blocks.flatMap((b) => [
+				b.text,
+				...b.threads.flatMap((t) => t.body.map((l) => l.text)),
+			])}
+		>
+			<div className="space-y-4">
+				<form className="flex flex-wrap items-end gap-2" onSubmit={open}>
+					<label className="flex flex-col text-sm">
+						Project
+						<select
+							className="rounded border px-2 py-1"
+							value={project}
+							onChange={(e) => setProject(e.target.value)}
+						>
+							{[...new Set([...known, project])]
+								.filter((n) => n !== "")
+								.map((n) => (
+									<option key={n}>{n}</option>
+								))}
+						</select>
+					</label>
+					<label className="flex min-w-64 flex-1 flex-col text-sm">
+						Document
+						<div className="relative">
+							<input
+								ref={pathInputRef}
+								className="rounded border px-2 py-1 w-full"
+								list="document-matches"
+								placeholder="Search tickets and docs, or paste a ticket ID"
+								value={path}
+								onChange={(e) => setPath(e.target.value)}
+							/>
+							{path && (
+								<button
+									type="button"
+									aria-label="Clear search"
+									onClick={() => {
+										setPath("");
+										setMatches([]);
+										pathInputRef.current?.focus();
+									}}
+									className="absolute right-0.5 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center text-red-600 hover:text-red-700"
+								>
+									✕
+								</button>
+							)}
+						</div>
+						<datalist id="document-matches">
+							{matches.map((m) => (
+								<option key={m} value={m} />
 							))}
-					</select>
-				</label>
-				<label className="flex min-w-64 flex-1 flex-col text-sm">
-					Document
-					<div className="relative">
-						<input
-							ref={pathInputRef}
-							className="rounded border px-2 py-1 w-full"
-							list="document-matches"
-							placeholder="Search tickets and docs, or paste a ticket ID"
-							value={path}
-							onChange={(e) => setPath(e.target.value)}
-						/>
-						{path && (
+						</datalist>
+					</label>
+					<button type="submit" className="rounded border px-3 py-1">
+						Open
+					</button>
+				</form>
+				{error && (
+					<p role="alert" className="text-red-700">
+						{error}
+					</p>
+				)}
+				{doc && (
+					<div className="space-y-2 text-sm text-gray-500">
+						<div className="flex flex-wrap items-center gap-2">
+							<IdChip id={doc.path} />
+							{(() => {
+								const ticketId = extractTicketId(doc.path);
+								return ticketId ? <IdChip id={ticketId} /> : null;
+							})()}
+							<span>on {doc.branch}. Select text to comment on it.</span>
+						</div>
+						<div className="flex flex-wrap items-center gap-2">
 							<button
 								type="button"
-								aria-label="Clear search"
-								onClick={() => {
-									setPath("");
-									setMatches([]);
-									pathInputRef.current?.focus();
-								}}
-								className="absolute right-0.5 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center text-red-600 hover:text-red-700"
+								className="rounded border px-3 py-1 text-black"
+								onClick={review}
 							>
-								✕
+								Request review
 							</button>
-						)}
-					</div>
-					<datalist id="document-matches">
-						{matches.map((m) => (
-							<option key={m} value={m} />
-						))}
-					</datalist>
-				</label>
-				<button type="submit" className="rounded border px-3 py-1">
-					Open
-				</button>
-			</form>
-			{error && (
-				<p role="alert" className="text-red-700">
-					{error}
-				</p>
-			)}
-			{doc && (
-				<div className="space-y-2 text-sm text-gray-500">
-					<div className="flex flex-wrap items-center gap-2">
-						<IdChip id={doc.path} />
-						{(() => {
-							const ticketId = extractTicketId(doc.path);
-							return ticketId ? <IdChip id={ticketId} /> : null;
-						})()}
-						<span>on {doc.branch}. Select text to comment on it.</span>
-					</div>
-					<div className="flex flex-wrap items-center gap-2">
-						<button
-							type="button"
-							className="rounded border px-3 py-1 text-black"
-							onClick={review}
-						>
-							Request review
-						</button>
-						<label className="flex items-center gap-1">
-							<input
-								type="checkbox"
-								checked={resend}
-								onChange={(e) => setResend(e.target.checked)}
-							/>
-							Resend comments already sent
-						</label>
-						{reviewed && <span role="status">{reviewed}</span>}
-					</div>
-				</div>
-			)}
-			{/* biome-ignore lint/a11y/noStaticElementInteractions: mouse selection has no keyboard twin here */}
-			<div className="space-y-2" onMouseUp={select}>
-				{blocks.map((b) => {
-					const here =
-						pending && pending.after === b.last ? pending : undefined;
-					const quotes = [
-						...b.threads.map((t) => t.quote),
-						...(here ? [here.quote] : []),
-					];
-					// Wide: the document column and a right margin, threads level with their text.
-					// Narrow: one column, the threads and the comment box right below the block.
-					return (
-						<div
-							key={b.start}
-							className="grid gap-x-6 lg:grid-cols-[minmax(0,48rem)_minmax(16rem,22rem)] lg:justify-center"
-						>
-							<div data-last={b.last}>
-								<BlockText block={b} quotes={quotes} />
-							</div>
-							<div className="space-y-2">
-								{b.threads.map((t) => (
-									<ThreadView
-										key={`${t.start}:${t.unread}:${t.resolved}`}
-										thread={t}
-										onOpen={opened}
-										onReply={replied}
-										onResolve={resolved}
-									/>
-								))}
-								{here && (
-									<div className="space-y-2 rounded border bg-white p-2 shadow">
-										<p className="text-sm italic">Comment on "{here.quote}"</p>
-										<textarea
-											aria-label="Comment"
-											className="w-full rounded border p-1"
-											value={text}
-											onChange={(e) => setText(e.target.value)}
-										/>
-										<div className="flex gap-2">
-											<button
-												type="button"
-												className="rounded border px-3 py-1"
-												onClick={submit}
-											>
-												Add comment
-											</button>
-											<button
-												type="button"
-												className="rounded border px-3 py-1"
-												onClick={() => setPending(undefined)}
-											>
-												Cancel
-											</button>
-										</div>
-									</div>
-								)}
-							</div>
+							<label className="flex items-center gap-1">
+								<input
+									type="checkbox"
+									checked={resend}
+									onChange={(e) => setResend(e.target.checked)}
+								/>
+								Resend comments already sent
+							</label>
+							{reviewed && <span role="status">{reviewed}</span>}
 						</div>
-					);
-				})}
+					</div>
+				)}
+				{/* biome-ignore lint/a11y/noStaticElementInteractions: mouse selection has no keyboard twin here */}
+				<div className="space-y-2" onMouseUp={select}>
+					{blocks.map((b) => {
+						const here =
+							pending && pending.after === b.last ? pending : undefined;
+						const quotes = [
+							...b.threads.map((t) => t.quote),
+							...(here ? [here.quote] : []),
+						];
+						// Wide: the document column and a right margin, threads level with their text.
+						// Narrow: one column, the threads and the comment box right below the block.
+						return (
+							<div
+								key={b.start}
+								className="grid gap-x-6 lg:grid-cols-[minmax(0,48rem)_minmax(16rem,22rem)] lg:justify-center"
+							>
+								<div data-last={b.last}>
+									<BlockText block={b} quotes={quotes} />
+								</div>
+								<div className="space-y-2">
+									{b.threads.map((t) => (
+										<ThreadView
+											key={`${t.start}:${t.unread}:${t.resolved}`}
+											thread={t}
+											onOpen={opened}
+											onReply={replied}
+											onResolve={resolved}
+										/>
+									))}
+									{here && (
+										<div className="space-y-2 rounded border bg-white p-2 shadow">
+											<p className="text-sm italic">
+												Comment on "{here.quote}"
+											</p>
+											<textarea
+												aria-label="Comment"
+												className="w-full rounded border p-1"
+												value={text}
+												onChange={(e) => setText(e.target.value)}
+											/>
+											<div className="flex gap-2">
+												<button
+													type="button"
+													className="rounded border px-3 py-1"
+													onClick={submit}
+												>
+													Add comment
+												</button>
+												<button
+													type="button"
+													className="rounded border px-3 py-1"
+													onClick={() => setPending(undefined)}
+												>
+													Cancel
+												</button>
+											</div>
+										</div>
+									)}
+								</div>
+							</div>
+						);
+					})}
+				</div>
 			</div>
-		</div>
+		</LinkScope>
 	);
 }

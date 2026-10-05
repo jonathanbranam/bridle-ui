@@ -35,7 +35,7 @@ export type Thread = {
 };
 
 export type Block = {
-	kind: "heading" | "item" | "code" | "para";
+	kind: "heading" | "item" | "code" | "para" | "frontmatter";
 	/** Source lines of the text itself (0-based, inclusive). */
 	start: number;
 	end: number;
@@ -133,6 +133,14 @@ export function parseDocument(content: string): Block[] {
 	) => blocks.push({ kind, start, end, text, level, last: end, threads: [] });
 
 	let i = 0;
+	// A leading `---` ... `---` block is front matter, kept as raw lines in `text`.
+	if (lines[0]?.trim() === "---") {
+		const close = lines.findIndex((l, n) => n > 0 && l.trim() === "---");
+		if (close > 0) {
+			add("frontmatter", 0, close, lines.slice(1, close).join("\n"));
+			i = close + 1;
+		}
+	}
 	while (i < lines.length) {
 		const line = lines[i];
 		if (isBlank(line)) {

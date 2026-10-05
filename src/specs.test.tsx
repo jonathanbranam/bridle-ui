@@ -1,0 +1,132 @@
+// Binds the executable scenarios in design/specs/ to tests (adapter: tools/vitest-bridle).
+// Skipped when `bridle` is not on PATH, as `npm run check` skips `check:specs`.
+import { execFileSync } from "node:child_process";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router";
+import { expect, test, vi } from "vitest";
+import {
+	createSteps,
+	registerBridleSpecs,
+} from "../tools/vitest-bridle/index.mjs";
+import { DocumentView } from "./Document";
+import { IdChip } from "./IdChip";
+
+function hasBridle() {
+	try {
+		execFileSync(process.env.BRIDLE_BIN ?? "bridle", ["--version"], {
+			stdio: "ignore",
+		});
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+// The thread highlights "Hello", which leaves "world." as its own text node to select.
+const doc = `# T
+
+Hello world.
+
+> [!comment] c1 human, 2026-10-02 14:05 EDT, on "Hello" [sent 2026-10-02 14:06 EDT]
+> Why?
+`;
+
+function stubGateway() {
+	vi.stubGlobal(
+		"fetch",
+		vi.fn(async (url: string) => {
+			if (url.endsWith("/projects"))
+				return new Response(
+					JSON.stringify({ projects: [{ project: "p", reachable: true }] }),
+				);
+			if (url.includes("/documents?"))
+				return new Response(JSON.stringify({ project: "p", paths: ["a.md"] }));
+			return new Response(
+				JSON.stringify({
+					project: "p",
+					path: "a.md",
+					content: doc,
+					hash: "h1",
+					branch: "feature",
+				}),
+			);
+		}),
+	);
+}
+
+function renderDocument() {
+	stubGateway();
+	render(
+		<MemoryRouter>
+			<DocumentView onLoggedOut={() => {}} />
+		</MemoryRouter>,
+	);
+}
+
+// `bridle spec coverage --tests src` finds bound scenarios by their ids in this file:
+// s-cc27 (IdChip)
+// s-50c7 (IdChip)
+// s-839b (Document)
+// s-8cdc (Document)
+const steps = createSteps();
+
+steps.given(/^an ID chip showing the ID "(.+)"$/, (w, id) => {
+	w.id = id;
+});
+steps.when(/^the chip is rendered$/, (w) => {
+	render(<IdChip id={w.id} />);
+});
+steps.then(/^the ID is plain selectable text, not inside the button$/, (w) => {
+	const text = screen.getByText(w.id);
+	expect(text.tagName).toBe("CODE");
+	expect(text.closest("button")).toBeNull();
+});
+steps.when(
+	/^the human clicks the button labelled "(.+)"$/,
+	async (w, label) => {
+		render(<IdChip id={w.id} />);
+		w.writeText = vi.spyOn(navigator.clipboard, "writeText");
+		await userEvent.setup().click(screen.getByRole("button", { name: label }));
+	},
+);
+steps.then(/^the clipboard receives "(.+)"$/, (w, text) => {
+	expect(w.writeText).toHaveBeenCalledWith(text);
+});
+
+steps.given(/^the Document page with an empty search box$/, () => {
+	renderDocument();
+});
+steps.when(/^the human types "(.+)" into the search box$/, async (_w, text) => {
+	await userEvent.setup().type(screen.getByLabelText("Document"), text);
+});
+steps.then(/^a "Clear search" button is shown$/, async () => {
+	expect(
+		await screen.findByRole("button", { name: "Clear search" }),
+	).toBeTruthy();
+});
+
+steps.given(/^an opened document$/, async () => {
+	renderDocument();
+	const user = userEvent.setup();
+	await user.type(screen.getByLabelText("Document"), "a.md");
+	await user.click(screen.getByRole("button", { name: "Open" }));
+	await screen.findByText(/on feature/);
+});
+steps.when(/^the human selects text inside the body by touch$/, () => {
+	vi.spyOn(window, "getSelection").mockReturnValue({
+		isCollapsed: false,
+		anchorNode: screen.getByText("world.").firstChild,
+		toString: () => "world",
+	} as unknown as Selection);
+	document.dispatchEvent(new Event("selectionchange"));
+});
+steps.then(/^the comment box opens$/, async () => {
+	await waitFor(() => expect(screen.getByLabelText("Comment")).toBeTruthy());
+});
+
+if (hasBridle()) {
+	await registerBridleSpecs({ steps });
+} else {
+	test.skip("bridle is not on PATH: spec scenarios not run", () => {});
+}

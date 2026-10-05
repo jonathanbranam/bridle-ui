@@ -56,3 +56,55 @@ test("opens design/specs/<capability>.md and shows IDs as chips", async () => {
 		true,
 	);
 });
+
+test("without a path it lists the project's specs", async () => {
+	vi.stubGlobal(
+		"fetch",
+		vi.fn(async (url: string) => {
+			if (url.endsWith("/projects"))
+				return new Response(
+					JSON.stringify({ projects: [{ project: "p", reachable: true }] }),
+				);
+			return new Response(
+				JSON.stringify({
+					project: "p",
+					specs: [
+						{
+							path: "design/specs/demo.md",
+							capability: "demo",
+							title: "Demo thing",
+							requirements: [
+								{
+									id: "r-1111",
+									heading: "R",
+									protected: false,
+									line: 3,
+									scenarios: [],
+								},
+							],
+							diagnostics: [],
+						},
+						{
+							path: "design/specs/bad.md",
+							capability: "bad",
+							title: null,
+							requirements: [],
+							diagnostics: [{ line: 2, column: 1, message: "no heading" }],
+						},
+					],
+				}),
+			);
+		}),
+	);
+	render(
+		<MemoryRouter initialEntries={["/specs"]}>
+			<SpecsView onLoggedOut={() => {}} />
+		</MemoryRouter>,
+	);
+	const link = await screen.findByRole("link", { name: "Demo thing" });
+	expect(link.getAttribute("href")).toBe(
+		"/specs?project=p&path=design%2Fspecs%2Fdemo.md",
+	);
+	expect(screen.getByText("demo, 1 requirements")).toBeTruthy();
+	expect(screen.getByText("line 2: no heading")).toBeTruthy();
+});

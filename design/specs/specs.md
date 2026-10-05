@@ -1,12 +1,12 @@
 # Specs page
 
-Read a project's spec from `design/specs/` through the gateway's document route. Read-only. The gateway has no spec listing yet (ticket 75zr, bridle side), so the human names the capability.
+Lists a project's specs from the gateway's specs route (`GET /projects/{p}/specs`) and opens one through the document route. Read-only. Requirement (`r-xxxx`) and scenario (`s-xxxx`) IDs written in markdown elsewhere (task bodies and threads, documents) link here when the gateway's `links/resolve` finds them, and stay plain text when not; the ID syntax is in `src/doc/links.ts`.
 
 ## Requirements
 
-### Requirement: A capability's spec opens by name and shows its IDs  {#r-4d71}
+### Requirement: A spec opens from the index and shows its IDs  {#r-4d71}
 
-The page `/specs?project=p&capability=name` SHALL read `design/specs/name.md` in project p and show it with each requirement and scenario heading followed by its ID as a copyable chip, without the `{#id}` marker in the title.
+The page `/specs?project=p` SHALL list the spec files of project p, each linking to `/specs?project=p&path=design/specs/name.md`. That page SHALL read the file (`?capability=name` still works)  and show it with each requirement and scenario heading followed by its ID as a copyable chip, without the `{#id}` marker in the title.
 
 #### Scenario: The IDs show as chips  {#s-6e3b}
 
@@ -20,4 +20,14 @@ The page `/specs?project=p&capability=name` SHALL read `design/specs/name.md` in
 
 *Verification*: **non-executable**
 
-Opening a capability with no file shows the gateway's not-found message.
+Opening a file that does not exist shows the gateway's not-found message.
+
+### Requirement: Spec IDs in markdown link to the Specs page  {#r-7c2a}
+
+A requirement or scenario ID in rendered markdown SHALL link to `/specs?project=p&path=<file>#<id>` when `links/resolve` returns a spec path for it, and SHALL stay plain text when it returns none.
+
+#### Scenario: A resolved ID links, an unresolved one does not  {#s-3f9d}
+
+*Verification*: **non-executable**
+
+Covered by `src/Md.test.tsx` (the spec ID tests), which are unit tests not bound to this scenario.

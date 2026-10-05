@@ -122,3 +122,21 @@ see: [ab3d]
 	expect(await screen.findByRole("link", { name: "ab3d" })).toBeInTheDocument();
 	expect(screen.getByText(/item with/)).toBeInTheDocument();
 });
+
+test("a resolved spec ID links to the Specs page at its heading", async () => {
+	resolving({ "r-ab23": "design/specs/thing.md#r-ab23" });
+	shown("see r-ab23 now");
+	const a = await screen.findByRole("link", { name: "r-ab23" });
+	expect(a).toHaveAttribute(
+		"href",
+		"/specs?project=p&path=design%2Fspecs%2Fthing.md#r-ab23",
+	);
+});
+
+test("an unresolved spec ID stays plain text", async () => {
+	resolving({});
+	shown("see s-zz99 now");
+	await waitFor(() => expect(fetch).toHaveBeenCalled());
+	expect(screen.queryByRole("link")).toBeNull();
+	expect(screen.getByText(/s-zz99/)).toBeTruthy();
+});

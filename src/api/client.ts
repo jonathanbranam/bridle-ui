@@ -13,6 +13,7 @@ import type { InteractionGroup } from "./generated/InteractionGroup";
 import type { InteractionReport } from "./generated/InteractionReport";
 import type { Items } from "./generated/Items";
 import type { LinkResolveRequest } from "./generated/LinkResolveRequest";
+import type { ProjectSpecs } from "./generated/ProjectSpecs";
 import type { Projects } from "./generated/Projects";
 import type { ResolvedLinks } from "./generated/ResolvedLinks";
 import type { ReviewRequest } from "./generated/ReviewRequest";
@@ -116,6 +117,10 @@ export const systemView = (project: string) =>
 
 export const agentList = (project: string) =>
 	call<AgentList>(`/projects/${encodeURIComponent(project)}/agents`);
+
+/** Every spec file under the project's design/specs, with requirement and scenario IDs. */
+export const projectSpecs = (project: string) =>
+	call<ProjectSpecs>(`/projects/${encodeURIComponent(project)}/specs`);
 
 export const projects = () => call<Projects>("/projects");
 

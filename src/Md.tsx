@@ -13,7 +13,9 @@ import { resolveLinks } from "./api/client";
 import {
 	documentHref,
 	findLinks,
+	isSpecId,
 	isTaskId,
+	specHref,
 	targetsIn,
 	taskHref,
 } from "./doc/links";
@@ -87,7 +89,14 @@ function Anchor({ href, children }: { href?: string; children?: ReactNode }) {
 			);
 		const path = paths.get(target);
 		return path ? (
-			<a className="text-blue-700 underline" href={documentHref(project, path)}>
+			<a
+				className="text-blue-700 underline"
+				href={
+					isSpecId(target)
+						? specHref(project, path)
+						: documentHref(project, path)
+				}
+			>
 				{children}
 			</a>
 		) : (

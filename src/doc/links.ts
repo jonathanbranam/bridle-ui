@@ -8,6 +8,7 @@ const END = "(?![\\w-])";
 const WIKI = "\\[\\[([^\\]|]+)(?:\\|([^\\]]+))?\\]\\]";
 const DOC_PATH = `${WORD}docs/[\\w./-]*\\w`;
 const TASK_ID = `${WORD}[a-z]{2,4}-[${ID_CHARS}]{4}${END}`;
+const SPEC_ID = `${WORD}[rs]-[${ID_CHARS}]{4}${END}`;
 const TICKET_ID = `${WORD}[${ID_CHARS}]{4}${END}`;
 /** True for a target in the task ID form (`ui-umaq`); those open the task page. */
 export const isTaskId = (target: string) =>
@@ -16,8 +17,18 @@ export const isTaskId = (target: string) =>
 /** The page a task ID opens; the ID alone finds the project. */
 export const taskHref = (id: string) => `/task?${new URLSearchParams({ id })}`;
 
+/** True for a requirement (`r-xxxx`) or scenario (`s-xxxx`) ID; the gateway resolves it to a spec file. */
+export const isSpecId = (target: string) =>
+	new RegExp(`^${SPEC_ID.slice(WORD.length)}$`).test(target);
+
+/** The Specs page opening a spec file; `path` may end in `#<id>` to land on a heading. */
+export const specHref = (project: string, path: string) => {
+	const [file, id] = path.split("#");
+	return `/specs?${new URLSearchParams({ project, path: file })}${id ? `#${id}` : ""}`;
+};
+
 const LINKABLE = new RegExp(
-	`${WIKI}|(${DOC_PATH})|(${TASK_ID})|(${TICKET_ID})`,
+	`${WIKI}|(${DOC_PATH})|(${TASK_ID})|(${SPEC_ID})|(${TICKET_ID})`,
 	"g",
 );
 
@@ -33,7 +44,7 @@ export function findLinks(text: string): Piece[] {
 	for (const m of text.matchAll(LINKABLE)) {
 		const at = m.index ?? 0;
 		if (at > pos) out.push({ text: text.slice(pos, at) });
-		const target = (m[1] ?? m[3] ?? m[4] ?? m[5]).trim();
+		const target = (m[1] ?? m[3] ?? m[4] ?? m[5] ?? m[6]).trim();
 		out.push({ target, label: m[2]?.trim() || m[1]?.trim() || m[0] });
 		pos = at + m[0].length;
 	}

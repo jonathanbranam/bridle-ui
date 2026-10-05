@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import { projects as listProjects, readDocument } from "./api/client";
+import {
+	projects as listProjects,
+	projectSpecs,
+	readDocument,
+} from "./api/client";
 import type { Document } from "./api/generated/Document";
+import type { SpecFile } from "./api/generated/SpecFile";
+import { specHref } from "./doc/links";
 import { IdChip } from "./IdChip";
 import { LinkScope, Md } from "./Md";
 
@@ -30,7 +36,11 @@ function SpecText({ text }: { text: string }) {
 		const key = `${i}`;
 		if (h) {
 			return (
-				<div key={key} className="mt-4 flex items-center gap-3">
+				<div
+					key={key}
+					id={h.id}
+					className="mt-4 flex scroll-mt-4 items-center gap-3"
+				>
 					<p className={sizes[h.level]}>{h.title}</p>
 					{h.id && <IdChip id={h.id} />}
 				</div>
@@ -44,15 +54,20 @@ function SpecText({ text }: { text: string }) {
 	});
 }
 
-// Specs live in design/specs/<capability>.md; until the gateway lists them, the human names the
-// capability and the existing document route reads it.
+// The index lists the project's spec files from the gateway; a file opens at `?path=`, and a
+// `#<id>` on the URL scrolls to that requirement or scenario.
 export function SpecsView({ onLoggedOut }: Props) {
 	const [params, setParams] = useSearchParams();
 	const qProject = params.get("project");
-	const qCap = params.get("capability");
+	// `capability` is the older way to name a file; it still opens.
+	const qPath =
+		params.get("path") ??
+		(params.get("capability")
+			? `design/specs/${params.get("capability")}.md`
+			: null);
 	const [project, setProject] = useState(qProject || "");
-	const [capability, setCapability] = useState(qCap || "");
 	const [known, setKnown] = useState<string[]>([]);
+	const [files, setFiles] = useState<SpecFile[]>();
 	const [doc, setDoc] = useState<Document>();
 	const [error, setError] = useState<string>();
 
@@ -74,9 +89,28 @@ export function SpecsView({ onLoggedOut }: Props) {
 	}, [fail]);
 
 	useEffect(() => {
-		if (!qProject || !qCap) return;
+		if (!project || qPath) return;
 		let stale = false;
-		readDocument(qProject, `design/specs/${qCap}.md`).then((r) => {
+		setFiles(undefined);
+		projectSpecs(project).then((r) => {
+			if (stale) return;
+			if (r.ok) {
+				setFiles(r.value.specs);
+				setError(undefined);
+			} else fail(r);
+		});
+		return () => {
+			stale = true;
+		};
+	}, [project, qPath, fail]);
+
+	useEffect(() => {
+		if (!qProject || !qPath) {
+			setDoc(undefined);
+			return;
+		}
+		let stale = false;
+		readDocument(qProject, qPath).then((r) => {
 			if (stale) return;
 			if (r.ok) {
 				setDoc(r.value);
@@ -89,23 +123,24 @@ export function SpecsView({ onLoggedOut }: Props) {
 		return () => {
 			stale = true;
 		};
-	}, [qProject, qCap, fail]);
+	}, [qProject, qPath, fail]);
+
+	useEffect(() => {
+		const id = window.location.hash.slice(1);
+		if (doc && id) document.getElementById(id)?.scrollIntoView?.();
+	}, [doc]);
 
 	return (
 		<section className="space-y-3">
-			<form
-				className="flex flex-wrap items-center gap-2"
-				onSubmit={(e) => {
-					e.preventDefault();
-					const name = capability.trim().replace(/\.md$/, "");
-					if (project && name) setParams({ project, capability: name });
-				}}
-			>
+			<div className="flex flex-wrap items-center gap-2">
 				<select
 					aria-label="Project"
 					className="rounded border p-1"
 					value={project}
-					onChange={(e) => setProject(e.target.value)}
+					onChange={(e) => {
+						setProject(e.target.value);
+						setParams({});
+					}}
 				>
 					{known.map((p) => (
 						<option key={p} value={p}>
@@ -113,18 +148,43 @@ export function SpecsView({ onLoggedOut }: Props) {
 						</option>
 					))}
 				</select>
-				<input
-					aria-label="Spec"
-					placeholder="capability, e.g. document"
-					className="min-w-0 flex-1 rounded border p-1"
-					value={capability}
-					onChange={(e) => setCapability(e.target.value)}
-				/>
-				<button type="submit" className="rounded border px-3 py-1">
-					Open
-				</button>
-			</form>
+				{qPath && (
+					<button
+						type="button"
+						className="rounded border px-3 py-1"
+						onClick={() => setParams({})}
+					>
+						All specs
+					</button>
+				)}
+			</div>
 			{error && <p role="alert">{error}</p>}
+			{!qPath && files?.length === 0 && <p>No specs in {project}.</p>}
+			{!qPath && files && files.length > 0 && (
+				<ul className="space-y-2">
+					{files.map((f) => (
+						<li key={f.path}>
+							<a
+								className="text-blue-700 underline"
+								href={specHref(project, f.path)}
+							>
+								{f.title || f.capability}
+							</a>{" "}
+							<span className="text-sm text-gray-600">
+								{f.capability}, {f.requirements.length} requirements
+							</span>
+							{f.diagnostics.map((d) => (
+								<p
+									key={`${d.line}:${d.column}`}
+									className="text-sm text-red-700"
+								>
+									line {d.line}: {d.message}
+								</p>
+							))}
+						</li>
+					))}
+				</ul>
+			)}
 			{doc && (
 				<article className="space-y-1">
 					<IdChip id={doc.path} />

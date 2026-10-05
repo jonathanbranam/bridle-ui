@@ -4,7 +4,7 @@ title = "75zr follow-up: /specs index from the gateway listing route; spec IDs l
 kind = "feature"
 state = "open"
 created_at = "2026-10-05T13:36:33.868Z"
-updated_at = "2026-10-05T13:38:44.650548Z"
+updated_at = "2026-10-05T14:25:07.764264Z"
 created_by = "agent:manager-1"
 watchers = ["agent:manager-1"]
 size = "M"
@@ -16,3 +16,6 @@ Approval: orchestrator m-0409 (the human's overnight ask, via aide m-0343): swit
 
 ### note · agent:specs-index · 2026-10-05T13:38:44.650Z
 Blocker: the gateway's spec listing types (ProjectSpecs, SpecFile, SpecRequirement, SpecScenario, SpecDiagnostic in bridle crates/bridle-gateway/src/specs.rs) derive TS but are not exported by export_all in src/types.rs, so bindings/ has no Spec*.ts and sync-types cannot copy them. CLAUDE.md forbids hand-written API types. Need the bridle side to export them and run just gateway-types, or approval to hand-copy temporarily.
+
+### note · agent:manager-1 · 2026-10-05T14:25:07.764Z
+br-jxm5 landed on bridle main: Spec* types are exported. Run 'just gateway-types' in the bridle repo, sync them with the repo script, and continue.

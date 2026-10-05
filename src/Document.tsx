@@ -28,8 +28,14 @@ import {
 	resolveThread,
 	type Thread,
 } from "./doc/comments";
+import { IdChip } from "./IdChip";
 
 type Props = { onLoggedOut: () => void };
+
+function extractTicketId(path: string): string | null {
+	const match = path.match(/-([abcdefghjkmnpqrstuvwxyz23456789]{4})\.md$/);
+	return match ? match[1] : null;
+}
 
 // Only what the documents use: `code` and **bold**. A real markdown library isn't worth it yet.
 function inline(text: string): ReactNode[] {
@@ -111,27 +117,36 @@ function ThreadView({
 		<aside
 			className={`rounded border p-2 text-sm ${thread.resolved ? "border-gray-300 bg-gray-50 text-gray-500" : "border-amber-300 bg-amber-50"}`}
 		>
-			<button
-				type="button"
-				className="w-full text-left"
-				aria-expanded={open}
-				onClick={() => {
-					setOpen(true);
-					if (thread.unread) onOpen(thread);
-				}}
-			>
-				{thread.id && <span className="mr-2 text-gray-500">{thread.id}</span>}
-				<span className="font-medium">{thread.who}</span>
-				<span className="ml-2 text-gray-500">{thread.when}</span>
-				<MarkView mark={thread.mark} />
-				{thread.resolved && <span className="ml-2">resolved</span>}
-				{thread.unread && (
-					<span className="ml-2 rounded bg-red-600 px-1 text-white">new</span>
+			<div className="flex items-start justify-between gap-2">
+				<button
+					type="button"
+					className="flex-1 text-left"
+					aria-expanded={open}
+					onClick={() => {
+						setOpen(true);
+						if (thread.unread) onOpen(thread);
+					}}
+				>
+					<span className="font-medium">{thread.who}</span>
+					<span className="ml-2 text-gray-500">{thread.when}</span>
+					<MarkView mark={thread.mark} />
+					{thread.resolved && <span className="ml-2">resolved</span>}
+					{thread.unread && (
+						<span className="ml-2 rounded bg-red-600 px-1 text-white">new</span>
+					)}
+					{thread.quote && (
+						<span className="block italic text-gray-600">"{thread.quote}"</span>
+					)}
+				</button>
+				{thread.id && (
+					<>
+						{/* biome-ignore lint/a11y/noStaticElementInteractions lint/a11y/useKeyWithClickEvents: prevent thread toggle when copying ID */}
+						<div onClick={(e) => e.stopPropagation()} className="flex-shrink-0">
+							<IdChip id={thread.id} />
+						</div>
+					</>
 				)}
-				{thread.quote && (
-					<span className="block italic text-gray-600">“{thread.quote}”</span>
-				)}
-			</button>
+			</div>
 			{open &&
 				thread.body.map((l, i) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: lines have no identity
@@ -399,26 +414,33 @@ export function DocumentView({ onLoggedOut }: Props) {
 				</p>
 			)}
 			{doc && (
-				<div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
-					<p>
-						{doc.path} on {doc.branch}. Select text to comment on it.
-					</p>
-					<button
-						type="button"
-						className="rounded border px-3 py-1 text-black"
-						onClick={review}
-					>
-						Request review
-					</button>
-					<label className="flex items-center gap-1">
-						<input
-							type="checkbox"
-							checked={resend}
-							onChange={(e) => setResend(e.target.checked)}
-						/>
-						Resend comments already sent
-					</label>
-					{reviewed && <span role="status">{reviewed}</span>}
+				<div className="space-y-2 text-sm text-gray-500">
+					<div className="flex flex-wrap items-center gap-2">
+						<IdChip id={doc.path} />
+						{(() => {
+							const ticketId = extractTicketId(doc.path);
+							return ticketId ? <IdChip id={ticketId} /> : null;
+						})()}
+						<span>on {doc.branch}. Select text to comment on it.</span>
+					</div>
+					<div className="flex flex-wrap items-center gap-2">
+						<button
+							type="button"
+							className="rounded border px-3 py-1 text-black"
+							onClick={review}
+						>
+							Request review
+						</button>
+						<label className="flex items-center gap-1">
+							<input
+								type="checkbox"
+								checked={resend}
+								onChange={(e) => setResend(e.target.checked)}
+							/>
+							Resend comments already sent
+						</label>
+						{reviewed && <span role="status">{reviewed}</span>}
+					</div>
 				</div>
 			)}
 			{/* biome-ignore lint/a11y/noStaticElementInteractions: mouse selection has no keyboard twin here */}
@@ -452,7 +474,7 @@ export function DocumentView({ onLoggedOut }: Props) {
 								))}
 								{here && (
 									<div className="space-y-2 rounded border bg-white p-2 shadow">
-										<p className="text-sm italic">Comment on “{here.quote}”</p>
+										<p className="text-sm italic">Comment on "{here.quote}"</p>
 										<textarea
 											aria-label="Comment"
 											className="w-full rounded border p-1"

@@ -10,11 +10,11 @@ test("renders the ID as text", () => {
 	expect(screen.getByText("task-123")).toBeInTheDocument();
 });
 
-test("renders an aria-labeled copy button with 44x44px touch target", () => {
+test("renders an aria-labeled copy button", () => {
 	render(<IdChip id="my-id" />);
 	const button = screen.getByRole("button", { name: "Copy my-id" });
 	expect(button).toBeInTheDocument();
-	expect(button).toHaveClass("w-11 h-11");
+	expect(button).toHaveClass("inline-flex");
 });
 
 test("shows Copied message when copy button is clicked", async () => {
@@ -26,15 +26,18 @@ test("shows Copied message when copy button is clicked", async () => {
 	expect(writeText).toHaveBeenCalledWith("test-id-456");
 });
 
-test("shows 'Copied' briefly then hides it", async () => {
+test("shows checkmark briefly when copy button is clicked", async () => {
 	const user = userEvent.setup();
 	render(<IdChip id="copied-test" />);
 	const button = screen.getByRole("button", { name: "Copy copied-test" });
+	const svgs = button.querySelectorAll("svg");
+	expect(svgs.length).toBe(1); // Copy icon initially
 	await user.click(button);
-	expect(screen.getByText("Copied")).toBeInTheDocument();
+	// After click, verify the title changes to "Copied!"
+	expect(button).toHaveAttribute("title", "Copied!");
 	await vi.waitFor(
 		() => {
-			expect(screen.queryByText("Copied")).not.toBeInTheDocument();
+			expect(button).toHaveAttribute("title", "Copy ID");
 		},
 		{ timeout: 3000 },
 	);

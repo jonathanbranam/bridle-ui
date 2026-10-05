@@ -47,10 +47,13 @@ function stub(error?: string) {
 					? new Response(JSON.stringify({ error }), { status: 403 })
 					: new Response(JSON.stringify({ hash: "h2" }));
 			}
+			const path = url.includes("t-x8jt.md")
+				? "docs/tickets/open/t-x8jt.md"
+				: "a.md";
 			return new Response(
 				JSON.stringify({
 					project: "p",
-					path: "a.md",
+					path,
 					content: original,
 					hash: "h1",
 					branch: "feature",
@@ -259,4 +262,75 @@ test("search clear button shows when typing, clears the box and focuses the inpu
 
 	// Input should be focused
 	expect(document.activeElement).toBe(searchInput);
+});
+
+test("the document path renders as an IdChip and its copy button calls clipboard.writeText with the path", async () => {
+	stub();
+	const user = await openDoc();
+	const writeText = vi.spyOn(navigator.clipboard, "writeText");
+	const copyButton = await screen.findByRole("button", {
+		name: "Copy a.md",
+	});
+	await user.click(copyButton);
+	expect(writeText).toHaveBeenCalledWith("a.md");
+});
+
+test("the document ticket ID renders as an IdChip when path ends with -<id>.md", async () => {
+	stub();
+	const user = userEvent.setup();
+	render(
+		<MemoryRouter>
+			<DocumentView onLoggedOut={() => {}} />
+		</MemoryRouter>,
+	);
+	await user.type(screen.getByLabelText("Document"), "x8jt");
+	await user.click(screen.getByRole("button", { name: "Open" }));
+	await screen.findByText(/on feature/);
+	expect(screen.getByRole("button", { name: "Copy x8jt" })).toBeInTheDocument();
+});
+
+test("a thread's copy button calls clipboard.writeText with the thread ID and does not toggle the thread", async () => {
+	stub();
+	const user = await openDoc();
+	const writeText = vi.spyOn(navigator.clipboard, "writeText");
+	expect(screen.queryByText("Why?")).toBeNull();
+	const copyButton = await screen.findByRole("button", { name: "Copy c1" });
+	await user.click(copyButton);
+	expect(writeText).toHaveBeenCalledWith("c1");
+	expect(screen.queryByText("Why?")).toBeNull();
+});
+
+test("paths not matching the ticket ID format do not render a ticket chip", async () => {
+	vi.stubGlobal(
+		"fetch",
+		vi.fn(async (url: string) => {
+			if (url.endsWith("/projects"))
+				return new Response(
+					JSON.stringify({ projects: [{ project: "p", reachable: true }] }),
+				);
+			if (url.includes("/documents?"))
+				return new Response(
+					JSON.stringify({ project: "p", paths: ["notes-final.md"] }),
+				);
+			return new Response(
+				JSON.stringify({
+					project: "p",
+					path: "notes-final.md",
+					content: "# Notes\n\nSome content.",
+					hash: "h1",
+					branch: "main",
+				}),
+			);
+		}),
+	);
+	const user = userEvent.setup();
+	render(
+		<MemoryRouter>
+			<DocumentView onLoggedOut={() => {}} />
+		</MemoryRouter>,
+	);
+	await user.type(screen.getByLabelText("Document"), "notes-final");
+	await user.click(screen.getByRole("button", { name: "Open" }));
+	await screen.findByText(/on main/);
+	expect(screen.queryByRole("button", { name: /Copy final/ })).toBeNull();
 });

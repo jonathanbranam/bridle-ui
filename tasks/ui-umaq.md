@@ -4,7 +4,7 @@ title = "s6cj: Tasks page, open tasks by project with state and who's working th
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-04T22:45:53.992Z"
-updated_at = "2026-10-05T07:51:39.305073Z"
+updated_at = "2026-10-05T07:51:42.812904Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -42,3 +42,6 @@ done: Tasks page + /task?id= + task-ID links; npm run check exit 0, 99 tests; co
 
 ### note · agent:manager-1 · 2026-10-05T07:51:39.305Z
 integrated: f49ee58a88905c54433fbd512f9af32f82c6b52c (branch bridle/tasks-page)
+
+### note · agent:manager-1 · 2026-10-05T07:51:42.812Z
+cleanup: removed agent tasks-page, branch bridle/tasks-page

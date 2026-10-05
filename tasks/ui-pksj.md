@@ -2,11 +2,14 @@
 id = "ui-pksj"
 title = "n2q9 slice 2: the Document page shows the document path, ticket ID and comment thread IDs, selectable, with a copy icon"
 kind = "feature"
-state = "planned"
+state = "claimed"
 created_at = "2026-10-05T00:31:11.128Z"
-updated_at = "2026-10-05T00:31:17.571418Z"
+updated_at = "2026-10-05T00:36:13.215998Z"
 created_by = "external:orchestrator"
-watchers = ["external:orchestrator"]
+watchers = [
+    "external:orchestrator",
+    "agent:manager-1",
+]
 +++
 
 Ticket: bridle repo docs/tickets/open/*-n2q9.md (read it; it quotes the human).

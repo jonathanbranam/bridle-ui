@@ -60,3 +60,6 @@
 {"actor":"external:orchestrator","at":"2026-10-04T23:21:39.506364Z","from":"pending","task":"ui-s3xe","to":"open"}
 {"actor":"external:orchestrator","at":"2026-10-04T23:21:39.544991Z","from":"open","task":"ui-s3xe","to":"planned"}
 {"actor":"agent:manager-1","at":"2026-10-04T23:38:54.161616Z","from":"planned","task":"ui-s3xe","to":"integrated"}
+{"actor":"human","at":"2026-10-05T00:00:34.316Z","from":"","task":"ui-7mcp","to":"pending"}
+{"actor":"external:orchestrator","at":"2026-10-05T00:00:38.578724Z","from":"pending","task":"ui-7mcp","to":"open"}
+{"actor":"external:orchestrator","at":"2026-10-05T00:00:38.600946Z","from":"open","task":"ui-7mcp","to":"planned"}

@@ -2,13 +2,14 @@
 id = "ui-65ft"
 title = "n2q9 slice 1: to-dos and questions show their task ID, selectable, with a copy icon"
 kind = "feature"
-state = "planned"
+state = "claimed"
 created_at = "2026-10-05T00:09:22.387Z"
-updated_at = "2026-10-05T00:09:45.590237Z"
+updated_at = "2026-10-05T00:15:31.629338Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
+    "agent:manager-1",
 ]
 +++
 

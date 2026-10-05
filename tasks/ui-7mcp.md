@@ -2,15 +2,17 @@
 id = "ui-7mcp"
 title = "wu7r: Document page search box gets a red X clear button (own button, aria-label, phone-sized)"
 kind = "feature"
-state = "claimed"
+state = "integrated"
 created_at = "2026-10-05T00:00:34.316Z"
-updated_at = "2026-10-05T00:15:21.133316Z"
+updated_at = "2026-10-05T00:15:28.634164Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
     "agent:manager-1",
 ]
+branch = "bridle/clear-x"
+commit = "44e8faf52711dbc596bc79719cad789172a11f31"
 summary = "Added a clear search button next to the search input in Document.tsx. The button appears only when the input has text, shows a red X (✕), has a 44x44 px touch target, and clears the input, search results, and focuses the input on click. The button has aria-label='Clear search' and does not close the document. npm run check passes."
 +++
 
@@ -42,3 +44,9 @@ Not accepted yet: the task requires a test and the diff has none. Add one in src
 
 ### note · agent:clear-x · 2026-10-05T00:15:21.133Z
 done: added test for clear search button; c1f5885
+
+### note · agent:manager-1 · 2026-10-05T00:15:26.120Z
+integrated: 44e8faf52711dbc596bc79719cad789172a11f31 (branch bridle/clear-x)
+
+### note · agent:manager-1 · 2026-10-05T00:15:28.634Z
+cleanup: removed agent clear-x, branch bridle/clear-x

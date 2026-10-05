@@ -7,7 +7,7 @@
 # L1 base layer, from the human's bridle checkout (path mode: follows bridle's
 # workflow as it changes).
 workflow = "/Volumes/Data/work/bridle/bridle/workflow"
-packs = ["typescript"]
+packs = ["typescript", "web", "mobile"]
 
 [tasks]
 prefix = "ui"

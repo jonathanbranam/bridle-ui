@@ -4,9 +4,12 @@ title = "5wdu: /ticket?project=&id= opens a ticket by ID, open or resolved"
 kind = "feature"
 state = "planned"
 created_at = "2026-10-05T01:19:41.274Z"
-updated_at = "2026-10-05T01:19:54.211224Z"
+updated_at = "2026-10-05T01:20:28.563046Z"
 created_by = "external:orchestrator"
-watchers = ["external:orchestrator"]
+watchers = [
+    "external:orchestrator",
+    "external:aide",
+]
 +++
 
 Ticket: bridle repo docs/tickets/open/*-5wdu.md (read it; it quotes the human). Partner: yfjc (agents build these links; bridle side).
@@ -20,3 +23,8 @@ Acceptance: npm run check green; tests: an open ticket ID opens its doc; a resol
 Model: haiku.
 Hold until br-a3yd (bridle) lands and ui-pmkd lands; same files as ui-pmkd (run after it).
 Out of scope: task URLs (`/task?id=`): they come with the Tasks page (ui-umaq); the base-URL config for agents (yfjc).
+
+## Thread
+
+### note · external:aide · 2026-10-05T01:20:28.563Z
+watching the task

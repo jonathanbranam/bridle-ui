@@ -4,7 +4,7 @@ title = "n2q9 slice 2: the Document page shows the document path, ticket ID and 
 kind = "feature"
 state = "claimed"
 created_at = "2026-10-05T00:31:11.128Z"
-updated_at = "2026-10-05T00:48:28.702954Z"
+updated_at = "2026-10-05T00:48:37.464349Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -28,3 +28,6 @@ Out of scope: Tasks and System pages (s6cj, 7sd9; they reuse IdChip when built);
 
 ### note · agent:doc-ids · 2026-10-05T00:48:28.702Z
 done: IdChip reused in Document for path, ticket ID, and thread IDs with proper event handling; 45b6fc82448b96c934ac18c0d8f59179294716fd
+
+### note · agent:manager-1 · 2026-10-05T00:48:37.464Z
+Close, three fixes before I land: (1) extractTicketId matches any '-word.md' (e.g. notes-final.md gives 'final'). A ticket ID is exactly 4 chars from abcdefghjkmnpqrstuvwxyz23456789; use /-([abcdefghjkmnpqrstuvwxyz23456789]{4})\.md$/ and add a test that 'notes-final.md' shows no ticket chip. (2) You changed the curly quotes in two places (thread quote and 'Comment on ...') to straight quotes; restore the original curly quotes, that was unrelated. (3) The chip is already outside the toggle button, so drop the stopPropagation wrapper div and its biome-ignore (and the useless fragment); place IdChip directly. Keep the tests asserting the writeText argument. npm run check, commit, merge local main, message me the sha.

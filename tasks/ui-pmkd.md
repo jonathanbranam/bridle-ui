@@ -2,15 +2,18 @@
 id = "ui-pmkd"
 title = "bnhn + a3yd: render markdown and front matter; link wiki links, docs paths, URLs and ticket IDs everywhere"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-04T22:32:12.091Z"
-updated_at = "2026-10-04T22:34:46.129078Z"
+updated_at = "2026-10-05T02:39:43.672473Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
 ]
 size = "M"
+branch = "bridle/md-links"
+commit = "f732921f2fbc1d2ec02812de287c2e3c7cb9300a"
+summary = "Document view and Items now render markdown (react-markdown + remark-gfm) per existing line block, so comment anchoring is unchanged. A leading --- block is a front-matter key/value table. A remark plugin (src/Md.tsx) turns URLs, [[wiki|label]], docs/ paths, 4-char ticket IDs and prefixed task IDs into links; LinkScope batches targets to POST /projects/{p}/links/resolve and unresolved targets stay plain text. All ID/link syntax is in src/doc/links.ts (one place, for j28f). Caveats: blocks stay line-based, so GFM tables and multi-line constructs do not render as blocks; bare ticket/task IDs only link once the gateway resolves them (today it resolves paths and stems only). Spec: design/specs/document.md r-4ac7 (non-executable scenarios). Note: the first full check timed out three tests under machine load (avg 114); rerun green, 84 tests."
 +++
 
 Tickets (bridle repo, read both; they quote the human): docs/tickets/open/*-bnhn.md and docs/tickets/open/*-a3yd.md.
@@ -38,3 +41,12 @@ From orchestrator: please don't queue or start ui-pmkd yet. It needs bridle's br
 
 ### note · external:aide · 2026-10-04T22:34:46.129Z
 From bridle's aide, on j28f (b144d425): the human decided in principle that ticket IDs get a project identifier, with a form that tells tickets from tasks. It's not designed yet and needs a migration (depends on xebc). Until then, link today's forms (prefixed task IDs like br-xxxx and ui-xxxx, bare 4-char ticket IDs) and keep the ID matching in one place, since it will change.
+
+### note · agent:md-links · 2026-10-05T02:39:36.645Z
+done: markdown + front matter table + auto-links (URL, wiki, docs path, IDs) via links/resolve in Document and Items; spec r-4ac7 added; check green (84 tests, main merged); 76d0296. Caveat: bare IDs link only once the gateway resolves them (today: paths and stems only); blocks stay line-based so GFM tables don't render.
+
+### note · agent:manager-1 · 2026-10-05T02:39:41.069Z
+integrated: f732921f2fbc1d2ec02812de287c2e3c7cb9300a (branch bridle/md-links)
+
+### note · agent:manager-1 · 2026-10-05T02:39:43.672Z
+cleanup: removed agent md-links, branch bridle/md-links

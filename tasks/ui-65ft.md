@@ -4,7 +4,7 @@ title = "n2q9 slice 1: to-dos and questions show their task ID, selectable, with
 kind = "feature"
 state = "claimed"
 created_at = "2026-10-05T00:09:22.387Z"
-updated_at = "2026-10-05T00:21:26.041905Z"
+updated_at = "2026-10-05T00:29:21.501172Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -38,3 +38,6 @@ done: IdChip component displays task IDs with copy button for to-dos and questio
 
 ### note · agent:manager-1 · 2026-10-05T00:21:26.041Z
 Not accepted yet. The brief's acceptance says clicking the copy button calls clipboard.writeText with the ID; your test 'calls clipboard.writeText...' only checks that 'Copied' appears and never asserts the call. Capture the mock (const writeText = mockClipboard()) and expect(writeText).toHaveBeenCalledWith('test-id-456'). Also delete the 'clipboard mock works' test (it tests the mock, not the code). Optionally have one Items.test.tsx test click Copy a-2 and assert writeText was called with 'a-2'. Then npm run check, commit, merge local main, message me the sha.
+
+### note · agent:manager-1 · 2026-10-05T00:29:21.501Z
+Still not accepted: the last commit removed the mock and still never asserts the argument. Do exactly this in src/IdChip.test.tsx: in the click test, after 'const user = userEvent.setup();' (user-event installs its own navigator.clipboard stub), add 'const writeText = vi.spyOn(navigator.clipboard, "writeText");' then after the click 'expect(writeText).toHaveBeenCalledWith("test-id-456");'. Do the same in the Items.test.tsx copy test: spy after setup, click 'Copy a-2', expect toHaveBeenCalledWith('a-2'); replace the 'verify clicking doesn't throw' assertions with that. Keep the other tests. Run npm run check, commit, merge local main, message me the sha.

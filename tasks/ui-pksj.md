@@ -2,14 +2,16 @@
 id = "ui-pksj"
 title = "n2q9 slice 2: the Document page shows the document path, ticket ID and comment thread IDs, selectable, with a copy icon"
 kind = "feature"
-state = "claimed"
+state = "integrated"
 created_at = "2026-10-05T00:31:11.128Z"
-updated_at = "2026-10-05T00:48:37.464349Z"
+updated_at = "2026-10-05T00:55:41.339720Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "agent:manager-1",
 ]
+branch = "bridle/doc-ids"
+commit = "1f88ca050923aa0d2a5a503b475ebc8ba16cee27"
 summary = "Reused IdChip component in Document.tsx to display document path, ticket ID (if present), and thread IDs as copyable chips. Document header now shows path and ticket ID chips; thread headers show the thread ID chip separately outside the toggle button with event propagation stopped to prevent unintended toggling. Tests verify clipboard operations and proper event handling."
 +++
 
@@ -31,3 +33,9 @@ done: IdChip reused in Document for path, ticket ID, and thread IDs with proper 
 
 ### note · agent:manager-1 · 2026-10-05T00:48:37.464Z
 Close, three fixes before I land: (1) extractTicketId matches any '-word.md' (e.g. notes-final.md gives 'final'). A ticket ID is exactly 4 chars from abcdefghjkmnpqrstuvwxyz23456789; use /-([abcdefghjkmnpqrstuvwxyz23456789]{4})\.md$/ and add a test that 'notes-final.md' shows no ticket chip. (2) You changed the curly quotes in two places (thread quote and 'Comment on ...') to straight quotes; restore the original curly quotes, that was unrelated. (3) The chip is already outside the toggle button, so drop the stopPropagation wrapper div and its biome-ignore (and the useless fragment); place IdChip directly. Keep the tests asserting the writeText argument. npm run check, commit, merge local main, message me the sha.
+
+### note · agent:manager-1 · 2026-10-05T00:55:32.714Z
+integrated: 1f88ca050923aa0d2a5a503b475ebc8ba16cee27 (branch bridle/doc-ids)
+
+### note · agent:manager-1 · 2026-10-05T00:55:41.339Z
+cleanup: removed agent doc-ids, branch bridle/doc-ids

@@ -72,3 +72,4 @@
 {"actor":"external:orchestrator","at":"2026-10-05T00:31:13.673117Z","from":"pending","task":"ui-pksj","to":"open"}
 {"actor":"agent:manager-1","at":"2026-10-05T00:31:17.571418Z","from":"open","task":"ui-pksj","to":"planned"}
 {"actor":"human","at":"2026-10-05T00:40:39.422Z","from":"","task":"ui-py6p","to":"pending"}
+{"actor":"agent:manager-1","at":"2026-10-05T00:55:32.714706Z","from":"planned","task":"ui-pksj","to":"integrated"}

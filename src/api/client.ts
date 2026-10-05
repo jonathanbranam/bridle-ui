@@ -1,5 +1,6 @@
 import type { ActionRequest } from "./generated/ActionRequest";
 import type { ActionResult } from "./generated/ActionResult";
+import type { AgentList } from "./generated/AgentList";
 import type { Credentials } from "./generated/Credentials";
 import type { DayReport } from "./generated/DayReport";
 import type { Document } from "./generated/Document";
@@ -17,6 +18,7 @@ import type { ResolvedLinks } from "./generated/ResolvedLinks";
 import type { ReviewRequest } from "./generated/ReviewRequest";
 import type { ReviewResult } from "./generated/ReviewResult";
 import type { SessionInfo } from "./generated/SessionInfo";
+import type { SystemView } from "./generated/SystemView";
 import type { TaskDetail } from "./generated/TaskDetail";
 import type { TaskList } from "./generated/TaskList";
 
@@ -108,6 +110,12 @@ export const taskDetail = (project: string, id: string) =>
 	call<TaskDetail>(
 		`/projects/${encodeURIComponent(project)}/tasks/${encodeURIComponent(id)}`,
 	);
+
+export const systemView = (project: string) =>
+	call<SystemView>(`/projects/${encodeURIComponent(project)}/system`);
+
+export const agentList = (project: string) =>
+	call<AgentList>(`/projects/${encodeURIComponent(project)}/agents`);
 
 export const projects = () => call<Projects>("/projects");
 

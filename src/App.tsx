@@ -6,6 +6,7 @@ import { DocumentView } from "./Document";
 import { ItemsView } from "./Items";
 import { Login } from "./Login";
 import { SpecsView } from "./SpecPage";
+import { SystemView } from "./System";
 import { TasksView, TaskView } from "./Tasks";
 import { TicketView } from "./Ticket";
 import { TimeView } from "./Time";
@@ -54,6 +55,7 @@ export function App() {
 						[
 							["/", "To-dos"],
 							["/tasks", "Tasks"],
+							["/system", "System"],
 							["/time", "Time"],
 							["/document", "Document"],
 							["/specs", "Specs"],
@@ -91,6 +93,10 @@ export function App() {
 					<Route
 						path="/tasks/:project/:id"
 						element={<TaskView onLoggedOut={loggedOut} />}
+					/>
+					<Route
+						path="/system"
+						element={<SystemView onLoggedOut={loggedOut} />}
 					/>
 					<Route path="/task" element={<TaskView onLoggedOut={loggedOut} />} />
 					<Route

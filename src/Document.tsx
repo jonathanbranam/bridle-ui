@@ -1,4 +1,10 @@
-import { type ReactNode, useCallback, useEffect, useState } from "react";
+import {
+	type ReactNode,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import { useSearchParams } from "react-router";
 import {
 	projects as listProjects,
@@ -180,6 +186,7 @@ export function DocumentView({ onLoggedOut }: Props) {
 	const [reviewed, setReviewed] = useState<string>();
 	const [known, setKnown] = useState<string[]>([]);
 	const [matches, setMatches] = useState<string[]>([]);
+	const pathInputRef = useRef<HTMLInputElement>(null);
 
 	const fail = useCallback(
 		(r: { notLoggedIn: boolean; error: string }) => {
@@ -352,13 +359,30 @@ export function DocumentView({ onLoggedOut }: Props) {
 				</label>
 				<label className="flex min-w-64 flex-1 flex-col text-sm">
 					Document
-					<input
-						className="rounded border px-2 py-1"
-						list="document-matches"
-						placeholder="Search tickets and docs, or paste a ticket ID"
-						value={path}
-						onChange={(e) => setPath(e.target.value)}
-					/>
+					<div className="relative">
+						<input
+							ref={pathInputRef}
+							className="rounded border px-2 py-1 w-full"
+							list="document-matches"
+							placeholder="Search tickets and docs, or paste a ticket ID"
+							value={path}
+							onChange={(e) => setPath(e.target.value)}
+						/>
+						{path && (
+							<button
+								type="button"
+								aria-label="Clear search"
+								onClick={() => {
+									setPath("");
+									setMatches([]);
+									pathInputRef.current?.focus();
+								}}
+								className="absolute right-0.5 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center text-red-600 hover:text-red-700"
+							>
+								✕
+							</button>
+						)}
+					</div>
 					<datalist id="document-matches">
 						{matches.map((m) => (
 							<option key={m} value={m} />

@@ -224,3 +224,39 @@ test("the comment box opens at the highlighted block, not above the document", a
 	const box = await screen.findByLabelText("Comment");
 	expect(row?.contains(box)).toBe(true);
 });
+
+test("search clear button shows when typing, clears the box and focuses the input", async () => {
+	stub();
+	const user = userEvent.setup();
+	render(
+		<MemoryRouter>
+			<DocumentView onLoggedOut={() => {}} />
+		</MemoryRouter>,
+	);
+	const searchInput = screen.getByLabelText("Document") as HTMLInputElement;
+
+	// Clear button should not be visible initially (empty search box)
+	expect(screen.queryByRole("button", { name: "Clear search" })).toBeNull();
+
+	// Type in the search box
+	await user.type(searchInput, "test");
+	expect(searchInput.value).toBe("test");
+
+	// Clear button should now be visible with correct aria-label
+	const clearButton = await screen.findByRole("button", {
+		name: "Clear search",
+	});
+	expect(clearButton).toBeTruthy();
+
+	// Click the clear button
+	await user.click(clearButton);
+
+	// Input should be empty and button should be hidden
+	await waitFor(() => {
+		expect(searchInput.value).toBe("");
+		expect(screen.queryByRole("button", { name: "Clear search" })).toBeNull();
+	});
+
+	// Input should be focused
+	expect(document.activeElement).toBe(searchInput);
+});

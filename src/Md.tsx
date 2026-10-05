@@ -10,7 +10,13 @@ import {
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { resolveLinks } from "./api/client";
-import { documentHref, findLinks, targetsIn } from "./doc/links";
+import {
+	documentHref,
+	findLinks,
+	isTaskId,
+	targetsIn,
+	taskHref,
+} from "./doc/links";
 
 type Resolved = { project: string; paths: Map<string, string | null> };
 const Links = createContext<Resolved>({ project: "", paths: new Map() });
@@ -71,7 +77,15 @@ function linkify() {
 function Anchor({ href, children }: { href?: string; children?: ReactNode }) {
 	const { project, paths } = useContext(Links);
 	if (href?.startsWith("bridle:")) {
-		const path = paths.get(decodeURIComponent(href.slice(7)));
+		const target = decodeURIComponent(href.slice(7));
+		// Task IDs always link: the task page says so itself if there is no such task.
+		if (isTaskId(target))
+			return (
+				<a className="text-blue-700 underline" href={taskHref(target)}>
+					{children}
+				</a>
+			);
+		const path = paths.get(target);
 		return path ? (
 			<a className="text-blue-700 underline" href={documentHref(project, path)}>
 				{children}

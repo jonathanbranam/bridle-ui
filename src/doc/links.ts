@@ -9,6 +9,13 @@ const WIKI = "\\[\\[([^\\]|]+)(?:\\|([^\\]]+))?\\]\\]";
 const DOC_PATH = `${WORD}docs/[\\w./-]*\\w`;
 const TASK_ID = `${WORD}[a-z]{2,4}-[${ID_CHARS}]{4}${END}`;
 const TICKET_ID = `${WORD}[${ID_CHARS}]{4}${END}`;
+/** True for a target in the task ID form (`ui-umaq`); those open the task page. */
+export const isTaskId = (target: string) =>
+	new RegExp(`^${TASK_ID.slice(WORD.length)}$`).test(target);
+
+/** The page a task ID opens; the ID alone finds the project. */
+export const taskHref = (id: string) => `/task?${new URLSearchParams({ id })}`;
+
 const LINKABLE = new RegExp(
 	`${WIKI}|(${DOC_PATH})|(${TASK_ID})|(${TICKET_ID})`,
 	"g",

@@ -56,7 +56,7 @@ test("an unresolved wiki link is plain text", async () => {
 	expect(screen.queryByRole("link")).toBeNull();
 });
 
-test("a ticket ID and a task ID link when resolved, not otherwise", async () => {
+test("a ticket ID links when resolved; a task ID links to the task page", async () => {
 	resolving({ ab3d: "docs/tickets/open/t-ab3d.md" });
 	shown("see ab3d and br-zz9k");
 	const a = await screen.findByRole("link", { name: "ab3d" });
@@ -64,7 +64,11 @@ test("a ticket ID and a task ID link when resolved, not otherwise", async () => 
 		"href",
 		"/document?project=p&path=docs%2Ftickets%2Fopen%2Ft-ab3d.md",
 	);
-	expect(screen.getAllByRole("link")).toHaveLength(1);
+	expect(screen.getByRole("link", { name: "br-zz9k" })).toHaveAttribute(
+		"href",
+		"/task?id=br-zz9k",
+	);
+	expect(screen.getAllByRole("link")).toHaveLength(2);
 });
 
 test("front matter is a table with linked values, and comments still anchor over a link", async () => {

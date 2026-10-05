@@ -17,6 +17,8 @@ import type { ResolvedLinks } from "./generated/ResolvedLinks";
 import type { ReviewRequest } from "./generated/ReviewRequest";
 import type { ReviewResult } from "./generated/ReviewResult";
 import type { SessionInfo } from "./generated/SessionInfo";
+import type { TaskDetail } from "./generated/TaskDetail";
+import type { TaskList } from "./generated/TaskList";
 
 const BASE = "/api/v1";
 
@@ -93,6 +95,19 @@ export const interactionDay = (date: string) =>
 /** `days` is `weekday`, `weekend` or a comma list like `mon,wed`. */
 export const interactionHours = (from: string, to: string, days: string) =>
 	call<HoursReport>(`/interactions/hours?${qs({ from, to, days })}`);
+
+export type TaskState = "open" | "closed" | "all";
+
+export const taskList = (project: string, state: TaskState = "open") =>
+	call<TaskList>(
+		`/projects/${encodeURIComponent(project)}/tasks?${qs({ state })}`,
+	);
+
+/** A task in any state, so closed tasks open from links. */
+export const taskDetail = (project: string, id: string) =>
+	call<TaskDetail>(
+		`/projects/${encodeURIComponent(project)}/tasks/${encodeURIComponent(id)}`,
+	);
 
 export const projects = () => call<Projects>("/projects");
 

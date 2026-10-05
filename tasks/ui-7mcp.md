@@ -2,13 +2,14 @@
 id = "ui-7mcp"
 title = "wu7r: Document page search box gets a red X clear button (own button, aria-label, phone-sized)"
 kind = "feature"
-state = "planned"
+state = "claimed"
 created_at = "2026-10-05T00:00:34.316Z"
-updated_at = "2026-10-05T00:00:45.757234Z"
+updated_at = "2026-10-05T00:05:43.621433Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
+    "agent:manager-1",
 ]
 +++
 

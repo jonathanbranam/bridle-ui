@@ -4,12 +4,13 @@ title = "5wdu: /ticket?project=&id= opens a ticket by ID, open or resolved"
 kind = "feature"
 state = "planned"
 created_at = "2026-10-05T01:19:41.274Z"
-updated_at = "2026-10-05T01:20:28.563046Z"
+updated_at = "2026-10-05T02:44:30.913760Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
 ]
+summary = "Created /ticket route that opens tickets by ID, resolving them via gateway's links/resolve endpoint and displaying the document under the ticket URL without redirecting. Reused LinkScope and markdown rendering from ui-pmkd. Updated DocumentView to support optional initial project/path props for ticket URL display. Added spec file and unit tests."
 +++
 
 Ticket: bridle repo docs/tickets/open/*-5wdu.md (read it; it quotes the human). Partner: yfjc (agents build these links; bridle side).

@@ -26,7 +26,11 @@ import { parseFrontMatter } from "./doc/links";
 import { IdChip } from "./IdChip";
 import { LinkScope, Md } from "./Md";
 
-type Props = { onLoggedOut: () => void };
+type Props = {
+	onLoggedOut: () => void;
+	initialProject?: string;
+	initialPath?: string;
+};
 
 function extractTicketId(path: string): string | null {
 	const match = path.match(/-([abcdefghjkmnpqrstuvwxyz23456789]{4})\.md$/);
@@ -198,9 +202,13 @@ function ThreadView({
 
 type Pending = { after: number; quote: string };
 
-export function DocumentView({ onLoggedOut }: Props) {
-	const [project, setProject] = useState("");
-	const [path, setPath] = useState("");
+export function DocumentView({
+	onLoggedOut,
+	initialProject,
+	initialPath,
+}: Props) {
+	const [project, setProject] = useState(initialProject || "");
+	const [path, setPath] = useState(initialPath || "");
 	const [doc, setDoc] = useState<Document>();
 	const [error, setError] = useState<string>();
 	const [pending, setPending] = useState<Pending>();
@@ -225,12 +233,19 @@ export function DocumentView({ onLoggedOut }: Props) {
 	const qProject = params.get("project");
 	const qPath = params.get("path");
 
+	// When initialPath is provided (from TicketView), use it directly.
+	// Otherwise, read from query params (Document page with /document?project=&path=).
+	const docProject = initialPath ? initialProject : qProject;
+	const docPath = initialPath ? initialPath : qPath;
+
 	useEffect(() => {
-		if (!qProject || !qPath) return;
-		setProject(qProject);
-		setPath(qPath);
+		if (!docProject || !docPath) return;
+		if (!initialPath) {
+			setProject(docProject);
+			setPath(docPath);
+		}
 		let stale = false;
-		readDocument(qProject, qPath).then((r) => {
+		readDocument(docProject, docPath).then((r) => {
 			if (stale) return;
 			if (r.ok) {
 				setDoc(r.value);
@@ -241,7 +256,7 @@ export function DocumentView({ onLoggedOut }: Props) {
 		return () => {
 			stale = true;
 		};
-	}, [qProject, qPath, fail]);
+	}, [docProject, docPath, fail, initialPath]);
 
 	useEffect(() => {
 		listProjects().then((r) => {
@@ -372,57 +387,59 @@ export function DocumentView({ onLoggedOut }: Props) {
 			])}
 		>
 			<div className="space-y-4">
-				<form className="flex flex-wrap items-end gap-2" onSubmit={open}>
-					<label className="flex flex-col text-sm">
-						Project
-						<select
-							className="rounded border px-2 py-1"
-							value={project}
-							onChange={(e) => setProject(e.target.value)}
-						>
-							{[...new Set([...known, project])]
-								.filter((n) => n !== "")
-								.map((n) => (
-									<option key={n}>{n}</option>
+				{!initialPath && (
+					<form className="flex flex-wrap items-end gap-2" onSubmit={open}>
+						<label className="flex flex-col text-sm">
+							Project
+							<select
+								className="rounded border px-2 py-1"
+								value={project}
+								onChange={(e) => setProject(e.target.value)}
+							>
+								{[...new Set([...known, project])]
+									.filter((n) => n !== "")
+									.map((n) => (
+										<option key={n}>{n}</option>
+									))}
+							</select>
+						</label>
+						<label className="flex min-w-64 flex-1 flex-col text-sm">
+							Document
+							<div className="relative">
+								<input
+									ref={pathInputRef}
+									className="rounded border px-2 py-1 w-full"
+									list="document-matches"
+									placeholder="Search tickets and docs, or paste a ticket ID"
+									value={path}
+									onChange={(e) => setPath(e.target.value)}
+								/>
+								{path && (
+									<button
+										type="button"
+										aria-label="Clear search"
+										onClick={() => {
+											setPath("");
+											setMatches([]);
+											pathInputRef.current?.focus();
+										}}
+										className="absolute right-0.5 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center text-red-600 hover:text-red-700"
+									>
+										✕
+									</button>
+								)}
+							</div>
+							<datalist id="document-matches">
+								{matches.map((m) => (
+									<option key={m} value={m} />
 								))}
-						</select>
-					</label>
-					<label className="flex min-w-64 flex-1 flex-col text-sm">
-						Document
-						<div className="relative">
-							<input
-								ref={pathInputRef}
-								className="rounded border px-2 py-1 w-full"
-								list="document-matches"
-								placeholder="Search tickets and docs, or paste a ticket ID"
-								value={path}
-								onChange={(e) => setPath(e.target.value)}
-							/>
-							{path && (
-								<button
-									type="button"
-									aria-label="Clear search"
-									onClick={() => {
-										setPath("");
-										setMatches([]);
-										pathInputRef.current?.focus();
-									}}
-									className="absolute right-0.5 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center text-red-600 hover:text-red-700"
-								>
-									✕
-								</button>
-							)}
-						</div>
-						<datalist id="document-matches">
-							{matches.map((m) => (
-								<option key={m} value={m} />
-							))}
-						</datalist>
-					</label>
-					<button type="submit" className="rounded border px-3 py-1">
-						Open
-					</button>
-				</form>
+							</datalist>
+						</label>
+						<button type="submit" className="rounded border px-3 py-1">
+							Open
+						</button>
+					</form>
+				)}
 				{error && (
 					<p role="alert" className="text-red-700">
 						{error}

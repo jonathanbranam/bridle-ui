@@ -5,6 +5,7 @@ import type { SessionInfo } from "./api/generated/SessionInfo";
 import { DocumentView } from "./Document";
 import { ItemsView } from "./Items";
 import { Login } from "./Login";
+import { TicketView } from "./Ticket";
 import { TimeView } from "./Time";
 
 // undefined while the first /session probe is in flight, null once known to be logged out.
@@ -74,6 +75,10 @@ export function App() {
 					<Route
 						path="/document"
 						element={<DocumentView onLoggedOut={loggedOut} />}
+					/>
+					<Route
+						path="/ticket"
+						element={<TicketView onLoggedOut={loggedOut} />}
 					/>
 					<Route path="*" element={<Navigate to="/" replace />} />
 				</Routes>

@@ -23,3 +23,7 @@ The installed UI is served by the bridle gateway at `/`.
 ## Specs
 
 Behaviour is specified in `design/specs/` (bridle's spec format, ids in `design/specs/.ids`). A new feature adds or changes a spec there in the same task. `npm run check` runs `bridle spec check --require-ids` (`check:specs`) when `bridle` is on PATH; CI does not yet. Scenarios marked executable are bound to tests in `src/specs.test.tsx` through the vendored adapter in `tools/vitest-bridle/`; `bridle spec coverage --tests src` lists the unbound ones.
+
+## Ticket URLs
+
+Open a ticket by ID with `/ticket?project=p&id=id`. Also accepts `br-id`-style task IDs. The URL is stable across moves from open/ to resolved/ (no redirect to the document path form).

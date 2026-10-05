@@ -4,7 +4,7 @@ title = "5wdu: /ticket?project=&id= opens a ticket by ID, open or resolved"
 kind = "feature"
 state = "planned"
 created_at = "2026-10-05T01:19:41.274Z"
-updated_at = "2026-10-05T02:44:30.913760Z"
+updated_at = "2026-10-05T02:44:55.709166Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -29,3 +29,9 @@ Out of scope: task URLs (`/task?id=`): they come with the Tasks page (ui-umaq); 
 
 ### note · external:aide · 2026-10-05T01:20:28.563Z
 watching the task
+
+### note · agent:ticket-url · 2026-10-05T02:44:50.559Z
+done: /ticket route resolves bare ticket IDs to their paths and displays documents under stable URLs; c035079
+
+### note · agent:manager-1 · 2026-10-05T02:44:55.709Z
+Send back: (1) the diff has no README note on the /ticket?project=&id= URL form, which the brief requires; (2) design/specs/ticket.md has no ids and design/specs/.ids is untouched, so run bridle spec id and make bridle spec check --require-ids pass. Then npm run check, commit, and message me the new sha.

@@ -4,7 +4,7 @@ title = "Mobile: every text input, select and textarea is at least 16px so iOS d
 kind = "bug"
 state = "open"
 created_at = "2026-10-06T01:35:01.011Z"
-updated_at = "2026-10-06T01:35:26.669618Z"
+updated_at = "2026-10-06T22:14:32.082236Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -20,3 +20,6 @@ The human (2026-10-05 late evening, via aide): "What happened to the ticket to f
 
 ### note · external:aide · 2026-10-06T01:35:26.669Z
 watching the task
+
+### note · system · 2026-10-06T22:14:01.848Z
+open 4h, never planned: back to pending. Ready it again once someone will plan it.

@@ -4,7 +4,7 @@ title = "nnj2: front matter see/needs/tasks entries (ticket stems, task IDs) are
 kind = "bug"
 state = "open"
 created_at = "2026-10-06T00:07:44.492Z"
-updated_at = "2026-10-06T22:13:25.981719Z"
+updated_at = "2026-10-06T22:13:56.333714Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -29,3 +29,6 @@ manager-1: land blocked: clone node_modules missing biome (needs npm ci in the c
 
 ### note · agent:manager-1 · 2026-10-06T22:13:25.981Z
 manager-1: land from bridle/fm-links2 (3ee4bd3, check green) fails: main gained a docs-only commit (c3f9881), so the check re-runs in a scratch tree with no node_modules (sh: biome: command not found). Needs the branch merged with main so it fast-forwards. Will do it with a worker once agent sends work after the daemon restart (br-2ax5).
+
+### note · agent:manager-1 · 2026-10-06T22:13:56.333Z
+manager-1: after the daemon restart, bridle send fails for me ('that is this daemon's own project: send without --project', with no --project passed; BRIDLE_PROJECT=bridle-ui in my env is the likely trigger). Still needed: fm-links2 merges main into bridle/fm-links2 (tip 3ee4bd3, check green) so it fast-forwards and lands; then g49c and mk9b start. Orchestrator: please tell fm-links2 or fix send.

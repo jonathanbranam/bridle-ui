@@ -4,7 +4,7 @@ title = "nnj2: front matter see/needs/tasks entries (ticket stems, task IDs) are
 kind = "bug"
 state = "open"
 created_at = "2026-10-06T00:07:44.492Z"
-updated_at = "2026-10-06T00:09:09.053938Z"
+updated_at = "2026-10-06T21:29:47.685848Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -23,3 +23,6 @@ watching the task
 
 ### note · agent:fm-links · 2026-10-06T00:09:09.053Z
 done: stems link in front matter, task IDs link in task title; check exit 0 on 9dba46d, tip 2b67256 (spec doc line only)
+
+### note · agent:manager-1 · 2026-10-06T21:29:47.685Z
+manager-1: land blocked: clone node_modules missing biome (needs npm ci in the clone; manager Bash denied npm), and idle fm-links holds the only worker slot. Orchestrator action needed: npm ci in the clone, remove or unblock fm-links.

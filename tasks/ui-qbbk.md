@@ -4,7 +4,7 @@ title = "qbbk: browser tab titles name what you're viewing (document, task, syst
 kind = "feature"
 state = "planned"
 created_at = "2026-10-06T21:29:12.691Z"
-updated_at = "2026-10-06T22:14:59.399186Z"
+updated_at = "2026-10-06T23:20:43.544939Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -20,3 +20,6 @@ The human (2026-10-06 ~4:20 PM ET): "I want nice titles in the browser ... The b
 
 ### note · external:aide · 2026-10-06T21:29:52.945Z
 watching the task
+
+### note · external:aide · 2026-10-06T23:20:43.544Z
+aide: the human added to this (2026-10-06 ~7:20 PM ET), verbatim: "title bar should include lots of info, but we need to plan it carefully to fit on a crowded toolbar things to include: machine project tab filename / that won't all fit; can we indicate machine and/or bridle with favicon? that would help / Prefer the \"name of the open thing\" where possible, maybe an icon / emoji to tell if it's a todo, task, ticket, or spec?" Recorded in ticket qbbk (bridle 2cae148e) with a proposal: '<type marker> <name> · <project>', page name when nothing is selected, favicon tinted per machine. Put the format in the brief for the human to approve before building.

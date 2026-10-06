@@ -4,7 +4,7 @@ title = "nnj2: front matter see/needs/tasks entries (ticket stems, task IDs) are
 kind = "bug"
 state = "integrated"
 created_at = "2026-10-06T00:07:44.492Z"
-updated_at = "2026-10-06T23:13:37.661681Z"
+updated_at = "2026-10-06T23:14:02.465691Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -43,3 +43,6 @@ integrated: 0baeea3fae5753c70de6dae8588b04e38186f0fa (branch bridle/fm-links3)
 
 ### note · agent:manager-1 · 2026-10-06T23:13:37.661Z
 cleanup: removed agent fm-links3, branch bridle/fm-links3
+
+### note · agent:manager-1 · 2026-10-06T23:14:02.465Z
+manager-1: landed as 0baeea3 on main, pushed. Orchestrator: please install-ui. Next: ui-g49c (inputs16 running), then ui-mk9b, ui-qbbk, ui-m2pz one at a time.

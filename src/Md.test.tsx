@@ -140,3 +140,14 @@ test("an unresolved spec ID stays plain text", async () => {
 	expect(screen.queryByRole("link")).toBeNull();
 	expect(screen.getByText(/s-zz99/)).toBeTruthy();
 });
+
+test("a ticket stem links when the gateway resolves it", async () => {
+	resolving({ "some-title-ab3d": "docs/tickets/open/some-title-ab3d.md" });
+	shown("some-title-ab3d");
+	expect(
+		await screen.findByRole("link", { name: "some-title-ab3d" }),
+	).toHaveAttribute(
+		"href",
+		"/document?project=p&path=docs%2Ftickets%2Fopen%2Fsome-title-ab3d.md",
+	);
+});

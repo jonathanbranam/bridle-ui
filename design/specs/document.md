@@ -84,7 +84,7 @@ Request review posts the path and resend flag, shows the reply, and reloads.
 
 ### Requirement: Documents render as markdown with front matter and links  {#r-4ac7}
 
-The page SHALL render a document's markdown (GFM), show a leading `---` front matter block as a key/value table for any file, and link URLs, `[[wiki links]]` (`target` or `target|label`), `docs/...` paths, ticket IDs and ticket-made task IDs, in the document, its threads and the front matter values. A path, wiki link or ID links to the document only when the gateway's `links/resolve` finds it; otherwise it stays plain text. The same linking applies to to-do and question text on the home page.
+The page SHALL render a document's markdown (GFM), show a leading `---` front matter block as a key/value table for any file, and link URLs, `[[wiki links]]` (`target` or `target|label`), `docs/...` paths, ticket IDs, ticket file stems (`some-title-ab12`) and ticket-made task IDs, in the document, its threads and the front matter values. A path, wiki link or ID links to the document only when the gateway's `links/resolve` finds it; otherwise it stays plain text. The same linking applies to to-do and question text on the home page.
 
 #### Scenario: Front matter is a table  {#s-6d3e}
 

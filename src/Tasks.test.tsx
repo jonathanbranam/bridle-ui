@@ -153,3 +153,14 @@ test("a task ID in markdown links to /task?id=", () => {
 		"/task?id=ui-umaq",
 	);
 });
+
+test("a task ID in the task's title links", async () => {
+	gateway({
+		"x-1111": detail("x-1111", "working", { title: "follows ui-umaq" }),
+	});
+	app("/tasks/p/x-1111");
+	expect(await screen.findByRole("link", { name: "ui-umaq" })).toHaveAttribute(
+		"href",
+		"/task?id=ui-umaq",
+	);
+});

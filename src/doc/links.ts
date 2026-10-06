@@ -10,6 +10,9 @@ const DOC_PATH = `${WORD}docs/[\\w./-]*\\w`;
 const TASK_ID = `${WORD}[a-z]{2,4}-[${ID_CHARS}]{4}${END}`;
 const SPEC_ID = `${WORD}[rs]-[${ID_CHARS}]{4}${END}`;
 const TICKET_ID = `${WORD}[${ID_CHARS}]{4}${END}`;
+// A ticket file stem: words then the ID (`some-title-ab12`). Needs two words before the ID so
+// ordinary hyphenated words ("re-test") are not candidates; the gateway still decides.
+const TICKET_STEM = `${WORD}[a-z0-9]+(?:-[a-z0-9]+)+-[${ID_CHARS}]{4}${END}`;
 /** True for a target in the task ID form (`ui-umaq`); those open the task page. */
 export const isTaskId = (target: string) =>
 	new RegExp(`^${TASK_ID.slice(WORD.length)}$`).test(target);
@@ -28,7 +31,7 @@ export const specHref = (project: string, path: string) => {
 };
 
 const LINKABLE = new RegExp(
-	`${WIKI}|(${DOC_PATH})|(${TASK_ID})|(${SPEC_ID})|(${TICKET_ID})`,
+	`${WIKI}|(${DOC_PATH})|(${TASK_ID})|(${SPEC_ID})|(${TICKET_STEM})|(${TICKET_ID})`,
 	"g",
 );
 
@@ -44,7 +47,7 @@ export function findLinks(text: string): Piece[] {
 	for (const m of text.matchAll(LINKABLE)) {
 		const at = m.index ?? 0;
 		if (at > pos) out.push({ text: text.slice(pos, at) });
-		const target = (m[1] ?? m[3] ?? m[4] ?? m[5] ?? m[6]).trim();
+		const target = (m[1] ?? m[3] ?? m[4] ?? m[5] ?? m[6] ?? m[7]).trim();
 		out.push({ target, label: m[2]?.trim() || m[1]?.trim() || m[0] });
 		pos = at + m[0].length;
 	}

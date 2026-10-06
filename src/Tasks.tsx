@@ -226,10 +226,12 @@ export function TaskView({ onLoggedOut }: Props) {
 	return (
 		<LinkScope
 			project={task.project}
-			texts={[task.body, ...task.thread.map((m) => m.body)]}
+			texts={[task.title, task.body, ...task.thread.map((m) => m.body)]}
 		>
 			<article className="space-y-3">
-				<h2 className="text-xl font-semibold">{task.title}</h2>
+				<h2 className="text-xl font-semibold">
+					<Md text={task.title} />
+				</h2>
 				<IdChip id={task.id} />
 				<p className="text-sm text-gray-600">
 					{task.project} / {task.state} / {task.priority} / {task.kind}

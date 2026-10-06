@@ -4,13 +4,14 @@ title = "Mobile: every text input, select and textarea is at least 16px so iOS d
 kind = "bug"
 state = "planned"
 created_at = "2026-10-06T01:35:01.011Z"
-updated_at = "2026-10-06T22:14:57.534923Z"
+updated_at = "2026-10-06T23:38:58.257473Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
 ]
 size = "S"
+summary = "Global CSS in src/index.css sets input/textarea/select to 16px (unlayered, beats Tailwind text-sm) plus body touch-action: manipulation; index.html viewport now has maximum-scale=1, viewport-fit=cover. src/mobile-inputs.test.ts fails if the rule drops under 16px, a field sets its own text-xs/text-sm/font-size, or the viewport meta regresses. Spec r-16f1 added to design/specs/system.md. Not yet installed on the live site (manager to run install-ui)."
 +++
 
 original id: g49c
@@ -23,3 +24,6 @@ watching the task
 
 ### note · system · 2026-10-06T22:14:01.848Z
 open 4h, never planned: back to pending. Ready it again once someone will plan it.
+
+### note · agent:inputs16 · 2026-10-06T23:38:58.257Z
+done: tip 57023b5, check green (exit 0, 110 tests). Not installed live yet.

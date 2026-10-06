@@ -2,9 +2,9 @@
 id = "ui-mk9b"
 title = "Document page: the search clear button moves outside the field, always shown, finger-sized, disabled when the field is empty"
 kind = "bug"
-state = "pending"
+state = "planned"
 created_at = "2026-10-06T01:35:01.516Z"
-updated_at = "2026-10-06T22:14:01.851990Z"
+updated_at = "2026-10-06T22:14:57.676206Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",

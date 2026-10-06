@@ -2,9 +2,9 @@
 id = "ui-g49c"
 title = "Mobile: every text input, select and textarea is at least 16px so iOS doesn't zoom on focus (g49c's mobile rule, never applied to bridle-ui)"
 kind = "bug"
-state = "open"
+state = "planned"
 created_at = "2026-10-06T01:35:01.011Z"
-updated_at = "2026-10-06T22:14:32.082236Z"
+updated_at = "2026-10-06T22:14:57.534923Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",

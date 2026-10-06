@@ -2,9 +2,9 @@
 id = "ui-qbbk"
 title = "qbbk: browser tab titles name what you're viewing (document, task, system...), updated on every route and selection change"
 kind = "feature"
-state = "open"
+state = "planned"
 created_at = "2026-10-06T21:29:12.691Z"
-updated_at = "2026-10-06T21:29:52.945872Z"
+updated_at = "2026-10-06T22:14:59.399186Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",

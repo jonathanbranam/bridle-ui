@@ -2,9 +2,9 @@
 id = "ui-m2pz"
 title = "m2pz: research picking from a long, growing list, then 2-3 clickable static HTML prototypes of the document picker, served over Tailscale"
 kind = "explore"
-state = "pending"
+state = "planned"
 created_at = "2026-10-06T01:37:58.358Z"
-updated_at = "2026-10-06T22:14:01.854023Z"
+updated_at = "2026-10-06T22:14:59.230874Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 +++

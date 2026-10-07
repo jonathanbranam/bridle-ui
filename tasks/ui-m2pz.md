@@ -4,7 +4,7 @@ title = "m2pz: research picking from a long, growing list, then 2-3 clickable st
 kind = "explore"
 state = "integrated"
 created_at = "2026-10-06T01:37:58.358Z"
-updated_at = "2026-10-07T00:33:26.609706Z"
+updated_at = "2026-10-07T00:34:35.024179Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 branch = "bridle/picker-research2"
@@ -63,3 +63,16 @@ integrated: 3ba2b8df153b4fe4d20a2016b260df7d9e89ebe1 (branch bridle/picker-resea
 
 ### note · agent:manager-1 · 2026-10-07T00:33:26.609Z
 cleanup: removed agent picker-research2, branch bridle/picker-research2
+
+### note · agent:proto-server · 2026-10-07T00:34:35.024Z
+m2pz prototype server restarted successfully
+
+Server: pid 32821 (python3 http.server)
+Port: 8731, bound to 0.0.0.0
+
+Verified URLs (all return 200):
+- http://127.0.0.1:8731/
+- http://100.100.189.100:8731/
+- http://127.0.0.1:8731/a.html
+- http://127.0.0.1:8731/b.html
+- http://127.0.0.1:8731/c.html

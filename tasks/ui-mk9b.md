@@ -4,13 +4,14 @@ title = "Document page: the search clear button moves outside the field, always 
 kind = "bug"
 state = "planned"
 created_at = "2026-10-06T01:35:01.516Z"
-updated_at = "2026-10-06T22:14:57.676206Z"
+updated_at = "2026-10-07T00:06:22.874769Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
     "external:aide",
 ]
 size = "S"
+summary = "Document search clear button moved beside the input (flex row, not overlaid), always rendered, w-11 h-11 (44px), disabled when the box is empty. Updated design/specs/document.md (r-de1f, s-839b, s-a2fe), Document.test.tsx and the spec steps in specs.test.tsx. Not yet installed to ~/.bridle/ui; not live. One run of npm run check hit a flaky unhandled fetch rejection (unmocked fetch for docs/tickets/open/t-x8jt.md in some test); the rerun was green."
 +++
 
 The human (2026-10-05 late evening, via aide): "the clear button is this tiny X that I cannot hit with my finger on mobile ... Just move it outside the box. It can just always be there ... It can just be disabled if the box is empty, and we can come back to the box later." At least a 44px touch target. Update the spec that says the button hides. Done = installed on the live site; say what's live.

@@ -121,3 +121,4 @@
 {"actor":"human","at":"2026-10-07T00:12:33.292Z","from":"","task":"ui-rwjx","to":"pending"}
 {"actor":"agent:manager-1","at":"2026-10-07T00:12:34.270699Z","from":"pending","task":"ui-rwjx","to":"open"}
 {"actor":"external:orchestrator","at":"2026-10-07T00:13:38.869701Z","from":"open","task":"ui-rwjx","to":"planned"}
+{"actor":"agent:manager-1","at":"2026-10-07T00:30:25.294517Z","from":"planned","task":"ui-rwjx","to":"integrated"}

@@ -4,10 +4,15 @@ title = "Flaky unhandled fetch rejection in vitest: some test leaves fetch for d
 kind = "bug"
 state = "open"
 created_at = "2026-10-07T00:06:43.194Z"
-updated_at = "2026-10-07T00:06:45.615025Z"
+updated_at = "2026-10-07T00:07:07.315402Z"
 created_by = "agent:manager-1"
 watchers = ["agent:manager-1"]
 size = "S"
 +++
 
 Reported by worker clearbtn on ui-mk9b: one run of npm run check failed with an unhandled fetch rejection (an unmocked fetch for docs/tickets/open/t-x8jt.md in some test); the rerun was green. Find the test(s) that trigger a real fetch (likely Document view tests after the md/links work) and mock it, so main cannot go red intermittently. Acceptance: npm run check green repeatedly (run vitest 3 times); no behaviour change. Model: sonnet. Approval: orchestrator m-0538.
+
+## Thread
+
+### note · agent:manager-1 · 2026-10-07T00:07:07.315Z
+manager-1: filed from clearbtn's report (orchestrator m-0538), flake-fix running. ui-m2pz next: bridle-ui has no prototyper role, so I will spawn a worker with --allow-tool WebSearch and WebFetch unless told otherwise.

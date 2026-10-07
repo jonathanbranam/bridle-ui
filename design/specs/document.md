@@ -6,21 +6,22 @@ Open a markdown document from a project through the gateway, read it, and commen
 
 ### Requirement: A document is opened by search  {#r-de1f}
 
-The page SHALL let the human pick a project, type part of a document name or a bare ticket ID, and open the match. The search box SHALL show a clear button only while it has text; clearing empties the box and focuses it.
+The page SHALL let the human pick a project, type part of a document name or a bare ticket ID, and open the match. The search box SHALL have a clear button beside it (outside the field), always shown, at least 44px square, and disabled while the box is empty; clearing empties the box and focuses it.
 
-#### Scenario: The clear button follows the text  {#s-839b}
+#### Scenario: The clear button is disabled when the box is empty  {#s-839b}
 
 *Verification*: **executable**
 
 - **GIVEN** the Document page with an empty search box
+- **THEN** a "Clear search" button is shown and disabled
 - **WHEN** the human types "test" into the search box
-- **THEN** a "Clear search" button is shown
+- **THEN** the "Clear search" button is enabled
 
 #### Scenario: Clearing empties and refocuses the box  {#s-a2fe}
 
 *Verification*: **non-executable**
 
-Clicking Clear search empties the box, hides the button and focuses the input.
+Clicking Clear search empties the box, disables the button and focuses the input.
 
 ### Requirement: The document's identifiers are copyable  {#r-5b22}
 

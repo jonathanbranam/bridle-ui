@@ -405,7 +405,7 @@ export function DocumentView({
 						</label>
 						<label className="flex min-w-64 flex-1 flex-col text-sm">
 							Document
-							<div className="relative">
+							<div className="flex items-center gap-1">
 								<input
 									ref={pathInputRef}
 									className="rounded border px-2 py-1 w-full"
@@ -414,20 +414,19 @@ export function DocumentView({
 									value={path}
 									onChange={(e) => setPath(e.target.value)}
 								/>
-								{path && (
-									<button
-										type="button"
-										aria-label="Clear search"
-										onClick={() => {
-											setPath("");
-											setMatches([]);
-											pathInputRef.current?.focus();
-										}}
-										className="absolute right-0.5 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center text-red-600 hover:text-red-700"
-									>
-										✕
-									</button>
-								)}
+								<button
+									type="button"
+									aria-label="Clear search"
+									disabled={!path}
+									onClick={() => {
+										setPath("");
+										setMatches([]);
+										pathInputRef.current?.focus();
+									}}
+									className="shrink-0 w-11 h-11 flex items-center justify-center rounded border text-red-600 hover:text-red-700 disabled:opacity-40 disabled:hover:text-red-600"
+								>
+									✕
+								</button>
 							</div>
 							<datalist id="document-matches">
 								{matches.map((m) => (

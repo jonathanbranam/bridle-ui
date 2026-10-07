@@ -102,10 +102,17 @@ steps.given(/^the Document page with an empty search box$/, () => {
 steps.when(/^the human types "(.+)" into the search box$/, async (_w, text) => {
 	await userEvent.setup().type(screen.getByLabelText("Document"), text);
 });
-steps.then(/^a "Clear search" button is shown$/, async () => {
+steps.then(/^a "Clear search" button is shown and disabled$/, () => {
 	expect(
-		await screen.findByRole("button", { name: "Clear search" }),
-	).toBeTruthy();
+		(screen.getByRole("button", { name: "Clear search" }) as HTMLButtonElement)
+			.disabled,
+	).toBe(true);
+});
+steps.then(/^the "Clear search" button is enabled$/, () => {
+	expect(
+		(screen.getByRole("button", { name: "Clear search" }) as HTMLButtonElement)
+			.disabled,
+	).toBe(false);
 });
 
 steps.given(/^an opened document$/, async () => {

@@ -238,26 +238,35 @@ test("search clear button shows when typing, clears the box and focuses the inpu
 	);
 	const searchInput = screen.getByLabelText("Document") as HTMLInputElement;
 
-	// Clear button should not be visible initially (empty search box)
-	expect(screen.queryByRole("button", { name: "Clear search" })).toBeNull();
+	// Clear button is always shown, but disabled while the box is empty
+	expect(
+		(screen.getByRole("button", { name: "Clear search" }) as HTMLButtonElement)
+			.disabled,
+	).toBe(true);
 
 	// Type in the search box
 	await user.type(searchInput, "test");
 	expect(searchInput.value).toBe("test");
 
-	// Clear button should now be visible with correct aria-label
+	// Clear button is now enabled
 	const clearButton = await screen.findByRole("button", {
 		name: "Clear search",
 	});
-	expect(clearButton).toBeTruthy();
+	expect((clearButton as HTMLButtonElement).disabled).toBe(false);
 
 	// Click the clear button
 	await user.click(clearButton);
 
-	// Input should be empty and button should be hidden
+	// Input should be empty and button disabled again
 	await waitFor(() => {
 		expect(searchInput.value).toBe("");
-		expect(screen.queryByRole("button", { name: "Clear search" })).toBeNull();
+		expect(
+			(
+				screen.getByRole("button", {
+					name: "Clear search",
+				}) as HTMLButtonElement
+			).disabled,
+		).toBe(true);
 	});
 
 	// Input should be focused

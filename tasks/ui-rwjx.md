@@ -2,9 +2,9 @@
 id = "ui-rwjx"
 title = "main red: Tasks.test.tsx 'a task ID in markdown links to /task?id=' leaves fetch(/api/v1/projects/p/links/resolve) unmocked (unhandled rejection, CI run 37550475781)"
 kind = "bug"
-state = "open"
+state = "planned"
 created_at = "2026-10-07T00:12:33.292Z"
-updated_at = "2026-10-07T00:12:34.270699Z"
+updated_at = "2026-10-07T00:13:38.869701Z"
 created_by = "agent:manager-1"
 watchers = ["agent:manager-1"]
 size = "S"

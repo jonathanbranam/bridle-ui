@@ -1,10 +1,16 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { afterEach, expect, test, vi } from "vitest";
 import { DocumentView } from "./Document";
 
-afterEach(() => vi.unstubAllGlobals());
+// Unmount first and let in-flight work settle: a fetch started after the stub is gone
+// would hit the real fetch (relative URL) and fail the run with an unhandled rejection.
+afterEach(async () => {
+	cleanup();
+	await new Promise((r) => setTimeout(r, 0));
+	vi.unstubAllGlobals();
+});
 
 const original = `# T
 

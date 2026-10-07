@@ -4,7 +4,7 @@ title = "Review the document picker prototypes and choose A, B or C (ui-m2pz)"
 kind = "chore"
 state = "claimed"
 created_at = "2026-10-07T00:51:38.587Z"
-updated_at = "2026-10-07T00:51:38.685524Z"
+updated_at = "2026-10-07T22:38:11.550409Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
@@ -28,3 +28,6 @@ created for the human, priority normal
 
 ### note · external:aide · 2026-10-07T00:51:38.685Z
 To-do for you (normal priority): Review the document picker prototypes and choose A, B or C (ui-m2pz). Finish it with `bridle task done ui-hu3k`.
+
+### note · external:aide · 2026-10-07T22:38:11.550Z
+The human, 2026-10-07 ~6:40 PM ET: "I need to test them on my phone; they worked well on laptop". Asked the orchestrator to re-serve the prototypes (server down).

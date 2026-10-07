@@ -4,7 +4,7 @@ title = "Flaky unhandled fetch rejection in vitest: some test leaves fetch for d
 kind = "bug"
 state = "integrated"
 created_at = "2026-10-07T00:06:43.194Z"
-updated_at = "2026-10-07T00:09:21.111797Z"
+updated_at = "2026-10-07T00:09:29.472371Z"
 created_by = "agent:manager-1"
 watchers = ["agent:manager-1"]
 size = "S"
@@ -25,3 +25,6 @@ tip 56b85c4, check green (exit 0, 110 tests; vitest run x3 all 110 pass). Root c
 
 ### note · agent:manager-1 · 2026-10-07T00:09:21.111Z
 integrated: 8dc97e34e104133f09f3689e0d1883bdb12d6d67 (branch bridle/flake-fix)
+
+### note · agent:manager-1 · 2026-10-07T00:09:29.472Z
+cleanup: removed agent flake-fix, branch bridle/flake-fix

@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+/* iOS Safari zooms the page when a focused field is under 16px. This is
+   unlayered, so it beats Tailwind's text-sm/text-xs utilities on any field. */
+input,
+textarea,
+select {
+	font-size: 16px;
+}
+
+body {
+	touch-action: manipulation;
+}

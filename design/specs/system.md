@@ -29,3 +29,13 @@ Under each reachable project the page SHALL list agents with name, role, state, 
 *Verification*: **non-executable**
 
 With one working and one stopped agent only the working one shows; ticking "Show stopped" adds the other.
+
+### Requirement: Form fields do not make mobile browsers zoom  {#r-16f1}
+
+Every input, textarea and select SHALL have a font size of at least 16px, and the page SHALL set the viewport meta (`maximum-scale=1`, `viewport-fit=cover`) and `touch-action: manipulation` on the body, so iOS Safari does not zoom on focus.
+
+#### Scenario: The CSS and viewport hold the floor  {#s-16f2}
+
+*Verification*: **non-executable**
+
+`src/mobile-inputs.test.ts` reads `src/index.css` and `index.html` and fails if the field rule drops under 16px, or a field in the source sets its own smaller size.

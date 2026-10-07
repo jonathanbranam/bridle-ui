@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { afterEach, expect, test, vi } from "vitest";
@@ -138,11 +138,9 @@ test("edges link to the other task's page", async () => {
 	);
 });
 
-test("a task ID in markdown links to /task?id=", () => {
-	vi.stubGlobal(
-		"fetch",
-		vi.fn(async () => json({ project: "p", links: [] })),
-	);
+test("a task ID in markdown links to /task?id=", async () => {
+	const fetchMock = vi.fn(async () => json({ project: "p", links: [] }));
+	vi.stubGlobal("fetch", fetchMock);
 	render(
 		<LinkScope project="p" texts={["see ui-umaq"]}>
 			<Md text="see ui-umaq" />
@@ -152,6 +150,10 @@ test("a task ID in markdown links to /task?id=", () => {
 		"href",
 		"/task?id=ui-umaq",
 	);
+	// Let the resolve call and its state update finish before the global is
+	// unstubbed, or a late call reaches the real fetch.
+	await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+	await act(async () => {});
 });
 
 test("a task ID in the task's title links", async () => {

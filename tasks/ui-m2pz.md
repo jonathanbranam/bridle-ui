@@ -4,10 +4,10 @@ title = "m2pz: research picking from a long, growing list, then 2-3 clickable st
 kind = "explore"
 state = "planned"
 created_at = "2026-10-06T01:37:58.358Z"
-updated_at = "2026-10-07T00:11:07.203413Z"
+updated_at = "2026-10-07T00:32:31.064596Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
-summary = "Three static picker prototypes (omnibox, folder browser, full-screen sheet) in prototypes/m2pz/, served on 0.0.0.0:8731 (pid 48925, http://100.100.189.100:8731/). Research step unsourced: no WebSearch/WebFetch available. App untouched."
+summary = "Research step: docs/research/m2pz-long-list-picking.md (285f6b5); sourced guidance supports search+scroll list (A, C), weak for folder browser (B); Apple HIG unverified."
 +++
 
 original id: m2pz
@@ -43,3 +43,12 @@ Comparison. A (omnibox) is one always-visible search field, recents when empty, 
 
 ### note · agent:picker-proto · 2026-10-07T00:11:07.203Z
 done: 3 prototypes at http://100.100.189.100:8731/ (pid 48925); research unsourced (no web tools); commit 6da8f9d (no npm check; app untouched)
+
+### note · agent:picker-research2 · 2026-10-07T00:32:23.603Z
+Research done: docs/research/m2pz-long-list-picking.md, commit 285f6b5 (branch bridle/picker-research2).
+Findings: NN/g, Baymard, GOV.UK and Material all say a long list is not a dropdown; the replacement is search/autocomplete with a scrollable result list (https://www.nngroup.com/articles/drop-down-menus/ , https://baymard.com/blog/drop-down-usability , https://design-system.service.gov.uk/components/select/ "last resort"). Baymard: 4-8 suggestions on mobile, crowding hurts, finger-sized rows (https://baymard.com/research-articles/autocomplete-design). Material: search bar vs full-screen search view with history first (https://github.com/material-components/material-components-android/blob/master/docs/components/Search.md). NN/g: 1cm touch targets (https://www.nngroup.com/articles/touch-target-size/), support paste (https://www.nngroup.com/articles/mobile-input-checklist/). WAI-ARIA combobox pattern for keyboard/a11y.
+Prototypes: A omnibox and C sheet are supported (search plus scrolling results; Material precedent is A on desktop, C on phone). B folder browser: only support is file-retrieval research that people browse folders, but those folders are shallow and small (~12 files), which thousands of docs break; phone width hurts it. Sources do not choose between A and C; picker-proto's lean (A with C's grouping) is consistent.
+Gaps: no source for open-on-paste-of-exact-ID (design decision, not guidance). Apple HIG pages: WebFetch returned only the page title (developer.apple.com/design/human-interface-guidelines/search-fields, /layout), so Apple claims are unverified. tau.ac.il/education/muse/publications/101.pdf: fetch could not read the PDF (binary); its figures come from a search snippet. No NN/g typeahead article surfaced.
+
+### note · agent:manager-1 · 2026-10-07T00:32:31.064Z
+manager-1: ui-m2pz deliverables are ready for the human. Prototypes (live, pid 48925, 0.0.0.0:8731; the server may need a restart after picker-proto was stopped): http://100.100.189.100:8731/ with /a.html omnibox, /b.html folder browser, /c.html full-screen sheet; source in branch bridle/picker-proto (6da8f9d). Sourced research: docs/research/m2pz-long-list-picking.md on branch bridle/picker-research2 (285f6b5); it supports A and C, weakly B; sources do not choose between A and C. FAILED FETCHES to report to the human (rule report-task-failures): WebFetch of the Apple HIG pages (search-fields, layout) returned only the page title, so Apple claims are unverified; the tau.ac.il PDF could not be read (binary), its figures come from a search snippet; no NN/g typeahead article surfaced. Not landing: an explore task, the human picks the design; say if you want the research doc and prototypes merged to main (I would land picker-research2's doc, and keep prototypes on their branch).

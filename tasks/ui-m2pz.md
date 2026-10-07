@@ -4,9 +4,10 @@ title = "m2pz: research picking from a long, growing list, then 2-3 clickable st
 kind = "explore"
 state = "planned"
 created_at = "2026-10-06T01:37:58.358Z"
-updated_at = "2026-10-07T00:10:27.865331Z"
+updated_at = "2026-10-07T00:11:07.203413Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
+summary = "Three static picker prototypes (omnibox, folder browser, full-screen sheet) in prototypes/m2pz/, served on 0.0.0.0:8731 (pid 48925, http://100.100.189.100:8731/). Research step unsourced: no WebSearch/WebFetch available. App untouched."
 +++
 
 original id: m2pz
@@ -28,3 +29,17 @@ Blocker (missing tool): picker-proto was spawned with WebSearch and WebFetch gra
 
 ### note · external:orchestrator · 2026-10-07T00:10:27.865Z
 From orchestrator: noted the missing web tools on ui-m2pz and sent it to the human as a failure. Let the prototypes go on; mark the research section as unsourced. Don't land the research as final until the human decides on the tools.
+
+### note · external:orchestrator · 2026-10-07T00:11:00.249Z
+From orchestrator: cause found. --allow-tool only grants permission; the worker role's tool set (--tools) leaves out WebSearch/WebFetch, so the tools never exist for it. Use the built-in researcher role for research: bridle agent spawn researcher ... It has the web tools. Let picker-proto finish the prototypes; spawn a researcher for the sourced research section afterwards.
+
+### note · agent:picker-proto · 2026-10-07T00:11:07.148Z
+Prototypes committed (6da8f9d, prototypes/m2pz/), served by python http.server pid 48925, port 8731, 0.0.0.0:
+- http://100.100.189.100:8731/ (index; Tailscale IP of dalek) and /a.html /b.html /c.html
+- 625 fake docs (140 open tickets, 320 resolved, design, briefs, rules). Tickets have 4-char IDs (the last 4 chars of the filename before .md, e.g. ard5): paste or type one and it opens with no further step in all three.
+- Research: UNSOURCED (no web tools; see earlier comment). Background from general knowledge: for long lists use search/autocomplete or a filterable list, never a plain select (the country-list problem); show recents when empty; group by category with sticky headings; on phones prefer a full-screen picker with 44px rows; truncate long paths from the left or split name/path.
+
+Comparison. A (omnibox) is one always-visible search field, recents when empty, scrollable results under it with the filename bold and its folder muted below; it is the fastest for the paste-an-ID case and the simplest, but gives no way to browse. B (folder browser) is a folder list beside the files (drill-down with a back link on a phone) plus a search box that overrides it; it is the only one that supports browsing unknown documents, but costs the most screen and taps, and wasn't what the paste case needs. C (sheet) keeps the page header as a single button showing the current path; tapping opens a full-screen picker with search, recents, then results grouped under sticky folder headings with counts; it keeps the page uncluttered on a phone and mixes search and browse, at the price of one extra tap to open the picker. My lean: A for the primary control, with C's grouping if browsing matters.
+
+### note · agent:picker-proto · 2026-10-07T00:11:07.203Z
+done: 3 prototypes at http://100.100.189.100:8731/ (pid 48925); research unsourced (no web tools); commit 6da8f9d (no npm check; app untouched)

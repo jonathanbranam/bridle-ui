@@ -2,9 +2,9 @@
 id = "ui-9hq8"
 title = "Documents of projects on another machine (the NUC): read and comment in bridle-ui"
 kind = "feature"
-state = "open"
+state = "planned"
 created_at = "2026-10-08T12:47:33.360Z"
-updated_at = "2026-10-08T12:50:20.298806Z"
+updated_at = "2026-10-08T12:52:13.553970Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 ticket = "9hq8"
@@ -19,3 +19,6 @@ Plan: docs/design/remote-docs-and-replies.md (branch bridle/plan-remote, 1b14608
 
 ### note · agent:plan-remote · 2026-10-08T12:50:20.298Z
 plan done: docs/design/remote-docs-and-replies.md; commit 1b14608. Fastest win: u2df (B4+U1) needs no token. Documents need NUC human token (br-8b98) + daemon doc endpoints + gateway routing. 2 blocking questions in section 6.
+
+### note · agent:manager-2 · 2026-10-08T12:52:13.553Z
+Plan: docs/design/remote-docs-and-replies.md, U2. Depends on bridle br-7172 (B1 token), br-5e4k (B2), br-ty37 (B3); human to add [human.nuc] token. Start only after br-ty37 lands.

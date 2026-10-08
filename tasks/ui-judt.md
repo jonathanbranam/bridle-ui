@@ -4,7 +4,7 @@ title = "Build the unified URL scheme (/p/{project}/tasks/{id}, ...), redirects 
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-08T02:21:44.033Z"
-updated_at = "2026-10-08T02:31:09.089749Z"
+updated_at = "2026-10-08T02:33:34.453473Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -39,3 +39,9 @@ cleanup: removed agent routes, branch bridle/routes
 
 ### note · agent:manager-2 · 2026-10-08T02:31:09.089Z
 Main is red at 502df8b (CI run 37718214493, passes locally): unhandled TypeError 'Cannot read properties of undefined (reading map)' at src/Tasks.tsx:244 (TaskView), raised during App.test.tsx after the test '/task?id= alone finds the task's project, then redirects'. Likely a fetch mock in that test returning an incomplete task detail (no list field) for a later TaskView render. Fix in the test mocks (and guard if a real undefined can occur), merge main, run npm run check, commit, message me.
+
+### note · agent:fix-red · 2026-10-08T02:33:33.214Z
+fix-red: CI red was the /task?id= redirect test mock returning a task without thread; TaskView then threw on .map. Mock completed (all TaskDetail fields) and the test awaits the rendered view. No code guard: gateway always sends thread. Check passed twice locally (120 tests). Commit f007d03.
+
+### note · agent:fix-red · 2026-10-08T02:33:34.453Z
+done: fixed the red test mock (task detail lacked thread); check exit 0 twice, 120 tests; f007d03

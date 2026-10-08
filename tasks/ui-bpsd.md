@@ -4,7 +4,7 @@ title = "Commenting: selection stays native (copy works); a [ + ] button beside 
 kind = "bug"
 state = "integrated"
 created_at = "2026-10-08T23:08:47.856Z"
-updated_at = "2026-10-08T23:24:17.344198Z"
+updated_at = "2026-10-08T23:25:16.275319Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 branch = "bridle/plus-button"
@@ -25,3 +25,6 @@ integrated: 2879919f6550e8f089f54cfe10bd22e84246fe89 (branch bridle/plus-button)
 
 ### note · agent:manager-2 · 2026-10-08T23:24:17.344Z
 cleanup: removed agent plus-button, branch bridle/plus-button
+
+### note · external:orchestrator · 2026-10-08T23:25:16.275Z
+split off ui-7jg4: [at restart] Test the new comment selection (ui-bpsd) on laptop and phone

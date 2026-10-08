@@ -204,6 +204,7 @@ function ThreadView({
 }
 
 type Pending = { after: number; quote: string };
+type Captured = Pending & { top: number; left: number };
 
 export function DocumentView({
 	onLoggedOut,
@@ -220,6 +221,8 @@ export function DocumentView({
 	const [reviewed, setReviewed] = useState<string>();
 	const [known, setKnown] = useState<string[]>([]);
 	const [matches, setMatches] = useState<string[]>([]);
+	const [captured, setCaptured] = useState<Captured>();
+	const tapping = useRef(false);
 	const pathInputRef = useRef<HTMLInputElement>(null);
 
 	const fail = useCallback(
@@ -326,18 +329,30 @@ export function DocumentView({
 		else fail(d);
 	};
 
-	// Stable (only reads the DOM and sets state) so the selectionchange effect can depend on it.
+	// Reads the selection once it settles and remembers it with where to put the [ + ] button.
+	// Nothing in the document changes here, so native selection and Copy keep working.
 	const select = useCallback(() => {
 		const sel = window.getSelection();
 		const el =
 			sel?.anchorNode?.parentElement?.closest<HTMLElement>("[data-last]");
-		if (!sel || sel.isCollapsed || !el) return;
-		const quote = quoteOf(sel.toString());
-		if (quote) setPending({ after: Number(el.dataset.last), quote });
+		const quote = sel && !sel.isCollapsed && el ? quoteOf(sel.toString()) : "";
+		if (!sel || !el || !quote) {
+			// iOS clears the selection as the tap on [ + ] lands; keep what was captured then.
+			if (!tapping.current) setCaptured(undefined);
+			return;
+		}
+		const r = sel.getRangeAt?.(0)?.getBoundingClientRect?.();
+		// Below the selection at its right end: clear of iOS's callout, which sits above it.
+		const left = Math.min(
+			(r?.right ?? 0) + window.scrollX,
+			window.scrollX + document.documentElement.clientWidth - 48,
+		);
+		const top = (r?.bottom ?? 0) + window.scrollY + 4;
+		setCaptured({ after: Number(el.dataset.last), quote, top, left });
 	}, []);
 
-	// Native touch selection (iOS, Android) fires no mouseup, only selectionchange. Debounced so
-	// the box opens once the handles settle; the selection itself is never touched.
+	// Touch and mouse selection both fire selectionchange. Debounced so the button appears once
+	// the handles settle.
 	useEffect(() => {
 		let timer: ReturnType<typeof setTimeout> | undefined;
 		const onChange = () => {
@@ -350,6 +365,13 @@ export function DocumentView({
 			document.removeEventListener("selectionchange", onChange);
 		};
 	}, [select]);
+
+	const startComment = () => {
+		tapping.current = false;
+		if (!captured) return;
+		setPending({ after: captured.after, quote: captured.quote });
+		setCaptured(undefined);
+	};
 
 	const submit = async () => {
 		if (!doc || !pending || !text.trim()) return;
@@ -478,8 +500,23 @@ export function DocumentView({
 						</div>
 					</div>
 				)}
-				{/* biome-ignore lint/a11y/noStaticElementInteractions: mouse selection has no keyboard twin here */}
-				<div className="space-y-2" onMouseUp={select}>
+				{captured && (
+					// preventDefault on pointer-down keeps focus and the selection where they are.
+					<button
+						type="button"
+						aria-label="Add comment on selection"
+						className="absolute z-10 h-10 w-10 rounded border bg-white shadow"
+						style={{ top: captured.top, left: captured.left }}
+						onPointerDown={(e) => {
+							e.preventDefault();
+							tapping.current = true;
+						}}
+						onClick={startComment}
+					>
+						+
+					</button>
+				)}
+				<div className="space-y-2">
 					{blocks.map((b) => {
 						const here =
 							pending && pending.after === b.last ? pending : undefined;

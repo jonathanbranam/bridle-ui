@@ -1,7 +1,7 @@
 // Binds the executable scenarios in design/specs/ to tests (adapter: tools/vitest-bridle).
 // Skipped when `bridle` is not on PATH, as `npm run check` skips `check:specs`.
 import { execFileSync } from "node:child_process";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { expect, test, vi } from "vitest";
@@ -135,8 +135,9 @@ steps.when(/^the human selects text inside the body by touch$/, () => {
 	} as unknown as Selection);
 	document.dispatchEvent(new Event("selectionchange"));
 });
-steps.then(/^the comment box opens$/, async () => {
-	await waitFor(() => expect(screen.getByLabelText("Comment")).toBeTruthy());
+steps.then(/^the \[ \+ \] button shows and no comment box opens$/, async () => {
+	await screen.findByRole("button", { name: "Add comment on selection" });
+	expect(screen.queryByLabelText("Comment")).toBeNull();
 });
 
 steps.given(/^the Specs page$/, () => {

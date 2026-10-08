@@ -1,4 +1,10 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import {
+	cleanup,
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { afterEach, expect, test, vi } from "vitest";
@@ -112,7 +118,10 @@ test("a selection becomes a comment in the approved format; errors are shown", a
 		anchorNode: text.firstChild,
 		toString: () => "world",
 	} as unknown as Selection);
-	await user.pointer({ target: text, keys: "[MouseLeft]" });
+	document.dispatchEvent(new Event("selectionchange"));
+	await user.click(
+		await screen.findByRole("button", { name: "Add comment on selection" }),
+	);
 	await user.type(await screen.findByLabelText("Comment"), "Say more");
 	await user.click(screen.getByRole("button", { name: "Add comment" }));
 	await waitFor(() => expect(puts).toHaveLength(1));
@@ -125,7 +134,7 @@ test("a selection becomes a comment in the approved format; errors are shown", a
 	);
 });
 
-test("a touch selection (selectionchange, no mouseup) opens the comment box only inside the body", async () => {
+test("a touch selection (selectionchange, no mouseup) shows [ + ] only inside the body", async () => {
 	stub("unused");
 	await openDoc();
 	const text = screen.getByText("world.");
@@ -137,14 +146,58 @@ test("a touch selection (selectionchange, no mouseup) opens the comment box only
 	} as unknown as Selection);
 	document.dispatchEvent(new Event("selectionchange"));
 	await new Promise((r) => setTimeout(r, 450));
-	expect(screen.queryByLabelText("Comment")).toBeNull();
+	expect(
+		screen.queryByRole("button", { name: "Add comment on selection" }),
+	).toBeNull();
 	spy.mockReturnValue({
 		isCollapsed: false,
 		anchorNode: text.firstChild,
 		toString: () => "world",
 	} as unknown as Selection);
 	document.dispatchEvent(new Event("selectionchange"));
+	const plus = await screen.findByRole("button", {
+		name: "Add comment on selection",
+	});
+	// Selecting alone opens no box and highlights nothing.
+	expect(screen.queryByLabelText("Comment")).toBeNull();
+	expect(screen.queryByText("world", { selector: "mark" })).toBeNull();
+	// The tap itself clears the selection on iOS; the captured quote still opens the box.
+	fireEvent.pointerDown(plus);
+	spy.mockReturnValue({
+		isCollapsed: true,
+		anchorNode: null,
+		toString: () => "",
+	} as unknown as Selection);
+	document.dispatchEvent(new Event("selectionchange"));
+	await new Promise((r) => setTimeout(r, 450));
+	fireEvent.click(plus);
 	expect(await screen.findByLabelText("Comment")).toBeTruthy();
+	expect(screen.getByText("world", { selector: "mark" })).toBeTruthy();
+});
+
+test("the [ + ] button goes away when the selection clears", async () => {
+	stub("unused");
+	await openDoc();
+	const text = screen.getByText("world.");
+	const spy = vi.spyOn(window, "getSelection");
+	spy.mockReturnValue({
+		isCollapsed: false,
+		anchorNode: text.firstChild,
+		toString: () => "world",
+	} as unknown as Selection);
+	document.dispatchEvent(new Event("selectionchange"));
+	await screen.findByRole("button", { name: "Add comment on selection" });
+	spy.mockReturnValue({
+		isCollapsed: true,
+		anchorNode: null,
+		toString: () => "",
+	} as unknown as Selection);
+	document.dispatchEvent(new Event("selectionchange"));
+	await waitFor(() =>
+		expect(
+			screen.queryByRole("button", { name: "Add comment on selection" }),
+		).toBeNull(),
+	);
 });
 
 test("Request review posts the path with the resend choice, shows the result, and reloads", async () => {
@@ -239,7 +292,10 @@ test("the comment box opens at the highlighted block, not above the document", a
 		anchorNode: text.firstChild,
 		toString: () => "world",
 	} as unknown as Selection);
-	await user.pointer({ target: text, keys: "[MouseLeft]" });
+	document.dispatchEvent(new Event("selectionchange"));
+	await user.click(
+		await screen.findByRole("button", { name: "Add comment on selection" }),
+	);
 	const box = await screen.findByLabelText("Comment");
 	expect(row?.contains(box)).toBe(true);
 });

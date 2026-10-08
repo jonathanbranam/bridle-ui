@@ -49,23 +49,23 @@ Each comment thread SHALL start collapsed, show its ID chip, and open on click w
 
 Clicking a thread shows its replies and PUTs the file with `[read <date> <time> EST]` appended and the loaded hash.
 
-### Requirement: Highlighting text opens a comment box  {#r-ad4b}
+### Requirement: Selected text can be commented on, with a [ + ] button  {#r-ad4b}
 
-Selecting text inside the document body SHALL open a comment box at the selected block, on mouse release or, for touch, on a selection change. A selection outside the body SHALL NOT open it. Adding the comment writes a `> [!comment] <id> human, <time>, on "<text>" [pending <time>]` callout after the line (and after any thread already there), and a gateway error is shown as an alert.
+Selecting text inside the document body SHALL change nothing in the page (native selection and Copy keep working) and SHALL show a [ + ] button below the selection. Tapping it opens a comment box at the selected block, with the quote captured when the selection settled, and only then highlights the passage. The button goes away when the selection clears. A selection outside the body SHALL NOT show it. Adding the comment writes a `> [!comment] <id> human, <time>, on "<text>" [pending <time>]` callout after the line (and after any thread already there), and a gateway error is shown as an alert.
 
-#### Scenario: A touch selection inside the body opens the box  {#s-8cdc}
+#### Scenario: A touch selection inside the body shows the [ + ] button  {#s-8cdc}
 
 *Verification*: **executable**
 
 - **GIVEN** an opened document
 - **WHEN** the human selects text inside the body by touch
-- **THEN** the comment box opens
+- **THEN** the [ + ] button shows and no comment box opens
 
 #### Scenario: A touch selection outside the body does not  {#s-05ee}
 
 *Verification*: **non-executable**
 
-A selection in the project picker fires selectionchange and no comment box opens.
+A selection in the project picker fires selectionchange and no [ + ] button shows.
 
 #### Scenario: Adding a comment writes the callout  {#s-31c2}
 

@@ -4,9 +4,10 @@ title = "Copy buttons do nothing: the Clipboard API needs HTTPS and the site is 
 kind = "bug"
 state = "planned"
 created_at = "2026-10-08T23:10:37.608Z"
-updated_at = "2026-10-08T23:14:11.663932Z"
+updated_at = "2026-10-08T23:17:58.449080Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
+summary = "IdChip's copy now goes through an exported copyText helper in src/IdChip.tsx: navigator.clipboard when present, else a hidden textarea plus document.execCommand('copy'), so it works on plain HTTP. On failure IdChip shows a role=alert 'Copy failed: select the ID'. IdChip is the only copy button in the app. Tests cover the API-present, absent and failing paths. Not done: serving over HTTPS (separate, gateway side)."
 ticket = "6tcv"
 +++
 

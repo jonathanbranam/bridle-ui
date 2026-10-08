@@ -12,3 +12,6 @@ tasks = ["ui-8a8c"]
 
 [[tier]]
 tasks = ["ui-yj6m"]
+
+[[tier]]
+tasks = ["ui-k9a8"]

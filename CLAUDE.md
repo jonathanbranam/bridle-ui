@@ -48,6 +48,9 @@ npm run dev     # Vite dev server, /api proxied to the gateway
   use `flex-wrap`; fixed widths (`w-*`) only on small labels. Check at 375, 768, 1280, 1920+.
   The viewport meta must not set `maximum-scale` (it blocks zoom); the 16px field rule
   already prevents iOS focus-zoom.
+- Landing means deployed: after each landing on main, once CI is green, the manager runs
+  `npm run install-ui` (installs `dist/` into `~/.bridle/ui/`, which the gateway serves) and
+  says so in its landing note. A merge alone changes nothing the human sees. (Incident ui-wdp3.)
 - Comments explain why, not what.
 - Don't commit unless asked. No Claude Code memory.
 

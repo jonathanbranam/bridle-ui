@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
+import { AutoTextarea } from "./AutoTextarea";
 import {
 	type Action,
 	act,
@@ -215,7 +216,7 @@ function ReplyBox({
 			}}
 		>
 			<label htmlFor="task-reply">Reply</label>
-			<textarea
+			<AutoTextarea
 				id="task-reply"
 				className="rounded border p-2"
 				value={text}

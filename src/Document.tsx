@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
+import { AutoTextarea } from "./AutoTextarea";
 import {
 	projects as listProjects,
 	readDocument,
@@ -172,7 +173,7 @@ function ThreadView({
 				))}
 			{open && !thread.resolved && (
 				<div className="mt-2 space-y-1">
-					<textarea
+					<AutoTextarea
 						aria-label="Reply"
 						className="w-full rounded border bg-white p-1"
 						value={reply}
@@ -556,7 +557,7 @@ export function DocumentView({
 											<p className="text-sm italic">
 												Comment on "{here.quote}"
 											</p>
-											<textarea
+											<AutoTextarea
 												aria-label="Comment"
 												className="w-full rounded border p-1"
 												value={text}

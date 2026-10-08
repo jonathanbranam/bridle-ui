@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { AutoTextarea } from "./AutoTextarea";
 import { type Action, act, items } from "./api/client";
 import type { Items as ItemsData } from "./api/generated/Items";
 import { IdChip } from "./IdChip";
@@ -148,7 +149,7 @@ function AnswerForm({
 				setText("");
 			}}
 		>
-			<textarea
+			<AutoTextarea
 				aria-label={label}
 				className="rounded border p-2"
 				required
@@ -185,7 +186,7 @@ export function TodoActions({
 					setReason("");
 				}}
 			>
-				<textarea
+				<AutoTextarea
 					aria-label={`Reason for declining ${title}`}
 					className="rounded border p-2"
 					required

@@ -170,3 +170,4 @@
 {"actor":"agent:manager-2","at":"2026-10-08T12:52:09.175216Z","from":"open","task":"ui-u2df","to":"planned"}
 {"actor":"agent:manager-2","at":"2026-10-08T12:52:09.821052Z","from":"open","task":"ui-9hq8","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-08T12:52:32.012608Z","queue":"reprioritized"}
+{"actor":"agent:manager-2","at":"2026-10-08T14:37:21.498259Z","from":"planned","task":"ui-u2df","to":"integrated"}

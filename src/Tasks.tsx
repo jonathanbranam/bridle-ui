@@ -14,6 +14,7 @@ import { taskHref } from "./doc/links";
 import { IdChip } from "./IdChip";
 import { TodoActions } from "./Items";
 import { LinkScope, Md } from "./Md";
+import { taskTitle } from "./pageTitle";
 
 type Props = { onLoggedOut: () => void };
 
@@ -223,6 +224,10 @@ export function TaskView({ onLoggedOut }: Props) {
 			stale = true;
 		};
 	}, [id, project, onLoggedOut]);
+
+	useEffect(() => {
+		if (task) document.title = taskTitle(task.project, task.id, task.title);
+	}, [task]);
 
 	// Refetch after every attempt so the view shows the gateway's truth, even on failure.
 	const run = async (action: Action, text?: string) => {

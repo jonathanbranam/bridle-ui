@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { Navigate, NavLink, Route, Routes } from "react-router";
-import { logout, session } from "./api/client";
+import { Navigate, NavLink, Route, Routes, useLocation } from "react-router";
+import { logout, projects, session } from "./api/client";
 import type { SessionInfo } from "./api/generated/SessionInfo";
 import { DocumentView } from "./Document";
 import { ItemsView } from "./Items";
 import { Login } from "./Login";
 import { ProjectView } from "./Project";
+import { projectOf, setFavicon, usePageTitle } from "./pageTitle";
 import { OldFile, OldTaskPath, OldTaskQuery, OldTicket } from "./Redirects";
 import { SpecsView } from "./SpecPage";
 import { SystemView } from "./System";
@@ -28,6 +29,27 @@ export function App() {
 			else setError(r.error);
 		});
 	}, []);
+
+	usePageTitle();
+
+	// Machine per project, for the favicon. Best effort: a failure leaves the default icon.
+	const [machines, setMachines] = useState<Record<string, string>>({});
+	useEffect(() => {
+		if (!user) return;
+		projects().then((r) => {
+			if (r.ok)
+				setMachines(
+					Object.fromEntries(
+						r.value.projects.map((p) => [p.project, p.machine ?? "local"]),
+					),
+				);
+		});
+	}, [user]);
+	const project = projectOf(useLocation().pathname);
+	const machine = project && machines[project];
+	useEffect(() => {
+		if (machine) setFavicon(machine);
+	}, [machine]);
 
 	return (
 		<main className="space-y-4 p-4">

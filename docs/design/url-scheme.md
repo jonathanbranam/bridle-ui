@@ -166,3 +166,13 @@ Redirects (client-side, `src/Redirects.tsx`, kept indefinitely):
 `/document` and `/specs` without a project and path remain as the project pickers (nav tabs);
 choosing a file moves to the canonical URL. The task-ID jump box on `/tasks` does the same
 lookup as `/task?id=` and then navigates to the canonical URL.
+
+## 4. Tab titles and favicon (ui-qbbk)
+
+`src/pageTitle.ts` sets `document.title` from the route on every path or query change:
+`<marker> <name> - <project>` (name first; ASCII hyphen). Markers: task, ticket, doc, spec; a
+task page refines its title to `<marker> <id> <title> - <project>` once loaded. With nothing open
+the title is the page name (`System - bridle`, `Documents - <project>`). The favicon is a tile
+whose colour is a hash of the project's machine name (`machine` from `/projects`; `local` when
+null); it only changes on `/p/{project}/...` routes. The to-dos marker exists but to-dos have no
+page of their own yet.

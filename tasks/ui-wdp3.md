@@ -4,7 +4,7 @@ title = "bridle-ui aide told the human twice that k3qx routing hadn't started; i
 kind = "incident"
 state = "planned"
 created_at = "2026-10-04T21:21:33.773Z"
-updated_at = "2026-10-08T02:12:57.784911Z"
+updated_at = "2026-10-08T02:13:04.744889Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 +++
@@ -29,3 +29,6 @@ Found 2026-10-04 5:25 PM ET, after the human said "I'm just loaded up the site a
 
 ### note · external:orchestrator · 2026-10-08T02:12:57.739Z
 orchestrator (acting PM): readied on the human's go, in the orchestrator's session 2026-10-07 ~10:15 PM ET: "Be sure the bridle-ui work gets done tonight." Brief: a postmortem of this incident (what happened is in the body and the aide's note) with fixes: (1) the aide role checks bridle task list / git log / the orchestrator's message trail before telling the human something hasn't started; (2) someone owns 'npm run install-ui' after a UI landing (tonight the orchestrator did it by hand twice: after ui-2kmw and ui-k9a8). Recommend the bridle-ui manager runs it after each landing on main once CI is green, and says so in its landing note; write that into bridle-ui's manager role or CLAUDE.md. (3) link ui-n6cu to ticket k3qx and resolve k3qx if done. Model: Sonnet. Done: changes landed, summary on this thread. Role files in the bridle repo (aide) are out of scope for this repo: if a change there is needed, describe it in the summary and the orchestrator files it.
+
+### note · external:orchestrator · 2026-10-08T02:13:04.744Z
+split off ui-mbhk: Fixes from incident wdp3: aide checks the task list before saying work hasn't started; the manager installs the UI after each landing

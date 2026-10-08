@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router";
 import {
+	type Action,
+	act,
 	projects as listProjects,
 	type TaskState,
 	taskDetail,
@@ -9,6 +11,7 @@ import {
 import type { TaskDetail } from "./api/generated/TaskDetail";
 import type { TaskSummary } from "./api/generated/TaskSummary";
 import { IdChip } from "./IdChip";
+import { TodoActions } from "./Items";
 import { LinkScope, Md } from "./Md";
 
 type Props = { onLoggedOut: () => void };
@@ -200,6 +203,7 @@ export function TaskView({ onLoggedOut }: Props) {
 	const project = route.project ?? params.get("project") ?? undefined;
 	const [task, setTask] = useState<TaskDetail>();
 	const [error, setError] = useState<string>();
+	const [actionError, setActionError] = useState<string>();
 
 	useEffect(() => {
 		let stale = false;
@@ -219,6 +223,17 @@ export function TaskView({ onLoggedOut }: Props) {
 			stale = true;
 		};
 	}, [id, project, onLoggedOut]);
+
+	// Refetch after every attempt so the view shows the gateway's truth, even on failure.
+	const run = async (action: Action, text?: string) => {
+		if (!task) return;
+		const r = await act(task.project, task.id, action, text);
+		if (r.ok) setActionError(undefined);
+		else if (r.notLoggedIn) return onLoggedOut();
+		else setActionError(r.error);
+		const fresh = await findTask(task.id, task.project);
+		if (fresh.ok) setTask(fresh.value);
+	};
 
 	if (error) return <p role="alert">{error}</p>;
 	if (!task) return <p>Loading task...</p>;
@@ -241,6 +256,18 @@ export function TaskView({ onLoggedOut }: Props) {
 						Claimed by: {task.agent?.name ?? task.claimed_by}
 						{task.agent && ` (${task.agent.role})`}
 					</p>
+				)}
+				{actionError && (
+					<p role="alert" className="text-red-700">
+						{actionError}
+					</p>
+				)}
+				{task.claimed_by === "human" && (
+					<TodoActions
+						title={task.title}
+						onDone={() => run("done")}
+						onDecline={(reason) => run("drop", reason)}
+					/>
 				)}
 				{task.branch && (
 					<p>

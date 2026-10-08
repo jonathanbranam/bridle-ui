@@ -162,7 +162,7 @@ function AnswerForm({
 	);
 }
 
-function TodoActions({
+export function TodoActions({
 	title,
 	onDone,
 	onDecline,

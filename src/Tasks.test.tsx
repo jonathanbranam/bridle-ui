@@ -37,7 +37,7 @@ const json = (v: unknown, status = 200) =>
 	new Response(JSON.stringify(v), { status });
 
 function gateway(tasks: Record<string, ReturnType<typeof detail>>) {
-	const fetchMock = vi.fn(async (url: string) => {
+	const fetchMock = vi.fn(async (url: string, _init?: RequestInit) => {
 		if (url.endsWith("/projects"))
 			return json({
 				projects: [
@@ -165,4 +165,39 @@ test("a task ID in the task's title links", async () => {
 		"href",
 		"/task?id=ui-umaq",
 	);
+});
+
+test("a task claimed by the human has Done and Decline, and shows the new state", async () => {
+	const tasks = {
+		"x-1111": detail("x-1111", "working", { claimed_by: "human" }),
+	};
+	const fetchMock = gateway(tasks);
+	const base = fetchMock.getMockImplementation();
+	fetchMock.mockImplementation(async (url: string, init?: RequestInit) => {
+		if (init?.method === "POST") {
+			tasks["x-1111"] = detail("x-1111", "dropped", { claimed_by: "human" });
+			return json({});
+		}
+		return base?.(url) as Promise<Response>;
+	});
+	app("/tasks/p/x-1111");
+	await userEvent.click(
+		await screen.findByRole("button", { name: "Decline…" }),
+	);
+	await userEvent.type(screen.getByLabelText(/Reason for declining/), "no");
+	await userEvent.click(screen.getByRole("button", { name: "Decline" }));
+	expect(await screen.findByText(/p \/ dropped/)).toBeInTheDocument();
+	const post = fetchMock.mock.calls.find(([, i]) => i?.method === "POST");
+	expect(post?.[0]).toMatch(/\/projects\/p\/tasks\/x-1111\/drop$/);
+});
+
+test("a task claimed by an agent has no Done or Decline", async () => {
+	gateway({
+		"x-1111": detail("x-1111", "working", { claimed_by: "agent:wk-1" }),
+	});
+	app("/tasks/p/x-1111");
+	await screen.findByText("Title x-1111");
+	expect(
+		screen.queryByRole("button", { name: "Done" }),
+	).not.toBeInTheDocument();
 });

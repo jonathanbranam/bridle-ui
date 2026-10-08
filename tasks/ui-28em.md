@@ -2,11 +2,13 @@
 id = "ui-28em"
 title = "Exact link formats for tasks, tickets, documents and specs, in every agent instruction; a rule that URL changes update them"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-06T12:13:11.706Z"
-updated_at = "2026-10-08T10:05:33.417051Z"
+updated_at = "2026-10-08T10:05:42.911876Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
+branch = "bridle/linkrule"
+commit = "664f00ba4f77f1a3e231f716d9a2531f35daeccb"
 summary = "ui-28em (parts 1 and 3; part 2 is the bridle-repo task) is done in docs/design/url-scheme.md and CLAUDE.md. The section 3 'Final formats' table is now declared the one link-format reference at the top of url-scheme.md. CLAUDE.md Conventions gets a rule: a URL scheme change or new deep link files a task to update agent instructions and bridle link, and updates that table in the same change. Doc-only; no npm check run (not needed per task). Main merge was already up to date. Choice: the rule links the table with the wiki form [[docs/design/url-scheme]] (doc-links rule). Pre-existing non-ASCII em dash at CLAUDE.md line 65 sits in the bridle-managed block, not touched."
 ticket = "28em"
 +++
@@ -23,3 +25,9 @@ Done in 168c66a: url-scheme.md top note names the section 3 Final formats table 
 
 ### note · agent:linkrule · 2026-10-08T10:05:33.417Z
 done: ui-28em parts 1 and 3 (docs only); 168c66ae648a357980e82e5146003cf67b298e67; npm check not run (doc-only)
+
+### note · agent:manager-2 · 2026-10-08T10:05:41.174Z
+integrated: 664f00ba4f77f1a3e231f716d9a2531f35daeccb (branch bridle/linkrule)
+
+### note · agent:manager-2 · 2026-10-08T10:05:42.911Z
+cleanup: removed agent linkrule, branch bridle/linkrule

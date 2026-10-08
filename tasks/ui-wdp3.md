@@ -2,11 +2,12 @@
 id = "ui-wdp3"
 title = "bridle-ui aide told the human twice that k3qx routing hadn't started; it had landed in 10 min (ui-n6cu, 7af2f59)"
 kind = "incident"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-04T21:21:33.773Z"
-updated_at = "2026-10-08T02:19:39.661716Z"
+updated_at = "2026-10-08T10:06:03.834088Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
+commit = "50e4017"
 +++
 
 The human, verbatim (2026-10-04, to the bridle-ui aide): "Okay, what's going on with this work? To describe what happened, we're going to need to file an incident for this."
@@ -44,3 +45,9 @@ Fixes:
 - Manager runs `npm run install-ui` after each landing on main once CI is green, and says so in the landing note. Written into bridle-ui CLAUDE.md (Conventions). A gateway restart, when a landing needs a newer bridle binary, is still not owned; raise it with the orchestrator.
 - Aide role (bridle repo, to be filed by the orchestrator): before telling the human work has not started or was not acted on, check `bridle task list`, `git log` on main, and the orchestrator's message trail, not only the inbox, to-dos and pending_tasks. Say "I could not find it" with what was checked, rather than "it hasn't started".
 - Ticket k3qx lives in the bridle repo; this worktree cannot reach it. It needs `bridle ticket set k3qx tasks ui-n6cu` and `bridle ticket resolve k3qx` there (the ask is done: ui-n6cu, 7af2f59). Not done from here.
+
+### note · external:orchestrator · 2026-10-08T10:06:03.833Z
+integrated: 50e4017
+
+### note · external:orchestrator · 2026-10-08T10:06:03.834Z
+resolution: Fixed by ui-mbhk: aide checks the task list before saying work hasn't started; the manager installs the UI after each landing.

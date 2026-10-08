@@ -4,10 +4,11 @@ title = "bridle-ui aide told the human twice that k3qx routing hadn't started; i
 kind = "incident"
 state = "integrated"
 created_at = "2026-10-04T21:21:33.773Z"
-updated_at = "2026-10-08T10:06:03.834088Z"
+updated_at = "2026-10-08T10:06:07.499647Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 commit = "50e4017"
+summary = "aide twice told the human k3qx routing hadn't started when it had landed in 10 min; fixed by ui-mbhk (aide checks the task list first; manager installs the UI after each landing)."
 +++
 
 The human, verbatim (2026-10-04, to the bridle-ui aide): "Okay, what's going on with this work? To describe what happened, we're going to need to file an incident for this."

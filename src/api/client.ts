@@ -25,7 +25,7 @@ import type { TaskList } from "./generated/TaskList";
 
 const BASE = "/api/v1";
 
-export type Action = "done" | "drop" | "answer";
+export type Action = "done" | "drop" | "answer" | "reply";
 
 /** A 401 is an expected state (show the login form), so it is a value, not a throw. */
 export type NotLoggedIn = { ok: false; notLoggedIn: true; error: string };

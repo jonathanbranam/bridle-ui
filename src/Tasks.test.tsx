@@ -185,3 +185,58 @@ test("a task claimed by an agent has no Done or Decline", async () => {
 		screen.queryByRole("button", { name: "Done" }),
 	).not.toBeInTheDocument();
 });
+
+test("every task has a reply box; Reply posts the text, clears it and refetches", async () => {
+	for (const [state, claimed_by] of [
+		["working", "agent:wk-1"],
+		["integrated", null],
+		["blocked", "human"],
+	] as const) {
+		const tasks: Record<string, ReturnType<typeof detail>> = {
+			"x-1111": detail("x-1111", state, { claimed_by }),
+		};
+		const fetchMock = gateway(tasks);
+		const base = fetchMock.getMockImplementation();
+		fetchMock.mockImplementation(async (url: string, init?: RequestInit) => {
+			if (init?.method === "POST") {
+				tasks["x-1111"].thread.push({
+					kind: "note",
+					from: "human",
+					body: "Hello there",
+					at: "2026-10-04T02:00:00Z",
+				});
+				return json({});
+			}
+			return base?.(url) as Promise<Response>;
+		});
+		const { unmount } = app("/p/p/tasks/x-1111");
+		const box = await screen.findByLabelText("Reply");
+		const button = screen.getByRole("button", { name: "Reply" });
+		expect(button).toBeDisabled();
+		await userEvent.type(box, "Hello there");
+		await userEvent.click(button);
+		expect(await screen.findByText("Hello there")).toBeInTheDocument();
+		expect(box).toHaveValue("");
+		const post = fetchMock.mock.calls.find(([, i]) => i?.method === "POST");
+		expect(post?.[0]).toMatch(/\/projects\/p\/tasks\/x-1111\/reply$/);
+		expect(JSON.parse(String(post?.[1]?.body))).toEqual({
+			text: "Hello there",
+		});
+		unmount();
+	}
+});
+
+test("a failed reply shows the error and keeps the text", async () => {
+	const fetchMock = gateway({ "x-1111": detail("x-1111", "working") });
+	const base = fetchMock.getMockImplementation();
+	fetchMock.mockImplementation(async (url: string, init?: RequestInit) =>
+		init?.method === "POST"
+			? json({ error: "nope" }, 500)
+			: (base?.(url) as Promise<Response>),
+	);
+	app("/p/p/tasks/x-1111");
+	await userEvent.type(await screen.findByLabelText("Reply"), "hi");
+	await userEvent.click(screen.getByRole("button", { name: "Reply" }));
+	expect(await screen.findByRole("alert")).toBeInTheDocument();
+	expect(screen.getByLabelText("Reply")).toHaveValue("hi");
+});

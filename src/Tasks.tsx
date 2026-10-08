@@ -199,6 +199,41 @@ export async function findTask(id: string, project: string | undefined) {
 	);
 }
 
+function ReplyBox({
+	onReply,
+}: {
+	onReply: (text: string) => Promise<boolean>;
+}) {
+	const [text, setText] = useState("");
+	return (
+		<form
+			className="flex flex-col gap-2"
+			onSubmit={async (e) => {
+				e.preventDefault();
+				// Keep the text on failure so it isn't lost.
+				if (await onReply(text)) setText("");
+			}}
+		>
+			<label htmlFor="task-reply">Reply</label>
+			<textarea
+				id="task-reply"
+				className="rounded border p-2"
+				value={text}
+				onChange={(e) => setText(e.target.value)}
+			/>
+			<div>
+				<button
+					type="submit"
+					className="rounded border px-3 py-2"
+					disabled={!text.trim()}
+				>
+					Reply
+				</button>
+			</div>
+		</form>
+	);
+}
+
 /** `/p/{project}/tasks/{id}` */
 export function TaskView({ onLoggedOut }: Props) {
 	const { id = "", project } = useParams();
@@ -231,13 +266,16 @@ export function TaskView({ onLoggedOut }: Props) {
 
 	// Refetch after every attempt so the view shows the gateway's truth, even on failure.
 	const run = async (action: Action, text?: string) => {
-		if (!task) return;
+		if (!task) return false;
 		const r = await act(task.project, task.id, action, text);
 		if (r.ok) setActionError(undefined);
-		else if (r.notLoggedIn) return onLoggedOut();
-		else setActionError(r.error);
+		else if (r.notLoggedIn) {
+			onLoggedOut();
+			return false;
+		} else setActionError(r.error);
 		const fresh = await findTask(task.id, task.project);
 		if (fresh.ok) setTask(fresh.value);
+		return r.ok;
 	};
 
 	if (error) return <p role="alert">{error}</p>;
@@ -308,6 +346,7 @@ export function TaskView({ onLoggedOut }: Props) {
 						</li>
 					))}
 				</ul>
+				<ReplyBox onReply={(text) => run("reply", text)} />
 			</article>
 		</LinkScope>
 	);

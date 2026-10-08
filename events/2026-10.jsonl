@@ -157,3 +157,4 @@
 {"actor":"human","at":"2026-10-08T02:33:39.205Z","from":"","task":"ui-xus5","to":"pending"}
 {"actor":"agent:manager-2","at":"2026-10-08T02:33:41.323921Z","from":"pending","task":"ui-xus5","to":"open"}
 {"actor":"agent:manager-2","at":"2026-10-08T02:33:45.428790Z","from":"open","task":"ui-xus5","to":"integrated"}
+{"actor":"agent:manager-2","at":"2026-10-08T10:04:48.679346Z","from":"planned","task":"ui-qbbk","to":"integrated"}

@@ -2,9 +2,9 @@
 id = "ui-6tcv"
 title = "Copy buttons do nothing: the Clipboard API needs HTTPS and the site is plain HTTP"
 kind = "bug"
-state = "open"
+state = "planned"
 created_at = "2026-10-08T23:10:37.608Z"
-updated_at = "2026-10-08T23:13:58.537640Z"
+updated_at = "2026-10-08T23:14:11.663932Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 ticket = "6tcv"

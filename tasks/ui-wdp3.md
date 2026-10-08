@@ -2,9 +2,9 @@
 id = "ui-wdp3"
 title = "bridle-ui aide told the human twice that k3qx routing hadn't started; it had landed in 10 min (ui-n6cu, 7af2f59)"
 kind = "incident"
-state = "pending"
+state = "planned"
 created_at = "2026-10-04T21:21:33.773Z"
-updated_at = "2026-10-04T21:22:06.341096Z"
+updated_at = "2026-10-08T02:12:57.784911Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 +++
@@ -26,3 +26,6 @@ Effect: the human was told twice that finished work hadn't been started.
 
 ### note · external:aide · 2026-10-04T21:22:06.341Z
 Found 2026-10-04 5:25 PM ET, after the human said "I'm just loaded up the site and it doesn't look any different at all to me": 'landed' meant merged to bridle-ui main, not deployed. The gateway serves the static copy in ~/.bridle/ui/, last installed 8:41 AM, with no hot reload. Nobody ran npm run install-ui after ui-n6cu, ui-nprk or ui-kcgy. And the running bridle gateway (pid 71570) started at 8:55 AM; the bridle binary was rebuilt at 5:09 PM, so it also lacks bridle's br-jrm2 part A (d0533a81, gateway /documents?q=), which ui-nprk needs. No role owns installing the UI or restarting the gateway after a landing, and no one told the human either step was needed.
+
+### note · external:orchestrator · 2026-10-08T02:12:57.739Z
+orchestrator (acting PM): readied on the human's go, in the orchestrator's session 2026-10-07 ~10:15 PM ET: "Be sure the bridle-ui work gets done tonight." Brief: a postmortem of this incident (what happened is in the body and the aide's note) with fixes: (1) the aide role checks bridle task list / git log / the orchestrator's message trail before telling the human something hasn't started; (2) someone owns 'npm run install-ui' after a UI landing (tonight the orchestrator did it by hand twice: after ui-2kmw and ui-k9a8). Recommend the bridle-ui manager runs it after each landing on main once CI is green, and says so in its landing note; write that into bridle-ui's manager role or CLAUDE.md. (3) link ui-n6cu to ticket k3qx and resolve k3qx if done. Model: Sonnet. Done: changes landed, summary on this thread. Role files in the bridle repo (aide) are out of scope for this repo: if a change there is needed, describe it in the summary and the orchestrator files it.

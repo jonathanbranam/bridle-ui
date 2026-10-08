@@ -138,3 +138,6 @@
 {"actor":"external:orchestrator","at":"2026-10-08T02:09:52.430345Z","from":"open","task":"ui-4u8g","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-08T02:09:52.456085Z","queue":"reprioritized"}
 {"actor":"agent:manager-2","at":"2026-10-08T02:11:52.199480Z","from":"planned","task":"ui-4u8g","to":"integrated"}
+{"actor":"external:orchestrator","at":"2026-10-08T02:12:57.686023Z","from":"pending","task":"ui-wdp3","to":"open"}
+{"actor":"external:orchestrator","at":"2026-10-08T02:12:57.784911Z","from":"open","task":"ui-wdp3","to":"planned"}
+{"actor":"external:orchestrator","at":"2026-10-08T02:12:57.927295Z","queue":"reprioritized"}

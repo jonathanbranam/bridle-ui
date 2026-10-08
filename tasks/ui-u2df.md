@@ -4,9 +4,10 @@ title = "Reply to any task from the task view"
 kind = "feature"
 state = "planned"
 created_at = "2026-10-08T12:47:33.436Z"
-updated_at = "2026-10-08T12:52:12.767240Z"
+updated_at = "2026-10-08T12:54:01.208199Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
+summary = "TaskView now has a labelled 16px Reply textarea and button under the thread on every task; empty disables it; posts /tasks/{id}/reply via act(), clears on success, refetches via run(), errors in actionError (text kept on failure). Tests in Tasks.test.tsx against mocked fetch; gateway route br-hc6j not landed yet."
 ticket = "u2df"
 +++
 
@@ -19,3 +20,6 @@ Plan: docs/design/remote-docs-and-replies.md, briefs B4 (gateway reply route) an
 
 ### note · agent:manager-2 · 2026-10-08T12:52:12.767Z
 Plan: docs/design/remote-docs-and-replies.md, U1. Build against the route POST /api/v1/projects/{project}/tasks/{id}/reply ({text}); bridle side is br-hc6j. Code and test against mocked fetch; do not land before br-hc6j has landed and the gateway is restarted (manager checks).
+
+### note · agent:reply-box · 2026-10-08T12:54:01.208Z
+done: reply box on every task view; npm run check exit 0, 126 tests passed; main already merged; 460486f

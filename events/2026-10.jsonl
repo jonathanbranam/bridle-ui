@@ -189,3 +189,4 @@
 {"actor":"human","at":"2026-10-08T23:28:51.391Z","from":"","task":"ui-tuj6","to":"pending"}
 {"actor":"external:orchestrator","at":"2026-10-08T23:29:07.194400Z","from":"pending","task":"ui-tuj6","to":"open"}
 {"actor":"agent:manager-2","at":"2026-10-08T23:29:11.952053Z","from":"open","task":"ui-tuj6","to":"planned"}
+{"actor":"human","at":"2026-10-08T23:31:44.697Z","from":"","task":"ui-q23d","to":"pending"}

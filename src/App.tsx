@@ -5,6 +5,8 @@ import type { SessionInfo } from "./api/generated/SessionInfo";
 import { DocumentView } from "./Document";
 import { ItemsView } from "./Items";
 import { Login } from "./Login";
+import { ProjectView } from "./Project";
+import { OldFile, OldTaskPath, OldTaskQuery, OldTicket } from "./Redirects";
 import { SpecsView } from "./SpecPage";
 import { SystemView } from "./System";
 import { TasksView, TaskView } from "./Tasks";
@@ -77,11 +79,23 @@ export function App() {
 					<Route path="/" element={<ItemsView onLoggedOut={loggedOut} />} />
 					<Route path="/time" element={<TimeView onLoggedOut={loggedOut} />} />
 					<Route
-						path="/document"
+						path="/p/:project"
+						element={<ProjectView onLoggedOut={loggedOut} />}
+					/>
+					<Route
+						path="/p/:project/tasks/:id"
+						element={<TaskView onLoggedOut={loggedOut} />}
+					/>
+					<Route
+						path="/p/:project/tickets/:id"
+						element={<TicketView onLoggedOut={loggedOut} />}
+					/>
+					<Route
+						path="/p/:project/docs"
 						element={<DocumentView onLoggedOut={loggedOut} />}
 					/>
 					<Route
-						path="/specs"
+						path="/p/:project/specs"
 						element={<SpecsView onLoggedOut={loggedOut} />}
 					/>
 					<Route
@@ -89,17 +103,33 @@ export function App() {
 						element={<TasksView onLoggedOut={loggedOut} />}
 					/>
 					<Route
-						path="/tasks/:project/:id"
-						element={<TaskView onLoggedOut={loggedOut} />}
-					/>
-					<Route
 						path="/system"
 						element={<SystemView onLoggedOut={loggedOut} />}
 					/>
-					<Route path="/task" element={<TaskView onLoggedOut={loggedOut} />} />
+					{/* Old URL forms, and the project pickers (/document, /specs) without a file. */}
+					<Route path="/tasks/:project/:id" element={<OldTaskPath />} />
 					<Route
-						path="/ticket"
-						element={<TicketView onLoggedOut={loggedOut} />}
+						path="/task"
+						element={<OldTaskQuery onLoggedOut={loggedOut} />}
+					/>
+					<Route path="/ticket" element={<OldTicket />} />
+					<Route
+						path="/document"
+						element={
+							<OldFile
+								kind="document"
+								picker={<DocumentView onLoggedOut={loggedOut} />}
+							/>
+						}
+					/>
+					<Route
+						path="/specs"
+						element={
+							<OldFile
+								kind="specs"
+								picker={<SpecsView onLoggedOut={loggedOut} />}
+							/>
+						}
 					/>
 					<Route path="*" element={<Navigate to="/" replace />} />
 				</Routes>

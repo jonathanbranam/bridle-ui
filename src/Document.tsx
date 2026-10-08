@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import {
 	projects as listProjects,
 	readDocument,
@@ -22,7 +22,7 @@ import {
 	resolveThread,
 	type Thread,
 } from "./doc/comments";
-import { parseFrontMatter } from "./doc/links";
+import { documentHref, parseFrontMatter } from "./doc/links";
 import { IdChip } from "./IdChip";
 import { LinkScope, Md } from "./Md";
 
@@ -229,12 +229,13 @@ export function DocumentView({
 
 	// The open document lives in the query (not the path: the gateway 404s paths with an
 	// extension), so a refresh or a shared link reopens it.
-	const [params, setParams] = useSearchParams();
-	const qProject = params.get("project");
+	const [params] = useSearchParams();
+	const navigate = useNavigate();
+	const qProject = useParams().project ?? params.get("project");
 	const qPath = params.get("path");
 
 	// When initialPath is provided (from TicketView), use it directly.
-	// Otherwise, read from query params (Document page with /document?project=&path=).
+	// Otherwise, read from query params (Document page with /p/{project}/docs?path=).
 	const docProject = initialPath ? initialProject : qProject;
 	const docPath = initialPath ? initialPath : qPath;
 
@@ -285,7 +286,7 @@ export function DocumentView({
 		const found = await searchDocuments(project, path.trim());
 		if (!found.ok) return fail(found);
 		const target = resolveOpen(path, found.value.paths);
-		if (target) setParams({ project, path: target });
+		if (target) navigate(documentHref(project, target));
 		else setError(`No document matches "${path.trim()}".`);
 	};
 

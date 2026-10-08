@@ -1,6 +1,7 @@
 # URL scheme (ticket 4u8g)
 
-Status: proposal, for the human's review. Nothing here is built.
+Status: built (ui-judt). Sections 1 and 2 are the proposal as reviewed; section 3 records the
+decisions and the final formats.
 
 ## 1. Current routes
 
@@ -122,3 +123,46 @@ filtered to the project; build it only if the human wants it.
 2. Should `bridle link` also accept a document path or spec ID (so agents can link those)?
    Today it does not.
 3. Is a `/p/{project}` overview page wanted now?
+
+## 3. Decisions and final formats (ui-judt)
+
+The human's answers (2026-10-07):
+
+1. Kind segments are PLURAL: `/p/{project}/tasks/{id}`, `/p/{project}/tickets/{id}`. For
+   consistency every kind is plural, so documents and specs are `/docs` and `/specs` (the
+   proposal's `doc`/`spec` singulars are superseded).
+2. `bridle link` will take a document path and a spec ID (a separate task in the bridle repo).
+3. A `/p/{project}` overview page is built now: the project's open tasks grouped by state, and
+   links to its documents and specs. It uses the existing task list API.
+4. Built without further review.
+
+Final formats (the only ones the UI emits; builders are in `src/doc/links.ts`):
+
+| Kind | URL |
+|---|---|
+| project overview | `/p/{project}` |
+| task | `/p/{project}/tasks/{id}` |
+| ticket | `/p/{project}/tickets/{id}` |
+| document | `/p/{project}/docs?path={file path}` |
+| spec | `/p/{project}/specs?path={file path}#{requirement or scenario id}` (the `#id` is optional) |
+| spec index of a project | `/p/{project}/specs` |
+| document picker of a project | `/p/{project}/docs` |
+| to-dos, task list across projects, system, time | `/`, `/tasks`, `/system`, `/time` |
+
+`{project}` and `{id}` are percent-encoded path segments; `path` is a query value.
+
+Redirects (client-side, `src/Redirects.tsx`, kept indefinitely):
+
+| Old | Lands on |
+|---|---|
+| `/tasks/{project}/{id}` | `/p/{project}/tasks/{id}` |
+| `/task?id=X&project=P` | `/p/P/tasks/X` |
+| `/task?id=X` | asks each project for X, then `/p/{project}/tasks/X` (error if none has it) |
+| `/ticket?project=P&id=X` | `/p/P/tickets/X` |
+| `/document?project=P&path=F` | `/p/P/docs?path=F` |
+| `/specs?project=P&path=F#X` | `/p/P/specs?path=F#X` |
+| `/specs?project=P&capability=C` | `/p/P/specs?path=design/specs/C.md` |
+
+`/document` and `/specs` without a project and path remain as the project pickers (nav tabs);
+choosing a file moves to the canonical URL. The task-ID jump box on `/tasks` does the same
+lookup as `/task?id=` and then navigates to the canonical URL.

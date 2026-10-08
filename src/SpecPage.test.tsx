@@ -103,7 +103,7 @@ test("without a path it lists the project's specs", async () => {
 	);
 	const link = await screen.findByRole("link", { name: "Demo thing" });
 	expect(link.getAttribute("href")).toBe(
-		"/specs?project=p&path=design%2Fspecs%2Fdemo.md",
+		"/p/p/specs?path=design%2Fspecs%2Fdemo.md",
 	);
 	expect(screen.getByText("demo, 1 requirements")).toBeTruthy();
 	expect(screen.getByText("line 2: no heading")).toBeTruthy();

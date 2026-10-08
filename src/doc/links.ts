@@ -17,17 +17,29 @@ const TICKET_STEM = `${WORD}[a-z0-9]+(?:-[a-z0-9]+)+-[${ID_CHARS}]{4}${END}`;
 export const isTaskId = (target: string) =>
 	new RegExp(`^${TASK_ID.slice(WORD.length)}$`).test(target);
 
-/** The page a task ID opens; the ID alone finds the project. */
-export const taskHref = (id: string) => `/task?${new URLSearchParams({ id })}`;
+// The canonical URL formats, all project-first (docs/design/url-scheme.md). Every URL the UI
+// emits comes from here.
+const projectBase = (project: string) => `/p/${encodeURIComponent(project)}`;
+
+/** A project's overview page. */
+export const projectHref = projectBase;
+
+/** The page a task opens. */
+export const taskHref = (project: string, id: string) =>
+	`${projectBase(project)}/tasks/${encodeURIComponent(id)}`;
+
+/** The page a ticket opens. */
+export const ticketHref = (project: string, id: string) =>
+	`${projectBase(project)}/tickets/${encodeURIComponent(id)}`;
 
 /** True for a requirement (`r-xxxx`) or scenario (`s-xxxx`) ID; the gateway resolves it to a spec file. */
 export const isSpecId = (target: string) =>
 	new RegExp(`^${SPEC_ID.slice(WORD.length)}$`).test(target);
 
-/** The Specs page opening a spec file; `path` may end in `#<id>` to land on a heading. */
+/** The page opening a spec file; `path` may end in `#<id>` to land on a heading. */
 export const specHref = (project: string, path: string) => {
 	const [file, id] = path.split("#");
-	return `/specs?${new URLSearchParams({ project, path: file })}${id ? `#${id}` : ""}`;
+	return `${projectBase(project)}/specs?${new URLSearchParams({ path: file })}${id ? `#${id}` : ""}`;
 };
 
 const LINKABLE = new RegExp(
@@ -65,7 +77,7 @@ export function targetsIn(texts: string[]): string[] {
 
 /** The page a resolved path opens. */
 export const documentHref = (project: string, path: string) =>
-	`/document?${new URLSearchParams({ project, path })}`;
+	`${projectBase(project)}/docs?${new URLSearchParams({ path })}`;
 
 export type FrontMatter = { rows: { key: string; value: string }[] };
 

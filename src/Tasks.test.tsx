@@ -72,10 +72,9 @@ const app = (path: string) =>
 			<Routes>
 				<Route path="/tasks" element={<TasksView onLoggedOut={() => {}} />} />
 				<Route
-					path="/tasks/:project/:id"
+					path="/p/:project/tasks/:id"
 					element={<TaskView onLoggedOut={() => {}} />}
 				/>
-				<Route path="/task" element={<TaskView onLoggedOut={() => {}} />} />
 			</Routes>
 		</MemoryRouter>,
 	);
@@ -109,36 +108,21 @@ test("show closed refetches with all", async () => {
 	);
 });
 
-test("a closed task opens by ID alone, finding its project", async () => {
-	gateway({ "x-4444": detail("x-4444", "integrated") });
-	app("/task?id=x-4444");
-	expect(await screen.findByText("Title x-4444")).toBeInTheDocument();
-	expect(screen.getByText("The body.")).toBeInTheDocument();
-	expect(screen.getByText("A note")).toBeInTheDocument();
-	expect(screen.getByText("bridle/x")).toBeInTheDocument();
-});
-
-test("an unknown ID says so", async () => {
-	gateway({});
-	app("/task?id=x-9999");
-	expect(await screen.findByRole("alert")).toHaveTextContent("No task x-9999");
-});
-
 test("edges link to the other task's page", async () => {
 	gateway({
 		"x-1111": detail("x-1111", "working"),
 		"x-2222": detail("x-2222", "planned", { blocked_by: [] }),
 	});
-	app("/tasks/p/x-1111");
+	app("/p/p/tasks/x-1111");
 	const link = await screen.findByRole("link", { name: "x-2222" });
-	expect(link).toHaveAttribute("href", "/tasks/p/x-2222");
+	expect(link).toHaveAttribute("href", "/p/p/tasks/x-2222");
 	await userEvent.click(link);
 	await waitFor(() =>
 		expect(screen.getByText("Title x-2222")).toBeInTheDocument(),
 	);
 });
 
-test("a task ID in markdown links to /task?id=", async () => {
+test("a task ID in markdown links to the task page", async () => {
 	const fetchMock = vi.fn(async () => json({ project: "p", links: [] }));
 	vi.stubGlobal("fetch", fetchMock);
 	render(
@@ -148,7 +132,7 @@ test("a task ID in markdown links to /task?id=", async () => {
 	);
 	expect(screen.getByRole("link", { name: "ui-umaq" })).toHaveAttribute(
 		"href",
-		"/task?id=ui-umaq",
+		"/p/p/tasks/ui-umaq",
 	);
 	// Let the resolve call and its state update finish before the global is
 	// unstubbed, or a late call reaches the real fetch.
@@ -160,10 +144,10 @@ test("a task ID in the task's title links", async () => {
 	gateway({
 		"x-1111": detail("x-1111", "working", { title: "follows ui-umaq" }),
 	});
-	app("/tasks/p/x-1111");
+	app("/p/p/tasks/x-1111");
 	expect(await screen.findByRole("link", { name: "ui-umaq" })).toHaveAttribute(
 		"href",
-		"/task?id=ui-umaq",
+		"/p/p/tasks/ui-umaq",
 	);
 });
 
@@ -180,7 +164,7 @@ test("a task claimed by the human has Done and Decline, and shows the new state"
 		}
 		return base?.(url) as Promise<Response>;
 	});
-	app("/tasks/p/x-1111");
+	app("/p/p/tasks/x-1111");
 	await userEvent.click(
 		await screen.findByRole("button", { name: "Decline…" }),
 	);
@@ -195,7 +179,7 @@ test("a task claimed by an agent has no Done or Decline", async () => {
 	gateway({
 		"x-1111": detail("x-1111", "working", { claimed_by: "agent:wk-1" }),
 	});
-	app("/tasks/p/x-1111");
+	app("/p/p/tasks/x-1111");
 	await screen.findByText("Title x-1111");
 	expect(
 		screen.queryByRole("button", { name: "Done" }),

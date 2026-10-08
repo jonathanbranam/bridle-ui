@@ -83,7 +83,7 @@ function Anchor({ href, children }: { href?: string; children?: ReactNode }) {
 		// Task IDs always link: the task page says so itself if there is no such task.
 		if (isTaskId(target))
 			return (
-				<a className="text-blue-700 underline" href={taskHref(target)}>
+				<a className="text-blue-700 underline" href={taskHref(project, target)}>
 					{children}
 				</a>
 			);

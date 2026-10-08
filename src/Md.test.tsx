@@ -42,10 +42,7 @@ test("a resolved wiki link opens the document, with its label", async () => {
 	resolving({ "docs/design/cli": "docs/design/cli.md" });
 	shown("read [[docs/design/cli|the CLI]] first");
 	const a = await screen.findByRole("link", { name: "the CLI" });
-	expect(a).toHaveAttribute(
-		"href",
-		"/document?project=p&path=docs%2Fdesign%2Fcli.md",
-	);
+	expect(a).toHaveAttribute("href", "/p/p/docs?path=docs%2Fdesign%2Fcli.md");
 });
 
 test("an unresolved wiki link is plain text", async () => {
@@ -62,11 +59,11 @@ test("a ticket ID links when resolved; a task ID links to the task page", async 
 	const a = await screen.findByRole("link", { name: "ab3d" });
 	expect(a).toHaveAttribute(
 		"href",
-		"/document?project=p&path=docs%2Ftickets%2Fopen%2Ft-ab3d.md",
+		"/p/p/docs?path=docs%2Ftickets%2Fopen%2Ft-ab3d.md",
 	);
 	expect(screen.getByRole("link", { name: "br-zz9k" })).toHaveAttribute(
 		"href",
-		"/task?id=br-zz9k",
+		"/p/p/tasks/br-zz9k",
 	);
 	expect(screen.getAllByRole("link")).toHaveLength(2);
 });
@@ -129,7 +126,7 @@ test("a resolved spec ID links to the Specs page at its heading", async () => {
 	const a = await screen.findByRole("link", { name: "r-ab23" });
 	expect(a).toHaveAttribute(
 		"href",
-		"/specs?project=p&path=design%2Fspecs%2Fthing.md#r-ab23",
+		"/p/p/specs?path=design%2Fspecs%2Fthing.md#r-ab23",
 	);
 });
 
@@ -148,6 +145,6 @@ test("a ticket stem links when the gateway resolves it", async () => {
 		await screen.findByRole("link", { name: "some-title-ab3d" }),
 	).toHaveAttribute(
 		"href",
-		"/document?project=p&path=docs%2Ftickets%2Fopen%2Fsome-title-ab3d.md",
+		"/p/p/docs?path=docs%2Ftickets%2Fopen%2Fsome-title-ab3d.md",
 	);
 });

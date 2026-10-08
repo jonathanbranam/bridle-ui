@@ -3,7 +3,7 @@
 import { execFileSync } from "node:child_process";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router";
 import { expect, test, vi } from "vitest";
 import {
 	createSteps,
@@ -59,8 +59,13 @@ function stubGateway() {
 function renderDocument() {
 	stubGateway();
 	render(
-		<MemoryRouter>
-			<DocumentView onLoggedOut={() => {}} />
+		<MemoryRouter initialEntries={["/p/p/docs"]}>
+			<Routes>
+				<Route
+					path="/p/:project/docs"
+					element={<DocumentView onLoggedOut={() => {}} />}
+				/>
+			</Routes>
 		</MemoryRouter>,
 	);
 }

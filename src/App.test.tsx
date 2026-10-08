@@ -1,6 +1,6 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router";
+import { MemoryRouter, useLocation } from "react-router";
 import { afterEach, expect, test, vi } from "vitest";
 import { App } from "./App";
 
@@ -137,4 +137,111 @@ test("navigating between tabs works", async () => {
 		"bg-gray-900",
 	);
 	expect(screen.getByLabelText("Project")).toBeInTheDocument();
+});
+
+function Where() {
+	const l = useLocation();
+	return <output aria-label="where">{l.pathname + l.search + l.hash}</output>;
+}
+const where = () => screen.getByLabelText("where").textContent;
+
+// Old URL forms keep working: each lands on the canonical one (docs/design/url-scheme.md).
+test.each([
+	["/tasks/p/x-1", "/p/p/tasks/x-1"],
+	["/task?id=x-1&project=p", "/p/p/tasks/x-1"],
+	["/ticket?project=p&id=ab3d", "/p/p/tickets/ab3d"],
+	["/document?project=p&path=docs%2Fa.md", "/p/p/docs?path=docs%2Fa.md"],
+	[
+		"/specs?project=p&path=design%2Fspecs%2Fd.md#r-ab23",
+		"/p/p/specs?path=design%2Fspecs%2Fd.md#r-ab23",
+	],
+	[
+		"/specs?project=p&capability=demo",
+		"/p/p/specs?path=design%2Fspecs%2Fdemo.md",
+	],
+])("%s redirects to %s", async (old, canonical) => {
+	route(live);
+	render(
+		<MemoryRouter initialEntries={[old]}>
+			<App />
+			<Where />
+		</MemoryRouter>,
+	);
+	await waitFor(() => expect(where()).toBe(canonical));
+	// Let the landing page's own requests finish before the fetch stub is removed.
+	await act(() => new Promise((r) => setTimeout(r, 20)));
+});
+
+test("/task?id= alone finds the task's project, then redirects", async () => {
+	route({
+		...live,
+		"/api/v1/projects": () =>
+			json(200, {
+				projects: [
+					{ project: "a", reachable: true },
+					{ project: "p", reachable: true },
+				],
+			}),
+		"/api/v1/projects/p/tasks/x-1": () =>
+			json(200, { id: "x-1", project: "p" }),
+	});
+	render(
+		<MemoryRouter initialEntries={["/task?id=x-1"]}>
+			<App />
+			<Where />
+		</MemoryRouter>,
+	);
+	await waitFor(() => expect(where()).toBe("/p/p/tasks/x-1"));
+});
+
+test("/task?id= for an unknown task says so", async () => {
+	route({
+		...live,
+		"/api/v1/projects": () =>
+			json(200, { projects: [{ project: "p", reachable: true }] }),
+	});
+	render(
+		<MemoryRouter initialEntries={["/task?id=x-9"]}>
+			<App />
+		</MemoryRouter>,
+	);
+	expect(await screen.findByRole("alert")).toHaveTextContent("No task x-9");
+});
+
+test("/document and /specs without a file stay the project pickers", async () => {
+	route(live);
+	render(
+		<MemoryRouter initialEntries={["/document"]}>
+			<App />
+			<Where />
+		</MemoryRouter>,
+	);
+	expect(await screen.findByLabelText("Project")).toBeInTheDocument();
+	expect(where()).toBe("/document");
+});
+
+test("/p/{project} lists the open tasks and links to docs and specs", async () => {
+	route({
+		...live,
+		"/api/v1/projects/p/tasks?state=open": () =>
+			json(200, {
+				project: "p",
+				tasks: [
+					{ id: "x-1", title: "First", state: "working", priority: "normal" },
+				],
+			}),
+	});
+	render(
+		<MemoryRouter initialEntries={["/p/p"]}>
+			<App />
+		</MemoryRouter>,
+	);
+	expect(await screen.findByRole("link", { name: "First" })).toHaveAttribute(
+		"href",
+		"/p/p/tasks/x-1",
+	);
+	expect(screen.getByRole("link", { name: "Documents" })).toHaveAttribute(
+		"href",
+		"/p/p/docs",
+	);
 });

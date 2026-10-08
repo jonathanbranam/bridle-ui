@@ -4,6 +4,7 @@ import { agentList, projects as listProjects, systemView } from "./api/client";
 import type { AgentList } from "./api/generated/AgentList";
 import type { AgentView } from "./api/generated/AgentView";
 import type { SystemView as SystemData } from "./api/generated/SystemView";
+import { taskHref } from "./doc/links";
 import { easternClock, easternDate } from "./time/eastern";
 
 type Props = { onLoggedOut: () => void };
@@ -107,7 +108,7 @@ function Daemon({ view }: { view: SystemData }) {
 	);
 }
 
-function Agent({ a }: { a: AgentView }) {
+function Agent({ a, project }: { a: AgentView; project: string }) {
 	return (
 		<li className="rounded border p-2 text-sm">
 			<div className="flex flex-wrap gap-x-2">
@@ -124,10 +125,7 @@ function Agent({ a }: { a: AgentView }) {
 			</div>
 			{a.task && (
 				<div>
-					<Link
-						className="underline"
-						to={`/task?${new URLSearchParams({ id: a.task })}`}
-					>
+					<Link className="underline" to={taskHref(project, a.task)}>
 						{a.task}
 					</Link>
 				</div>
@@ -156,7 +154,7 @@ export function Agents({ list }: { list: AgentList }) {
 			) : (
 				<ul className="space-y-2">
 					{shown.map((a) => (
-						<Agent key={a.name} a={a} />
+						<Agent key={a.name} a={a} project={list.project} />
 					))}
 				</ul>
 			)}

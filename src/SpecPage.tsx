@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import {
 	projects as listProjects,
 	projectSpecs,
@@ -7,7 +7,7 @@ import {
 } from "./api/client";
 import type { Document } from "./api/generated/Document";
 import type { SpecFile } from "./api/generated/SpecFile";
-import { specHref } from "./doc/links";
+import { projectHref, specHref } from "./doc/links";
 import { IdChip } from "./IdChip";
 import { LinkScope, Md } from "./Md";
 
@@ -57,8 +57,9 @@ function SpecText({ text }: { text: string }) {
 // The index lists the project's spec files from the gateway; a file opens at `?path=`, and a
 // `#<id>` on the URL scrolls to that requirement or scenario.
 export function SpecsView({ onLoggedOut }: Props) {
-	const [params, setParams] = useSearchParams();
-	const qProject = params.get("project");
+	const [params] = useSearchParams();
+	const navigate = useNavigate();
+	const qProject = useParams().project ?? params.get("project");
 	// `capability` is the older way to name a file; it still opens.
 	const qPath =
 		params.get("path") ??
@@ -139,7 +140,7 @@ export function SpecsView({ onLoggedOut }: Props) {
 					value={project}
 					onChange={(e) => {
 						setProject(e.target.value);
-						setParams({});
+						navigate(`${projectHref(e.target.value)}/specs`);
 					}}
 				>
 					{known.map((p) => (
@@ -152,7 +153,7 @@ export function SpecsView({ onLoggedOut }: Props) {
 					<button
 						type="button"
 						className="rounded border px-3 py-1"
-						onClick={() => setParams({})}
+						onClick={() => navigate(`${projectHref(project)}/specs`)}
 					>
 						All specs
 					</button>

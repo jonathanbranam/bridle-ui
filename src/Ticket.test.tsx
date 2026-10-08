@@ -23,20 +23,12 @@ vi.mock("react-router", async () => {
 	const actual = await vi.importActual<typeof router>("react-router");
 	return {
 		...actual,
-		useSearchParams: vi.fn(),
+		useParams: vi.fn(),
 	};
 });
 
 const mockResolveLinks = vi.mocked(apiClient.resolveLinks);
-const mockUseSearchParams = vi.mocked(router.useSearchParams);
-
-function createMockSearchParams(
-	params: Record<string, string>,
-): [URLSearchParams, () => void] {
-	const searchParams = new URLSearchParams(params);
-	const setParams = vi.fn();
-	return [searchParams, setParams];
-}
+const mockUseParams = vi.mocked(router.useParams);
 
 describe("TicketView", () => {
 	beforeEach(() => {
@@ -44,8 +36,7 @@ describe("TicketView", () => {
 	});
 
 	it("shows missing project or ID error", () => {
-		const [params, setParams] = createMockSearchParams({});
-		mockUseSearchParams.mockReturnValue([params, setParams]);
+		mockUseParams.mockReturnValue({});
 
 		render(<TicketView onLoggedOut={() => {}} />);
 		expect(screen.getByRole("alert")).toHaveTextContent(
@@ -54,11 +45,10 @@ describe("TicketView", () => {
 	});
 
 	it("shows loading while resolving", () => {
-		const [params, setParams] = createMockSearchParams({
+		mockUseParams.mockReturnValue({
 			project: "test",
 			id: "ab3d",
 		});
-		mockUseSearchParams.mockReturnValue([params, setParams]);
 		mockResolveLinks.mockReturnValue(
 			new Promise((resolve) => {
 				setTimeout(
@@ -81,11 +71,10 @@ describe("TicketView", () => {
 	});
 
 	it("shows document for resolved ticket", async () => {
-		const [params, setParams] = createMockSearchParams({
+		mockUseParams.mockReturnValue({
 			project: "test",
 			id: "ab3d",
 		});
-		mockUseSearchParams.mockReturnValue([params, setParams]);
 		mockResolveLinks.mockResolvedValue({
 			ok: true,
 			value: {
@@ -102,11 +91,10 @@ describe("TicketView", () => {
 	});
 
 	it("shows not found error for unknown ticket", async () => {
-		const [params, setParams] = createMockSearchParams({
+		mockUseParams.mockReturnValue({
 			project: "test",
 			id: "unknown",
 		});
-		mockUseSearchParams.mockReturnValue([params, setParams]);
 		mockResolveLinks.mockResolvedValue({
 			ok: true,
 			value: {
@@ -126,11 +114,10 @@ describe("TicketView", () => {
 
 	it("calls onLoggedOut on 401 error", async () => {
 		const onLoggedOut = vi.fn();
-		const [params, setParams] = createMockSearchParams({
+		mockUseParams.mockReturnValue({
 			project: "test",
 			id: "ab3d",
 		});
-		mockUseSearchParams.mockReturnValue([params, setParams]);
 		mockResolveLinks.mockResolvedValue({
 			ok: false,
 			notLoggedIn: true,
@@ -145,11 +132,10 @@ describe("TicketView", () => {
 	});
 
 	it("shows error on API failure", async () => {
-		const [params, setParams] = createMockSearchParams({
+		mockUseParams.mockReturnValue({
 			project: "test",
 			id: "ab3d",
 		});
-		mockUseSearchParams.mockReturnValue([params, setParams]);
 		mockResolveLinks.mockResolvedValue({
 			ok: false,
 			notLoggedIn: false,

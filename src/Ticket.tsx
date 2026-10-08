@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useParams } from "react-router";
 import { resolveLinks } from "./api/client";
 import { DocumentView } from "./Document";
 
 type Props = { onLoggedOut: () => void };
 
 export function TicketView({ onLoggedOut }: Props) {
-	const [params] = useSearchParams();
+	const { project: qProject, id: qId } = useParams();
 	const [resolvedPath, setResolvedPath] = useState<string | null | undefined>();
 	const [error, setError] = useState<string>();
-
-	const qProject = params.get("project");
-	const qId = params.get("id");
 
 	useEffect(() => {
 		if (!qProject || !qId) {

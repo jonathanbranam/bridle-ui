@@ -1,6 +1,6 @@
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router";
 import { afterEach, expect, test, vi } from "vitest";
 import { DocumentView } from "./Document";
 
@@ -73,8 +73,13 @@ function stub(error?: string) {
 async function openDoc() {
 	const user = userEvent.setup();
 	render(
-		<MemoryRouter>
-			<DocumentView onLoggedOut={() => {}} />
+		<MemoryRouter initialEntries={["/p/p/docs"]}>
+			<Routes>
+				<Route
+					path="/p/:project/docs"
+					element={<DocumentView onLoggedOut={() => {}} />}
+				/>
+			</Routes>
 		</MemoryRouter>,
 	);
 	await user.type(screen.getByLabelText("Document"), "a.md");
@@ -202,8 +207,13 @@ test("the project is a dropdown of known projects and a bare ticket ID opens its
 	stub();
 	const user = userEvent.setup();
 	render(
-		<MemoryRouter>
-			<DocumentView onLoggedOut={() => {}} />
+		<MemoryRouter initialEntries={["/p/p/docs"]}>
+			<Routes>
+				<Route
+					path="/p/:project/docs"
+					element={<DocumentView onLoggedOut={() => {}} />}
+				/>
+			</Routes>
 		</MemoryRouter>,
 	);
 	expect((await screen.findByRole("option", { name: "p" })).textContent).toBe(
@@ -238,8 +248,13 @@ test("search clear button shows when typing, clears the box and focuses the inpu
 	stub();
 	const user = userEvent.setup();
 	render(
-		<MemoryRouter>
-			<DocumentView onLoggedOut={() => {}} />
+		<MemoryRouter initialEntries={["/p/p/docs"]}>
+			<Routes>
+				<Route
+					path="/p/:project/docs"
+					element={<DocumentView onLoggedOut={() => {}} />}
+				/>
+			</Routes>
 		</MemoryRouter>,
 	);
 	const searchInput = screen.getByLabelText("Document") as HTMLInputElement;
@@ -294,8 +309,13 @@ test("the document ticket ID renders as an IdChip when path ends with -<id>.md",
 	stub();
 	const user = userEvent.setup();
 	render(
-		<MemoryRouter>
-			<DocumentView onLoggedOut={() => {}} />
+		<MemoryRouter initialEntries={["/p/p/docs"]}>
+			<Routes>
+				<Route
+					path="/p/:project/docs"
+					element={<DocumentView onLoggedOut={() => {}} />}
+				/>
+			</Routes>
 		</MemoryRouter>,
 	);
 	await user.type(screen.getByLabelText("Document"), "x8jt");
@@ -340,8 +360,13 @@ test("paths not matching the ticket ID format do not render a ticket chip", asyn
 	);
 	const user = userEvent.setup();
 	render(
-		<MemoryRouter>
-			<DocumentView onLoggedOut={() => {}} />
+		<MemoryRouter initialEntries={["/p/p/docs"]}>
+			<Routes>
+				<Route
+					path="/p/:project/docs"
+					element={<DocumentView onLoggedOut={() => {}} />}
+				/>
+			</Routes>
 		</MemoryRouter>,
 	);
 	await user.type(screen.getByLabelText("Document"), "notes-final");

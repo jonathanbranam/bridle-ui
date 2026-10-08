@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import {
 	type Action,
 	act,
@@ -10,14 +10,12 @@ import {
 } from "./api/client";
 import type { TaskDetail } from "./api/generated/TaskDetail";
 import type { TaskSummary } from "./api/generated/TaskSummary";
+import { taskHref } from "./doc/links";
 import { IdChip } from "./IdChip";
 import { TodoActions } from "./Items";
 import { LinkScope, Md } from "./Md";
 
 type Props = { onLoggedOut: () => void };
-
-const taskPath = (project: string, id: string) =>
-	`/tasks/${encodeURIComponent(project)}/${encodeURIComponent(id)}`;
 
 const worker = (t: TaskSummary) => t.agent?.name ?? t.claimed_by;
 
@@ -78,7 +76,12 @@ export function TasksView({ onLoggedOut }: Props) {
 					onSubmit={(e) => {
 						e.preventDefault();
 						const id = lookup.trim();
-						if (id) navigate(`/task?${new URLSearchParams({ id })}`);
+						if (!id) return;
+						findTask(id, undefined).then((r) => {
+							if (r.ok) navigate(taskHref(r.value.project, r.value.id));
+							else if (r.notLoggedIn) onLoggedOut();
+							else setError(r.error);
+						});
 					}}
 				>
 					<input
@@ -127,7 +130,7 @@ export function TasksView({ onLoggedOut }: Props) {
 									<li key={t.id} className="rounded border p-3">
 										<Link
 											className="font-medium text-blue-700 underline"
-											to={taskPath(p.project, t.id)}
+											to={taskHref(p.project, t.id)}
 										>
 											{t.title}
 										</Link>
@@ -163,7 +166,7 @@ function EdgeList({
 				<Link
 					key={id}
 					className="mr-2 text-blue-700 underline"
-					to={taskPath(project, id)}
+					to={taskHref(project, id)}
 				>
 					{id}
 				</Link>
@@ -176,7 +179,7 @@ const paragraphs = (text: string) =>
 	text.split(/\n{2,}/).filter((s) => s.trim());
 
 /** Task IDs are globally unique, so with only the ID, ask each project until one has it. */
-async function findTask(id: string, project: string | undefined) {
+export async function findTask(id: string, project: string | undefined) {
 	const p = await listProjects();
 	if (!p.ok) return p;
 	const names = project
@@ -195,12 +198,9 @@ async function findTask(id: string, project: string | undefined) {
 	);
 }
 
-/** `/tasks/{project}/{id}`, or `/task?id=` which finds the project itself. */
+/** `/p/{project}/tasks/{id}` */
 export function TaskView({ onLoggedOut }: Props) {
-	const route = useParams();
-	const [params] = useSearchParams();
-	const id = route.id ?? params.get("id") ?? "";
-	const project = route.project ?? params.get("project") ?? undefined;
+	const { id = "", project } = useParams();
 	const [task, setTask] = useState<TaskDetail>();
 	const [error, setError] = useState<string>();
 	const [actionError, setActionError] = useState<string>();

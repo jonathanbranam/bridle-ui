@@ -9,12 +9,14 @@ changes: []
 specs: []
 needs: []
 see: []
-tasks: []
+tasks: [ui-k9a8]
 ---
 
 ## The ask
 
 The human, 2026-10-07 ~9:15 PM ET, verbatim (to the bridle-ui aide): "the site doesn't resize properly in a browser at all; doesn't fill it; goes tiny when there is extra space; lots of issues like that"
+
+The human, a minute later, verbatim: "it should flow to fill the browser size on a desktop / laptop large screen"
 
 The ask:
 1. Every page fills the browser window and uses the space as the window grows; nothing shrinks or sits in a narrow strip when there is more room.

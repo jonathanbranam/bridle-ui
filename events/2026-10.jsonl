@@ -153,3 +153,4 @@
 {"actor":"external:orchestrator","at":"2026-10-08T02:21:50.381444Z","from":"open","task":"ui-28em","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-08T02:21:50.479742Z","queue":"reprioritized"}
 {"actor":"external:orchestrator","at":"2026-10-08T02:23:43.210822Z","queue":"reprioritized"}
+{"actor":"agent:manager-2","at":"2026-10-08T02:30:26.671030Z","from":"planned","task":"ui-judt","to":"integrated"}

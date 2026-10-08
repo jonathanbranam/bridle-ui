@@ -53,6 +53,10 @@ npm run dev     # Vite dev server, /api proxied to the gateway
   says so in its landing note. A merge alone changes nothing the human sees. (Incident ui-wdp3.)
 - Comments explain why, not what.
 - Don't commit unless asked. No Claude Code memory.
+- Link formats: any change to the URL scheme, or any new deep link, files a task to update the
+  agent instructions and `bridle link` (in the bridle repo). The formats are the "Final
+  formats" table in section 3 of [[docs/design/url-scheme]]; update that table in the same
+  change.
 
 <!-- bridle:managed:start -->
 This project's workflow rules, current task and role priming are rendered by

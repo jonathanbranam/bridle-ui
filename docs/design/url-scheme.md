@@ -3,6 +3,11 @@
 Status: built (ui-judt). Sections 1 and 2 are the proposal as reviewed; section 3 records the
 decisions and the final formats.
 
+**The one reference for link formats.** The "Final formats" table in section 3 is the only
+authoritative list of link formats per kind (project, task, ticket, document, spec). Agent
+instructions, `bridle link` and docs point here instead of copying a format. Sections 1 and 2
+describe the old and proposed forms and are not a source for links.
+
 ## 1. Current routes
 
 ### UI routes (`src/App.tsx`, react-router; the gateway serves `index.html` for any non-API path)

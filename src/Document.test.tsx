@@ -430,3 +430,35 @@ test("paths not matching the ticket ID format do not render a ticket chip", asyn
 	await screen.findByText(/on main/);
 	expect(screen.queryByRole("button", { name: /Copy final/ })).toBeNull();
 });
+
+test("the comment box starts empty for a different selection, keeps the draft for the same one", async () => {
+	stub();
+	const user = await openDoc();
+	const select = (node: Node, quote: string) => {
+		vi.spyOn(window, "getSelection").mockReturnValue({
+			isCollapsed: false,
+			anchorNode: node,
+			toString: () => quote,
+		} as unknown as Selection);
+		document.dispatchEvent(new Event("selectionchange"));
+	};
+	const plus = () =>
+		screen.findByRole("button", { name: "Add comment on selection" });
+	select(screen.getByText("world.").firstChild as Node, "world");
+	await user.click(await plus());
+	await user.type(await screen.findByLabelText("Comment"), "draft");
+	await user.click(screen.getByRole("button", { name: "Cancel" }));
+	// Same selection again: the draft is still there.
+	select(screen.getByText("world.").firstChild as Node, "world");
+	await user.click(await plus());
+	expect(
+		((await screen.findByLabelText("Comment")) as HTMLTextAreaElement).value,
+	).toBe("draft");
+	await user.click(screen.getByRole("button", { name: "Cancel" }));
+	// A different selection (another block): the box is empty.
+	select(screen.getByText("Hello", { selector: "mark" }), "Hello");
+	await user.click(await plus());
+	expect(
+		((await screen.findByLabelText("Comment")) as HTMLTextAreaElement).value,
+	).toBe("");
+});

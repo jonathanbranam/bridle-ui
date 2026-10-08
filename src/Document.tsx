@@ -217,6 +217,8 @@ export function DocumentView({
 	const [error, setError] = useState<string>();
 	const [pending, setPending] = useState<Pending>();
 	const [text, setText] = useState("");
+	// Which selection (block and quote) the text in the box was typed for.
+	const draftFor = useRef<string | undefined>(undefined);
 	const [resend, setResend] = useState(false);
 	const [reviewed, setReviewed] = useState<string>();
 	const [known, setKnown] = useState<string[]>([]);
@@ -369,6 +371,11 @@ export function DocumentView({
 	const startComment = () => {
 		tapping.current = false;
 		if (!captured) return;
+		// The draft belongs to the selection it was typed for: a different one starts empty,
+		// the same one (reopened after Cancel) keeps the text.
+		const key = `${captured.after}\n${captured.quote}`;
+		if (draftFor.current !== key) setText("");
+		draftFor.current = key;
 		setPending({ after: captured.after, quote: captured.quote });
 		setCaptured(undefined);
 	};

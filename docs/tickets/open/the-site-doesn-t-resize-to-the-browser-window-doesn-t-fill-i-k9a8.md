@@ -27,3 +27,16 @@ The ask:
 Starting points (from the aide's quick look, not a diagnosis):
 - `src/App.tsx`: the shell `<main>` is `mx-auto ... max-w-3xl` (768px) unless the page is "wide", so most pages are a narrow centred column on a large window.
 - `index.html`: the viewport meta has `maximum-scale=1`, which blocks zooming.
+
+## Findings and fixes (worker resize)
+
+Code survey of every page at 375, 768, 1280 and 1920+ (no browser available, so by reading
+the classes, not screenshots):
+
+- Shell `<main>` was `max-w-3xl` on every page but Document: narrow strip on a wide window. Fixed: shell fills the width.
+- Nav buttons did not wrap: overflowed at 375. Fixed: `flex-wrap`.
+- Document two-column grid had fixed column widths centred (`lg:justify-center`), leaving empty sides. Fixed: text column is `1fr`, margin column keeps 16-22rem.
+- Viewport meta had `maximum-scale=1`, blocking zoom. Removed; the 16px input rule stops iOS focus-zoom.
+- Other pages (To-dos, Tasks, Task view, Ticket, Specs, System, Time, Login) use wrapping flex rows and only small fixed label widths; nothing else found. Login form stays `max-w-xs` (a form, not a page).
+
+Layout rule: written in CLAUDE.md, Conventions.

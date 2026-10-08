@@ -488,7 +488,7 @@ export function DocumentView({
 						return (
 							<div
 								key={b.start}
-								className="grid gap-x-6 lg:grid-cols-[minmax(0,48rem)_minmax(16rem,22rem)] lg:justify-center"
+								className="grid gap-x-6 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)]"
 							>
 								<div data-last={b.last}>
 									<BlockText block={b} quotes={quotes} />

@@ -35,10 +35,10 @@ describe("mobile input zoom", () => {
 		}
 	});
 
-	it("has the viewport meta that disables zoom", () => {
+	it("has the viewport meta, without blocking zoom", () => {
 		const html = read("index.html");
 		expect(html).toContain(
-			"width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover",
+			"width=device-width, initial-scale=1.0, viewport-fit=cover",
 		);
 	});
 });

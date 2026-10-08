@@ -43,6 +43,11 @@ npm run dev     # Vite dev server, /api proxied to the gateway
 
 - Keep it small (YAGNI): v1 is to-dos and decisions only. No state library, no router until a
   second page needs one.
+- Layout: pages fill the browser width (no `max-w-*` or `mx-auto` on the shell or a page).
+  A page may cap line length of running prose only, never its whole width. Rows of controls
+  use `flex-wrap`; fixed widths (`w-*`) only on small labels. Check at 375, 768, 1280, 1920+.
+  The viewport meta must not set `maximum-scale` (it blocks zoom); the 16px field rule
+  already prevents iOS focus-zoom.
 - Comments explain why, not what.
 - Don't commit unless asked. No Claude Code memory.
 

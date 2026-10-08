@@ -183,7 +183,23 @@ test("/task?id= alone finds the task's project, then redirects", async () => {
 				],
 			}),
 		"/api/v1/projects/p/tasks/x-1": () =>
-			json(200, { id: "x-1", project: "p" }),
+			json(200, {
+				id: "x-1",
+				project: "p",
+				title: "T",
+				body: "b",
+				thread: [],
+				watchers: [],
+				branch: null,
+				blocks: [],
+				blocked_by: [],
+				kind: "feature",
+				state: "open",
+				priority: "normal",
+				claimed_by: null,
+				agent: null,
+				updated: "2026-10-07T00:00:00Z",
+			}),
 	});
 	render(
 		<MemoryRouter initialEntries={["/task?id=x-1"]}>
@@ -192,6 +208,8 @@ test("/task?id= alone finds the task's project, then redirects", async () => {
 		</MemoryRouter>,
 	);
 	await waitFor(() => expect(where()).toBe("/p/p/tasks/x-1"));
+	// Let the task view finish rendering before the fetch stub is removed.
+	await screen.findByRole("heading", { name: "T" });
 });
 
 test("/task?id= for an unknown task says so", async () => {

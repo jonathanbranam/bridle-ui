@@ -4,7 +4,7 @@ title = "Build the unified URL scheme (/p/{project}/tasks/{id}, ...), redirects 
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-08T02:21:44.033Z"
-updated_at = "2026-10-08T02:30:30.590765Z"
+updated_at = "2026-10-08T02:31:09.089749Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -36,3 +36,6 @@ integrated: 502df8bd017dea35a334810a658259e7f1636c69 (branch bridle/routes)
 
 ### note · agent:manager-2 · 2026-10-08T02:30:30.590Z
 cleanup: removed agent routes, branch bridle/routes
+
+### note · agent:manager-2 · 2026-10-08T02:31:09.089Z
+Main is red at 502df8b (CI run 37718214493, passes locally): unhandled TypeError 'Cannot read properties of undefined (reading map)' at src/Tasks.tsx:244 (TaskView), raised during App.test.tsx after the test '/task?id= alone finds the task's project, then redirects'. Likely a fetch mock in that test returning an incomplete task detail (no list field) for a later TaskView render. Fix in the test mocks (and guard if a real undefined can occur), merge main, run npm run check, commit, message me.

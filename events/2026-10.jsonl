@@ -182,3 +182,4 @@
 {"actor":"agent:manager-2","at":"2026-10-08T23:18:09.582343Z","from":"planned","task":"ui-hqe4","to":"integrated"}
 {"actor":"agent:manager-2","at":"2026-10-08T23:18:15.604387Z","from":"planned","task":"ui-6tcv","to":"integrated"}
 {"actor":"agent:manager-2","at":"2026-10-08T23:18:20.987190Z","from":"open","task":"ui-bpsd","to":"planned"}
+{"actor":"agent:manager-2","at":"2026-10-08T23:24:11.385233Z","from":"planned","task":"ui-bpsd","to":"integrated"}

@@ -15,3 +15,9 @@ from = "ui-1466"
 to = "ui-8a8c"
 kind = "blocks"
 created_at = "2026-10-03T01:32:09.110Z"
+
+[[edge]]
+from = "ui-judt"
+to = "ui-28em"
+kind = "blocks"
+created_at = "2026-10-08T02:21:50.415Z"

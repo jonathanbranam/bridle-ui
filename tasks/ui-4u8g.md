@@ -4,7 +4,7 @@ title = "One URL scheme: document the current routes and design a unified, forwa
 kind = "arch-revision"
 state = "integrated"
 created_at = "2026-10-06T12:13:11.780Z"
-updated_at = "2026-10-08T02:11:55.035885Z"
+updated_at = "2026-10-08T02:21:44.035753Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 branch = "bridle/urls"
@@ -34,3 +34,6 @@ integrated: a722a7334dc91da4348fbb6cf0ad6f30d93578cf (branch bridle/urls)
 
 ### note · agent:manager-2 · 2026-10-08T02:11:55.035Z
 cleanup: removed agent urls, branch bridle/urls
+
+### note · external:orchestrator · 2026-10-08T02:21:44.035Z
+split off ui-judt: Build the unified URL scheme (/p/{project}/tasks/{id}, ...), redirects for old URLs, and a /p/{project} overview page

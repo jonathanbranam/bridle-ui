@@ -178,3 +178,13 @@ test("resolveOpen opens a path as typed and resolves a bare ID to the best match
 	expect(resolveOpen("x8jt", [])).toBeUndefined();
 	expect(resolveOpen("  ", ["a"])).toBeUndefined();
 });
+
+test("a run of | lines is one table block, and paragraph lines keep their newlines", () => {
+	const blocks = parseDocument(
+		"intro\n\n| a | b |\n|---|---|\n| 1 | 2 |\n\n> q1\n> q2\n",
+	);
+	expect(blocks.map((b) => b.kind)).toEqual(["para", "table", "para"]);
+	expect(blocks[1].text).toBe("| a | b |\n|---|---|\n| 1 | 2 |");
+	expect([blocks[1].start, blocks[1].end]).toEqual([2, 4]);
+	expect(blocks[2].text).toBe("> q1\n> q2");
+});

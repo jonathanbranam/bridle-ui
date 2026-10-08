@@ -1,20 +1,48 @@
 import { useCallback, useState } from "react";
 
+/** Plain HTTP has no navigator.clipboard, so fall back to a hidden textarea and execCommand. */
+export async function copyText(text: string): Promise<boolean> {
+	try {
+		if (navigator.clipboard) {
+			await navigator.clipboard.writeText(text);
+			return true;
+		}
+	} catch {
+		// fall through to the textarea
+	}
+	const area = document.createElement("textarea");
+	area.value = text;
+	area.setAttribute("readonly", "");
+	area.style.position = "fixed";
+	area.style.opacity = "0";
+	document.body.appendChild(area);
+	area.select();
+	area.setSelectionRange(0, text.length);
+	try {
+		return document.execCommand("copy");
+	} catch {
+		return false;
+	} finally {
+		document.body.removeChild(area);
+	}
+}
+
 type Props = {
 	id: string;
 };
 
 export function IdChip({ id }: Props) {
 	const [showCopied, setShowCopied] = useState(false);
+	const [failed, setFailed] = useState(false);
 
 	const handleCopy = useCallback(async () => {
-		try {
-			await navigator.clipboard.writeText(id);
-			setShowCopied(true);
-			setTimeout(() => setShowCopied(false), 2000);
-		} catch {
-			// Silently ignore clipboard errors; the ID is still selectable
-		}
+		const ok = await copyText(id);
+		setFailed(!ok);
+		setShowCopied(ok);
+		setTimeout(() => {
+			setShowCopied(false);
+			setFailed(false);
+		}, 2000);
 	}, [id]);
 
 	return (
@@ -57,6 +85,11 @@ export function IdChip({ id }: Props) {
 					</svg>
 				)}
 			</button>
+			{failed && (
+				<span role="alert" className="text-sm text-red-700">
+					Copy failed: select the ID
+				</span>
+			)}
 		</div>
 	);
 }

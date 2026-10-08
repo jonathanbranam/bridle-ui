@@ -43,15 +43,25 @@ test("shows checkmark briefly when copy button is clicked", async () => {
 	);
 });
 
-test("button click is safe even if clipboard is undefined", async () => {
-	// Simulate clipboard being unavailable by not mocking it
-	const user = userEvent.setup();
-	render(<IdChip id="error-test" />);
-	const button = screen.getByRole("button", { name: "Copy error-test" });
-	// Clicking should not throw even if clipboard is unavailable
+test("without navigator.clipboard (plain HTTP) it falls back to execCommand", async () => {
+	const user = userEvent.setup(); // installs its own clipboard, so stub after it
+	vi.stubGlobal("navigator", {});
+	const exec = vi.fn(() => true);
+	document.execCommand = exec;
+	render(<IdChip id="http-id" />);
+	const button = screen.getByRole("button", { name: "Copy http-id" });
 	await user.click(button);
-	// ID should still be selectable
-	expect(screen.getByText("error-test")).toBeInTheDocument();
+	expect(exec).toHaveBeenCalledWith("copy");
+	expect(button).toHaveAttribute("title", "Copied!");
+});
+
+test("when copying fails, a visible message says so", async () => {
+	const user = userEvent.setup(); // installs its own clipboard, so stub after it
+	vi.stubGlobal("navigator", {});
+	document.execCommand = vi.fn(() => false);
+	render(<IdChip id="fail-id" />);
+	await user.click(screen.getByRole("button", { name: "Copy fail-id" }));
+	expect(screen.getByRole("alert")).toHaveTextContent("Copy failed");
 });
 
 test("ID remains selectable and not in a button", () => {

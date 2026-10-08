@@ -148,3 +148,45 @@ test("a ticket stem links when the gateway resolves it", async () => {
 		"/p/p/docs?path=docs%2Ftickets%2Fopen%2Fsome-title-ab3d.md",
 	);
 });
+
+test("a GFM table renders as a table inside a scrolling box", () => {
+	shown("| a | b |\n|:--|--:|\n| 1 | 2 |");
+	const table = screen.getByRole("table");
+	expect(table.parentElement).toHaveClass("overflow-x-auto");
+	expect(screen.getByRole("columnheader", { name: "b" })).toHaveStyle({
+		textAlign: "right",
+	});
+	expect(screen.getByRole("cell", { name: "1" })).toBeInTheDocument();
+});
+
+test("the Document page renders a markdown table as a table", async () => {
+	vi.stubGlobal(
+		"fetch",
+		vi.fn(async (url: string) => {
+			if (url.endsWith("/projects"))
+				return new Response(
+					JSON.stringify({ projects: [{ project: "p", reachable: true }] }),
+				);
+			if (url.includes("/documents?"))
+				return new Response(JSON.stringify({ project: "p", paths: [] }));
+			if (url.includes("/links/resolve"))
+				return new Response(JSON.stringify({ project: "p", links: [] }));
+			return new Response(
+				JSON.stringify({
+					project: "p",
+					path: "a.md",
+					content: "intro\n\n| name | idea |\n|---|---|\n| cell-x | cell-y |\n",
+					hash: "h1",
+					branch: "main",
+				}),
+			);
+		}),
+	);
+	render(
+		<MemoryRouter initialEntries={["/document?project=p&path=a.md"]}>
+			<DocumentView onLoggedOut={() => {}} />
+		</MemoryRouter>,
+	);
+	expect(await screen.findByRole("table")).toBeInTheDocument();
+	expect(screen.getByRole("cell", { name: "cell-y" })).toBeInTheDocument();
+});

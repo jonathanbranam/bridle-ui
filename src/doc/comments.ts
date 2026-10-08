@@ -35,7 +35,7 @@ export type Thread = {
 };
 
 export type Block = {
-	kind: "heading" | "item" | "code" | "para" | "frontmatter";
+	kind: "heading" | "item" | "code" | "para" | "table" | "frontmatter";
 	/** Source lines of the text itself (0-based, inclusive). */
 	start: number;
 	end: number;
@@ -60,6 +60,7 @@ const isBlank = (l: string) => l.trim() === "";
 const isFence = (l: string) => /^\s*(```|~~~)/.test(l);
 const isHeading = (l: string) => /^#{1,6}\s/.test(l);
 const isItem = (l: string) => /^\s*([-*+]|\d+[.)])\s/.test(l);
+const isTable = (l: string) => l.trimStart().startsWith("|");
 const isCallout = (l: string) => HEADER.test(l);
 
 export const isHuman = (who: string) => {
@@ -162,6 +163,12 @@ export function parseDocument(content: string): Block[] {
 			const level = line.match(/^#+/)?.[0].length ?? 1;
 			add("heading", i, i, line.replace(/^#+\s+/, ""), level);
 			i++;
+		} else if (isTable(line)) {
+			// Kept whole, rows on their own lines, or no markdown parser reads it as a table.
+			let j = i;
+			while (j + 1 < lines.length && isTable(lines[j + 1])) j++;
+			add("table", i, j, lines.slice(i, j + 1).join("\n"));
+			i = j + 1;
 		} else if (isItem(line)) {
 			let j = i;
 			while (
@@ -185,13 +192,14 @@ export function parseDocument(content: string): Block[] {
 				!isFence(lines[j + 1]) &&
 				!isHeading(lines[j + 1]) &&
 				!isItem(lines[j + 1]) &&
+				!isTable(lines[j + 1]) &&
 				!isCallout(lines[j + 1])
 			)
 				j++;
 			const text = lines
 				.slice(i, j + 1)
-				.map((l) => l.replace(/^>\s?/, "").trim())
-				.join(" ");
+				.map((l) => l.trim())
+				.join("\n");
 			add("para", i, j, text);
 			i = j + 1;
 		}

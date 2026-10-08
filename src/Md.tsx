@@ -125,7 +125,28 @@ export function Md({ text }: { text: string }) {
 		<ReactMarkdown
 			remarkPlugins={[remarkGfm, linkify]}
 			urlTransform={urlTransform}
-			components={{ p: Fragment, a: Anchor }}
+			components={{
+				p: Fragment,
+				a: Anchor,
+				table: ({ children }) => (
+					<div className="my-2 overflow-x-auto">
+						<table className="border-collapse text-sm">{children}</table>
+					</div>
+				),
+				th: ({ children, style }) => (
+					<th
+						style={style}
+						className="border border-gray-300 bg-gray-100 px-2 py-1 text-left font-semibold"
+					>
+						{children}
+					</th>
+				),
+				td: ({ children, style }) => (
+					<td style={style} className="border border-gray-300 px-2 py-1">
+						{children}
+					</td>
+				),
+			}}
 		>
 			{text}
 		</ReactMarkdown>

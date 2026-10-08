@@ -96,8 +96,11 @@ function BlockText({ block, quotes }: { block: Block; quotes: string[] }) {
 					{block.text}
 				</pre>
 			);
+		case "table":
+			return <Md text={block.text} />;
 		default:
-			return <p>{t}</p>;
+			// A div: the text may be markdown with blocks of its own (a blockquote).
+			return <div>{t}</div>;
 	}
 }
 

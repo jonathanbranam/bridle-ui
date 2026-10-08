@@ -127,3 +127,4 @@
 {"actor":"external:aide","at":"2026-10-07T00:51:38.626499Z","from":"pending","task":"ui-hu3k","to":"open"}
 {"actor":"external:aide","at":"2026-10-07T00:51:38.636948Z","from":"open","task":"ui-hu3k","to":"planned"}
 {"actor":"human","at":"2026-10-07T22:38:05.853Z","from":"","task":"ui-2kmw","to":"pending"}
+{"actor":"external:orchestrator","at":"2026-10-08T01:02:51.349643Z","from":"pending","task":"ui-2kmw","to":"open"}

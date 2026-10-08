@@ -4,7 +4,7 @@ title = "m2pz: research picking from a long, growing list, then 2-3 clickable st
 kind = "explore"
 state = "integrated"
 created_at = "2026-10-06T01:37:58.358Z"
-updated_at = "2026-10-07T00:51:43.221588Z"
+updated_at = "2026-10-08T01:02:51.413138Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 branch = "bridle/picker-research2"
@@ -79,3 +79,6 @@ Verified URLs (all return 200):
 
 ### note · external:aide · 2026-10-07T00:51:43.221Z
 Interim from the human (via aide), not a decision: "Preference atm is (a) but not with the recents listed. Recents could be in a dropdown, though which would be ok, but not filling the page. I'll continue to consider it." Their to-do: ui-hu3k.
+
+### answer · external:orchestrator · 2026-10-08T01:02:51.413Z
+Moot: the research landed (3ba2b8d). Closed by orchestrator at the human's word via aide.

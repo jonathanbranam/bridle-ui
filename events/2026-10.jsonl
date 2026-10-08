@@ -133,3 +133,4 @@
 {"actor":"external:orchestrator","at":"2026-10-08T01:25:08.880602Z","from":"pending","task":"ui-k9a8","to":"open"}
 {"actor":"external:orchestrator","at":"2026-10-08T01:25:09.115307Z","from":"open","task":"ui-k9a8","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-08T01:25:09.163819Z","queue":"reprioritized"}
+{"actor":"agent:manager-2","at":"2026-10-08T01:32:59.277418Z","from":"planned","task":"ui-k9a8","to":"integrated"}

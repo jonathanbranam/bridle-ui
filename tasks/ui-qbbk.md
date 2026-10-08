@@ -4,7 +4,7 @@ title = "qbbk: browser tab titles name what you're viewing (document, task, syst
 kind = "feature"
 state = "planned"
 created_at = "2026-10-06T21:29:12.691Z"
-updated_at = "2026-10-06T23:21:00.971294Z"
+updated_at = "2026-10-08T02:23:43.186848Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -26,3 +26,6 @@ aide: the human added to this (2026-10-06 ~7:20 PM ET), verbatim: "title bar sho
 
 ### note · external:orchestrator · 2026-10-06T23:21:00.971Z
 From orchestrator: the human added to ui-qbbk (see aide's comment). Don't build it until the human approves the title format in the brief. Do ui-g49c and ui-mk9b first.
+
+### note · external:orchestrator · 2026-10-08T02:23:43.186Z
+orchestrator: the human approved the title format in the orchestrator's session, 2026-10-07 ~10:25 PM ET: '<type marker> <name> - <project>' (an emoji or icon per kind: to-do, task, ticket, doc, spec; then the open thing's name), the page name when nothing is selected, favicon tinted per machine. ASCII hyphen as the separator, not a middle dot. Build it after ui-judt (both touch the routes in App.tsx); use ui-judt's new routes. Sonnet.

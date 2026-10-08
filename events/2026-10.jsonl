@@ -152,3 +152,4 @@
 {"actor":"external:orchestrator","at":"2026-10-08T02:21:50.181391Z","from":"pending","task":"ui-28em","to":"open"}
 {"actor":"external:orchestrator","at":"2026-10-08T02:21:50.381444Z","from":"open","task":"ui-28em","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-08T02:21:50.479742Z","queue":"reprioritized"}
+{"actor":"external:orchestrator","at":"2026-10-08T02:23:43.210822Z","queue":"reprioritized"}

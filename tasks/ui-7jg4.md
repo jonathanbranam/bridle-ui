@@ -4,7 +4,7 @@ title = "[at restart] Test the new comment selection (ui-bpsd) on laptop and pho
 kind = "feature"
 state = "claimed"
 created_at = "2026-10-08T23:25:16.272Z"
-updated_at = "2026-10-08T23:25:16.293006Z"
+updated_at = "2026-10-08T23:28:51.430808Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -31,3 +31,6 @@ created for the human, priority normal
 
 ### note · external:orchestrator · 2026-10-08T23:25:16.293Z
 To-do for you (normal priority): [at restart] Test the new comment selection (ui-bpsd) on laptop and phone. Finish it with `bridle task done ui-7jg4`.
+
+### note · external:aide · 2026-10-08T23:28:51.430Z
+The human, ~7:35 PM ET, verbatim: "when opening the comment box a second time, it retains the text from previously; it should clear the text if the selection changes. It works ok on desktop; passes my needs; also tables look good; next test is mobile". Desktop passes; mobile test pending; stale-text bug filed as ui-tuj6.

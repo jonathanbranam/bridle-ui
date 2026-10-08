@@ -186,3 +186,5 @@
 {"actor":"human","at":"2026-10-08T23:25:16.272Z","from":"","task":"ui-7jg4","to":"pending"}
 {"actor":"external:orchestrator","at":"2026-10-08T23:25:16.279284Z","from":"pending","task":"ui-7jg4","to":"open"}
 {"actor":"external:orchestrator","at":"2026-10-08T23:25:16.279875Z","from":"open","task":"ui-7jg4","to":"planned"}
+{"actor":"human","at":"2026-10-08T23:28:51.391Z","from":"","task":"ui-tuj6","to":"pending"}
+{"actor":"external:orchestrator","at":"2026-10-08T23:29:07.194400Z","from":"pending","task":"ui-tuj6","to":"open"}

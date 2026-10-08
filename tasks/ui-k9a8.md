@@ -4,7 +4,7 @@ title = "The site doesn't resize to the browser window: doesn't fill it, goes ti
 kind = "bug"
 state = "integrated"
 created_at = "2026-10-08T01:24:35.367Z"
-updated_at = "2026-10-08T01:32:59.277418Z"
+updated_at = "2026-10-08T01:33:03.573417Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 branch = "bridle/resize"
@@ -28,3 +28,6 @@ done: shell fills window, nav wraps, Document grid fluid, maximum-scale dropped,
 
 ### note · agent:manager-2 · 2026-10-08T01:32:59.277Z
 integrated: 1c54ce917ead5ddde5aa0e49903b22a96753330f (branch bridle/resize)
+
+### note · agent:manager-2 · 2026-10-08T01:33:03.573Z
+cleanup: removed agent resize, branch bridle/resize

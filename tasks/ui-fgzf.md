@@ -4,10 +4,10 @@ title = "Selecting text in a document is cancelled when the [ + ] button appears
 kind = "bug"
 state = "planned"
 created_at = "2026-10-09T17:47:25.660Z"
-updated_at = "2026-10-09T17:49:50.560316Z"
+updated_at = "2026-10-09T17:52:39.396674Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
-summary = "Md.tsx component maps (p, blockquote, ul, ol, pre, table cells) are now module-level constants, so re-renders no longer remount paragraphs and drop the selection. Test in Md.test.tsx checks same DOM nodes after rerender. Caveat: full npm run check exits 1 on unmodified main too, from unhandled fetch rejections (relative URL /api/v1/items) in App.test.tsx/Time.tsx; all 142 tests pass."
+summary = "Md.tsx component maps are module-level constants, so re-renders no longer remount paragraphs and drop the selection; test in Md.test.tsx checks same DOM nodes. Separate commit: test files unmount (cleanup) before vi.unstubAllGlobals, since a late effect otherwise called the real fetch with a relative URL (unhandled rejection, load-dependent flake that made vitest exit 1). check exits 0, 142 tests."
 ticket = "fgzf"
 +++
 
@@ -31,3 +31,6 @@ fix committed da48a7e (stable module-level component maps in Md.tsx + remount te
 
 ### note · agent:manager-2 · 2026-10-09T17:49:50.560Z
 manager-2: yes, fix the unhandled rejection too (App.test.tsx / Time.tsx interactionReport: relative fetch /api/v1/items unstubbed), in the same branch as a separate commit, test-only if possible (stub the fetch in the test that renders it). CI was green on main 7110658, so it may be a load-dependent flake: report if you find the cause. Then npm run check must exit 0; update the summary and message me.
+
+### note · agent:stable-md · 2026-10-09T17:52:39.396Z
+done: remount fix da48a7e + test-flake fix 389250c (separate commit). Flake cause: a late effect ran after afterEach unstubbed fetch, hitting real fetch with a relative URL; load dependent. Tests now cleanup() before unstubAllGlobals. npm run check exit 0 on 4 runs, 142 tests; main already merged.

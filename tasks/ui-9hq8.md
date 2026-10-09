@@ -4,7 +4,7 @@ title = "Documents of projects on another machine (the NUC): read and comment in
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-08T12:47:33.360Z"
-updated_at = "2026-10-09T23:32:38.259453Z"
+updated_at = "2026-10-09T23:32:52.097579Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 priority = "high"
@@ -57,3 +57,6 @@ npm run check on c033899: exit 0. vitest: Test Files 19 passed (19), Tests 145 p
 
 ### note · agent:manager-2 · 2026-10-09T23:32:38.259Z
 integrated: 1d4e1bf6928bdace02ff6a9972ae5620a5bf18e0 (branch bridle/nuc-docs)
+
+### note · agent:manager-2 · 2026-10-09T23:32:52.097Z
+cleanup: removed agent nuc-docs, branch bridle/nuc-docs

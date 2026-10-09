@@ -46,7 +46,7 @@ function routed(url: string) {
 	return null;
 }
 
-function stub(error?: string) {
+function stub(error?: string, content = original) {
 	const puts: { content: string; hash: string }[] = [];
 	vi.stubGlobal(
 		"fetch",
@@ -66,7 +66,7 @@ function stub(error?: string) {
 				JSON.stringify({
 					project: "p",
 					path,
-					content: original,
+					content,
 					hash: "h1",
 					branch: "feature",
 				}),
@@ -378,6 +378,36 @@ test("the document ticket ID renders as an IdChip when path ends with -<id>.md",
 	await user.click(screen.getByRole("button", { name: "Open" }));
 	await screen.findByText(/on feature/);
 	expect(screen.getByRole("button", { name: "Copy x8jt" })).toBeInTheDocument();
+});
+
+test("a resolved thread opens and closes from its header or the [-] button, with aria-expanded following", async () => {
+	stub(
+		undefined,
+		`# T
+
+Hello world.
+
+> [!comment] c2 human, 2026-10-02 14:05 EDT, on "Hello" [sent 2026-10-02 14:06 EDT]
+> Old note.
+>
+> **resolved by human, 2026-10-02 14:07 EDT**
+`,
+	);
+	const user = await openDoc();
+	const header = screen.getByRole("button", { name: /human.*Hello/ });
+	expect(header).toHaveAttribute("aria-expanded", "false");
+	expect(screen.queryByText("Old note.")).toBeNull();
+	await user.click(header);
+	expect(header).toHaveAttribute("aria-expanded", "true");
+	expect(screen.getByText("Old note.")).toBeTruthy();
+	await user.click(screen.getByRole("button", { name: "Minimize thread" }));
+	expect(header).toHaveAttribute("aria-expanded", "false");
+	expect(screen.queryByText("Old note.")).toBeNull();
+	expect(screen.queryByRole("button", { name: "Minimize thread" })).toBeNull();
+	await user.click(header);
+	expect(header).toHaveAttribute("aria-expanded", "true");
+	await user.click(header);
+	expect(header).toHaveAttribute("aria-expanded", "false");
 });
 
 test("a thread's copy button calls clipboard.writeText with the thread ID and does not toggle the thread", async () => {

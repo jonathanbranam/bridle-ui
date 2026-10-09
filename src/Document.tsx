@@ -116,8 +116,8 @@ function ThreadView({
 					className="flex-1 text-left"
 					aria-expanded={open}
 					onClick={() => {
-						setOpen(true);
-						if (thread.unread) onOpen(thread);
+						setOpen(!open);
+						if (!open && thread.unread) onOpen(thread);
 					}}
 				>
 					<span className="font-medium">{thread.who}</span>
@@ -131,6 +131,16 @@ function ThreadView({
 						<span className="block italic text-gray-600">"{thread.quote}"</span>
 					)}
 				</button>
+				{open && (
+					<button
+						type="button"
+						className="flex-shrink-0 rounded border px-1"
+						aria-label="Minimize thread"
+						onClick={() => setOpen(false)}
+					>
+						[-]
+					</button>
+				)}
 				{thread.id && (
 					<>
 						{/* biome-ignore lint/a11y/noStaticElementInteractions lint/a11y/useKeyWithClickEvents: prevent thread toggle when copying ID */}

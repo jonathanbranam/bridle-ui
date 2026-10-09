@@ -1,10 +1,13 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { afterEach, expect, test, vi } from "vitest";
 import { DocumentView } from "./Document";
 import { LinkScope, Md } from "./Md";
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+	cleanup();
+	vi.unstubAllGlobals();
+});
 
 function resolving(map: Record<string, string | null>) {
 	vi.stubGlobal(
@@ -231,4 +234,15 @@ test("a highlight keeps bold, links and code intact, partly or wholly inside", (
 	expect(a).toHaveAttribute("href", "https://example.com/x");
 	expect(a?.querySelector("mark")).not.toBeNull();
 	expect(container.querySelector("code mark")?.textContent).toBe("code");
+});
+
+test("a re-render keeps the rendered paragraphs mounted (selection survives)", () => {
+	const { container, rerender } = render(<Md block text={"one\n\n- two"} />);
+	const before = [...container.querySelectorAll("p, ul")];
+	rerender(<Md block text={"one\n\n- two"} />);
+	const after = [...container.querySelectorAll("p, ul")];
+	expect(before.length).toBe(2);
+	after.forEach((n, i) => {
+		expect(n).toBe(before[i]);
+	});
 });

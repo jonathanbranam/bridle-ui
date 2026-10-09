@@ -1,10 +1,14 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, useLocation } from "react-router";
 import { afterEach, expect, test, vi } from "vitest";
 import { App } from "./App";
 
-afterEach(() => vi.unstubAllGlobals());
+// Unmount before unstubbing, or a late effect calls the real fetch with a relative URL.
+afterEach(() => {
+	cleanup();
+	vi.unstubAllGlobals();
+});
 
 function route(handlers: Record<string, () => Response>) {
 	vi.stubGlobal(

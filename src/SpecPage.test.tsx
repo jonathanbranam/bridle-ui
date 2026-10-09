@@ -1,9 +1,12 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { afterEach, expect, test, vi } from "vitest";
 import { parseHeading, SpecsView } from "./SpecPage";
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+	cleanup();
+	vi.unstubAllGlobals();
+});
 
 test("parseHeading takes the id out of the title", () => {
 	expect(parseHeading("### Requirement: A thing  {#r-1111 protected}")).toEqual(

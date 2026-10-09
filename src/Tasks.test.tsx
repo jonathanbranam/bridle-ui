@@ -1,11 +1,14 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { afterEach, expect, test, vi } from "vitest";
 import { LinkScope, Md } from "./Md";
 import { TasksView, TaskView } from "./Tasks";
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+	cleanup();
+	vi.unstubAllGlobals();
+});
 
 const summary = (id: string, state: string, extra = {}) => ({
 	id,

@@ -7,7 +7,7 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { resolveLinks } from "./api/client";
 import {
@@ -186,6 +186,52 @@ function rehypeMarkQuotes(quotes: string[]) {
 	};
 }
 
+// Module-level so component types are stable across renders: inline arrow functions would be new
+// types each render, remounting every element and dropping the browser's text selection.
+const shared: Components = {
+	a: Anchor,
+	table: ({ children }) => (
+		<div className="my-2 overflow-x-auto">
+			<table className="border-collapse text-sm">{children}</table>
+		</div>
+	),
+	th: ({ children, style }) => (
+		<th
+			style={style}
+			className="border border-gray-300 bg-gray-100 px-2 py-1 text-left font-semibold"
+		>
+			{children}
+		</th>
+	),
+	td: ({ children, style }) => (
+		<td style={style} className="border border-gray-300 px-2 py-1">
+			{children}
+		</td>
+	),
+};
+const inlineComponents: Components = { p: Fragment, ...shared };
+const blockComponents: Components = {
+	p: ({ children }) => <p className="my-1">{children}</p>,
+	blockquote: ({ children }) => (
+		<blockquote className="my-1 border-l-4 border-gray-300 pl-3 text-gray-700">
+			{children}
+		</blockquote>
+	),
+	ul: ({ children }) => <ul className="my-1 list-disc pl-6">{children}</ul>,
+	ol: ({ children, start }) => (
+		<ol start={start} className="my-1 list-decimal pl-6">
+			{children}
+		</ol>
+	),
+	pre: ({ children }) => (
+		<pre className="my-1 overflow-x-auto rounded bg-gray-100 p-2 text-sm">
+			{children}
+		</pre>
+	),
+
+	...shared,
+};
+
 /**
  * Markdown with auto-linking. By default one block's text, inline (paragraphs are the caller's);
  * `block` renders it whole: paragraphs, quotes, lists, code. `quotes` are highlighted.
@@ -204,50 +250,7 @@ export function Md({
 			remarkPlugins={[remarkGfm, linkify]}
 			rehypePlugins={quotes.length ? [[rehypeMarkQuotes, quotes]] : []}
 			urlTransform={urlTransform}
-			components={{
-				...(block
-					? {
-							p: ({ children }) => <p className="my-1">{children}</p>,
-							blockquote: ({ children }) => (
-								<blockquote className="my-1 border-l-4 border-gray-300 pl-3 text-gray-700">
-									{children}
-								</blockquote>
-							),
-							ul: ({ children }) => (
-								<ul className="my-1 list-disc pl-6">{children}</ul>
-							),
-							ol: ({ children, start }) => (
-								<ol start={start} className="my-1 list-decimal pl-6">
-									{children}
-								</ol>
-							),
-							pre: ({ children }) => (
-								<pre className="my-1 overflow-x-auto rounded bg-gray-100 p-2 text-sm">
-									{children}
-								</pre>
-							),
-						}
-					: { p: Fragment }),
-				a: Anchor,
-				table: ({ children }) => (
-					<div className="my-2 overflow-x-auto">
-						<table className="border-collapse text-sm">{children}</table>
-					</div>
-				),
-				th: ({ children, style }) => (
-					<th
-						style={style}
-						className="border border-gray-300 bg-gray-100 px-2 py-1 text-left font-semibold"
-					>
-						{children}
-					</th>
-				),
-				td: ({ children, style }) => (
-					<td style={style} className="border border-gray-300 px-2 py-1">
-						{children}
-					</td>
-				),
-			}}
+			components={block ? blockComponents : inlineComponents}
 		>
 			{text}
 		</ReactMarkdown>

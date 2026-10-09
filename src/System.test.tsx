@@ -1,10 +1,13 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { afterEach, expect, test, vi } from "vitest";
 import { SystemView, uptime } from "./System";
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+	cleanup();
+	vi.unstubAllGlobals();
+});
 
 const status = {
 	pid: 1,

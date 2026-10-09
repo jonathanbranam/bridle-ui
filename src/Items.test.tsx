@@ -1,9 +1,12 @@
-import { render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, expect, test, vi } from "vitest";
 import { ItemsView } from "./Items";
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+	cleanup();
+	vi.unstubAllGlobals();
+});
 
 const todo = (id: string, title: string) => ({
 	task_id: id,

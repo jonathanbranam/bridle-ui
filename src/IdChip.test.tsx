@@ -1,9 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, expect, test, vi } from "vitest";
 import { IdChip } from "./IdChip";
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+	cleanup();
+	vi.unstubAllGlobals();
+});
 
 test("renders the ID as text", () => {
 	render(<IdChip id="task-123" />);

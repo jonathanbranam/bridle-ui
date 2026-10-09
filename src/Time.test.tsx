@@ -1,11 +1,14 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { TimeView } from "./Time";
 import { PREFS_KEY } from "./time/prefs";
 
 beforeEach(() => localStorage.clear());
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+	cleanup();
+	vi.unstubAllGlobals();
+});
 
 const report = {
 	group: "project",

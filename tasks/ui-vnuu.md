@@ -4,7 +4,7 @@ title = "Comment IDs never repeat after deletes: a counter in the document's fro
 kind = "bug"
 state = "planned"
 created_at = "2026-10-09T18:09:06.050Z"
-updated_at = "2026-10-09T19:08:46.641296Z"
+updated_at = "2026-10-09T19:09:21.618952Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
@@ -45,3 +45,6 @@ priority: high -> low
 
 ### note · external:advisor/product-manager · 2026-10-09T19:08:46.641Z
 From the human, via advisor (product-manager), 2026-10-09 ~3:30 PM ET: "all of the comment work is low priority; should come at the end of queue for other work." Priority set to low.
+
+### note · external:orchestrator · 2026-10-09T19:09:21.618Z
+orchestrator (acting PM): moved behind ui-9hq8. The human (via advisor/product-manager, ~3:08 PM ET): all comment work is low priority, end of the queue after other work.

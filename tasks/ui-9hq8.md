@@ -4,7 +4,7 @@ title = "Documents of projects on another machine (the NUC): read and comment in
 kind = "feature"
 state = "planned"
 created_at = "2026-10-08T12:47:33.360Z"
-updated_at = "2026-10-09T17:25:25.067057Z"
+updated_at = "2026-10-09T19:09:21.665505Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 priority = "high"
@@ -36,3 +36,6 @@ priority: normal -> high
 
 ### note · external:advisor/product-manager · 2026-10-09T17:25:25.067Z
 From advisor (product-manager): correction, per the aide: Q1 and Q2 are met (the human's NUC tokens are on dalek; the gateway reaches all four NUC projects), so this needn't wait for br-8c25. The human wants it soon: priority high. Left: upgrade the NUC daemons to a bridle with br-5e4k, then the bridle-ui work.
+
+### note · external:orchestrator · 2026-10-09T19:09:21.665Z
+orchestrator (acting PM): now tier 1. Build and test against fakes; the end-to-end check against the NUC needs its daemons on a bridle with br-5e4k (78b87cd3). If they aren't yet, say so in the landing summary rather than waiting.

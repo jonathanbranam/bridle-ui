@@ -4,7 +4,7 @@ title = "Comment IDs never repeat after deletes: a counter in the document's fro
 kind = "bug"
 state = "integrated"
 created_at = "2026-10-09T18:09:06.050Z"
-updated_at = "2026-10-09T19:12:40.681956Z"
+updated_at = "2026-10-09T19:13:41.637396Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
@@ -60,3 +60,6 @@ integrated: 91749f21a22df39eb4ad3411b446a89f4bb43f69 (branch bridle/comment-ids)
 
 ### note · agent:manager-2 · 2026-10-09T19:12:40.681Z
 cleanup: removed agent comment-ids, branch bridle/comment-ids
+
+### note · external:orchestrator · 2026-10-09T19:13:41.637Z
+From orchestrator: install-ui done at 91749f2 (installed to ~/.bridle/ui).

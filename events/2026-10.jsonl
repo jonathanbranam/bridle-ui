@@ -207,3 +207,5 @@
 {"actor":"agent:manager-2","at":"2026-10-09T12:20:04.194204Z","from":"open","task":"ui-kqsp","to":"planned"}
 {"actor":"agent:manager-2","at":"2026-10-09T12:20:04.658825Z","from":"open","task":"ui-5zrr","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-09T12:20:26.875098Z","queue":"reprioritized"}
+{"actor":"agent:manager-2","at":"2026-10-09T12:23:17.747954Z","from":"planned","task":"ui-5zrr","to":"integrated"}
+{"actor":"agent:manager-2","at":"2026-10-09T12:23:22.871161Z","from":"planned","task":"ui-kqsp","to":"integrated"}

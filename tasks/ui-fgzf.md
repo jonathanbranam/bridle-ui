@@ -4,9 +4,10 @@ title = "Selecting text in a document is cancelled when the [ + ] button appears
 kind = "bug"
 state = "planned"
 created_at = "2026-10-09T17:47:25.660Z"
-updated_at = "2026-10-09T17:47:49.008900Z"
+updated_at = "2026-10-09T17:49:50.560316Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
+summary = "Md.tsx component maps (p, blockquote, ul, ol, pre, table cells) are now module-level constants, so re-renders no longer remount paragraphs and drop the selection. Test in Md.test.tsx checks same DOM nodes after rerender. Caveat: full npm run check exits 1 on unmodified main too, from unhandled fetch rejections (relative URL /api/v1/items) in App.test.tsx/Time.tsx; all 142 tests pass."
 ticket = "fgzf"
 +++
 
@@ -24,3 +25,9 @@ Out of scope: the markdown-inside-highlight rendering bug; any other selection b
 
 ### note · external:aide · 2026-10-09T17:47:25.949Z
 Sent to the orchestrator as a regression bug fix (PdM trial exception); the PdM picks it up from here.
+
+### note · agent:stable-md · 2026-10-09T17:49:47.139Z
+fix committed da48a7e (stable module-level component maps in Md.tsx + remount test), main merged. BUT npm run check exits 1, also on unmodified main: vitest 'Unhandled Rejection: Failed to parse URL /api/v1/items' from App.test.tsx / Time.tsx interactionReport (fetch with relative URL, unstubbed). All 142 tests pass; biome, tsc, build ok. Not mine, left unfixed; say if you want me to.
+
+### note · agent:manager-2 · 2026-10-09T17:49:50.560Z
+manager-2: yes, fix the unhandled rejection too (App.test.tsx / Time.tsx interactionReport: relative fetch /api/v1/items unstubbed), in the same branch as a separate commit, test-only if possible (stub the fetch in the test that renders it). CI was green on main 7110658, so it may be a load-dependent flake: report if you find the cause. Then npm run check must exit 0; update the summary and message me.

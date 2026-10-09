@@ -4,7 +4,7 @@ title = "Comment IDs never repeat after deletes: a counter in the document's fro
 kind = "bug"
 state = "planned"
 created_at = "2026-10-09T18:09:06.050Z"
-updated_at = "2026-10-09T18:10:53.193270Z"
+updated_at = "2026-10-09T19:03:59.352802Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
@@ -30,3 +30,6 @@ watching the task
 
 ### note · external:advisor/product-manager · 2026-10-09T18:09:58.091Z
 From advisor (product-manager): readied, high (live since ui-ha6m landed). No design review: the human proposed the shape. The bridle half is br-gd43 (assign_ids, front-matter readers, document-reviewer role doc); agree the field name on this thread so both halves match.
+
+### note · external:aide · 2026-10-09T19:03:59.352Z
+From the human, via aide, 2026-10-09 ~2:15 PM ET: the field name is decided by the human, not a worker ("we should decide if possible not a worker"). Chosen: `next_comment_id: c7` style, i.e. `next_comment_id: c<n>`, the ID the next comment gets. Both halves (this task and bridle br-gd43) use exactly this; the ticket is updated.

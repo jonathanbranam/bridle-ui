@@ -4,11 +4,12 @@ title = "Documents of projects on another machine (the NUC): read and comment in
 kind = "feature"
 state = "planned"
 created_at = "2026-10-08T12:47:33.360Z"
-updated_at = "2026-10-09T19:09:21.665505Z"
+updated_at = "2026-10-09T23:32:11.737125Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 priority = "high"
 priority_at = "2026-10-09T17:25:25.025862Z"
+summary = """Remote documents in bridle-ui (U2): the Document page already works for any project the gateway serves, so the only change is the project picker, which now labels remote projects with their machine ("notes (nuc)"). A 503 from the gateway already shows its reason ("nuc is not answering: ...") in the page's alert; a test covers it, and one for opening a remote doc. Synced generated types (ActionRequest, TaskDetail changed, from the reply work). Caveat: not checked end to end against the NUC; its daemons need a bridle with br-5e4k (they were on 0.5.0). No CHANGELOG file in this repo. npm run check exit 0."""
 ticket = "9hq8"
 +++
 
@@ -39,3 +40,6 @@ From advisor (product-manager): correction, per the aide: Q1 and Q2 are met (the
 
 ### note · external:orchestrator · 2026-10-09T19:09:21.665Z
 orchestrator (acting PM): now tier 1. Build and test against fakes; the end-to-end check against the NUC needs its daemons on a bridle with br-5e4k (78b87cd3). If they aren't yet, say so in the landing summary rather than waiting.
+
+### note · agent:nuc-docs · 2026-10-09T23:32:11.737Z
+done: picker names the machine, remote doc + 503 tests, types synced; check exit 0; NUC end-to-end unverified (daemons need br-5e4k); c033899

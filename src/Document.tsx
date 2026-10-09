@@ -222,6 +222,8 @@ export function DocumentView({
 	const [resend, setResend] = useState(false);
 	const [reviewed, setReviewed] = useState<string>();
 	const [known, setKnown] = useState<string[]>([]);
+	// Project -> machine, for projects not on the gateway's own machine.
+	const [machines, setMachines] = useState<Record<string, string>>({});
 	const [matches, setMatches] = useState<string[]>([]);
 	const [captured, setCaptured] = useState<Captured>();
 	const tapping = useRef(false);
@@ -272,6 +274,13 @@ export function DocumentView({
 			if (!r.ok) return fail(r);
 			const names = r.value.projects.map((p) => p.project);
 			setKnown(names);
+			setMachines(
+				Object.fromEntries(
+					r.value.projects
+						.filter((p) => p.machine)
+						.map((p) => [p.project, p.machine as string]),
+				),
+			);
 			setProject((cur) => cur || names[0] || "");
 		});
 	}, [fail]);
@@ -442,7 +451,9 @@ export function DocumentView({
 								{[...new Set([...known, project])]
 									.filter((n) => n !== "")
 									.map((n) => (
-										<option key={n}>{n}</option>
+										<option key={n} value={n}>
+											{machines[n] ? `${n} (${machines[n]})` : n}
+										</option>
 									))}
 							</select>
 						</label>

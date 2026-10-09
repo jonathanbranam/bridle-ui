@@ -518,3 +518,56 @@ Hello world.
 	expect(puts[0].content).toBe("# T\n\nHello world.\n");
 	expect(puts[0].hash).toBe("h1");
 });
+
+test("a project on another machine is named in the picker, opens, and a 503 shows the gateway's reason", async () => {
+	vi.stubGlobal(
+		"fetch",
+		vi.fn(async (url: string) => {
+			if (url.endsWith("/projects"))
+				return new Response(
+					JSON.stringify({
+						projects: [
+							{ project: "notes", machine: "nuc", url: null, reachable: true },
+						],
+					}),
+				);
+			if (url.includes("/documents?"))
+				return new Response(JSON.stringify({ project: "notes", paths: [] }));
+			if (url.includes("down.md"))
+				return new Response(
+					JSON.stringify({ error: "nuc is not answering: connection refused" }),
+					{ status: 503 },
+				);
+			return new Response(
+				JSON.stringify({
+					project: "notes",
+					path: "a.md",
+					content: "# T\n\nHello.\n",
+					hash: "h1",
+					branch: "main",
+				}),
+			);
+		}),
+	);
+	const user = userEvent.setup();
+	render(
+		<MemoryRouter initialEntries={["/p/notes/docs"]}>
+			<Routes>
+				<Route
+					path="/p/:project/docs"
+					element={<DocumentView onLoggedOut={() => {}} />}
+				/>
+			</Routes>
+		</MemoryRouter>,
+	);
+	await screen.findByRole("option", { name: "notes (nuc)" });
+	await user.type(screen.getByLabelText("Document"), "a.md");
+	await user.click(screen.getByRole("button", { name: "Open" }));
+	await screen.findByText(/on main/);
+	await user.clear(screen.getByLabelText("Document"));
+	await user.type(screen.getByLabelText("Document"), "down.md");
+	await user.click(screen.getByRole("button", { name: "Open" }));
+	expect((await screen.findByRole("alert")).textContent).toBe(
+		"nuc is not answering: connection refused",
+	);
+});

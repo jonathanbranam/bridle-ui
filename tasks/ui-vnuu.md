@@ -2,9 +2,9 @@
 id = "ui-vnuu"
 title = "Comment IDs never repeat after deletes: a counter in the document's front matter"
 kind = "bug"
-state = "open"
+state = "planned"
 created_at = "2026-10-09T18:09:06.050Z"
-updated_at = "2026-10-09T18:09:58.091947Z"
+updated_at = "2026-10-09T18:10:53.193270Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
@@ -15,7 +15,10 @@ priority_at = "2026-10-09T18:09:53.598680Z"
 ticket = "vnuu"
 +++
 
-docs/tickets/open/comment-ids-never-repeat-after-deletes-a-counter-in-the-docu-vnuu.md
+Brief (orchestrator, acting PM). Ticket vnuu has the human's words (2026-10-09 ~2:00 PM ET) and the full ask; this task is the bridle-ui half. Field name (orchestrator, acting PM for bridle-ui): `comment_next`, the next comment number to assign (an integer; next ID is max(comment_next, highest c<n> + 1); write comment_next = assigned + 1). Same name in bridle (br-gd43) and bridle-ui (ui-vnuu).
+Files: src/doc/comments.ts (nextId and every writer that assigns an ID; deleteThread never lowers the counter), the front-matter writer it needs (create a minimal front matter when none), the Document page's front-matter table if it chokes on the key, tests.
+Accept: tests: delete the newest thread, then all threads, add a comment, the ID keeps counting up; a file without the field still works and gets it on the first new ID; the repo's check script passes.
+Model: Sonnet. Out of scope: the bridle half (br-gd43: daemon assign_ids and the reviewer role doc).
 
 ## Thread
 

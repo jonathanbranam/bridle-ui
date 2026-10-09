@@ -2,11 +2,14 @@
 id = "ui-ha6m"
 title = "The human can delete a resolved comment thread (kept in git history)"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-09T02:29:02.507Z"
-updated_at = "2026-10-09T17:25:37.581462Z"
+updated_at = "2026-10-09T17:33:40.282178Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
+branch = "bridle/delete-thread"
+commit = "7110658d7d0b736c301cb4cbebaba5759bc5f3da"
+summary = "Added deleteThread(content, id) in src/doc/comments.ts (removes a resolved thread's callout plus one adjoining blank line; unresolved, unknown or unnumbered threads returned unchanged) and a Delete button on open resolved threads in src/Document.tsx, which asks window.confirm then saves through the same hash-checked save as resolve. Highlights are drawn at render time from the header quote, so no markers need unwrapping; the highlighted text is untouched. Unit and UI tests added. Follow-up option, not built: hide resolved threads behind a 'show resolved (n)' toggle. Caveat: threads without a c<n> id (hand-typed, not yet numbered) get no Delete button."
 ticket = "ha6m"
 +++
 
@@ -21,3 +24,11 @@ Accept: unit tests for deleteThread (thread gone, highlighted text kept, other t
 Model: Sonnet (text transform with edge cases).
 Out of scope, and why: auto-dismiss or a "show resolved (n)" toggle (the ask says only if cheap; mention it in your report as a follow-up option instead); the markdown-inside-highlight rendering bug (its own ticket); undo (confirm is enough; git keeps the history).
 Runs after ui-wtr3: both touch src/Document.tsx.
+
+## Thread
+
+### note · agent:delete-thread · 2026-10-09T17:33:31.606Z
+done: Delete button on resolved threads (confirm, then save) + deleteThread in comments.ts; npm run check exit 0, 141 tests; 57aae64. Follow-up option: 'show resolved (n)' toggle.
+
+### note · agent:manager-2 · 2026-10-09T17:33:40.282Z
+integrated: 7110658d7d0b736c301cb4cbebaba5759bc5f3da (branch bridle/delete-thread)

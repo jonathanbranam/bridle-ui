@@ -2,9 +2,9 @@
 id = "ui-ha6m"
 title = "The human can delete a resolved comment thread (kept in git history)"
 kind = "feature"
-state = "pending"
+state = "open"
 created_at = "2026-10-09T02:29:02.507Z"
-updated_at = "2026-10-09T02:29:02.507Z"
+updated_at = "2026-10-09T17:24:27.572852Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 ticket = "ha6m"

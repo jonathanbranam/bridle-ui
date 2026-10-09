@@ -35,11 +35,18 @@ export type Thread = {
 };
 
 export type Block = {
-	kind: "heading" | "item" | "code" | "para" | "table" | "frontmatter";
+	kind:
+		| "heading"
+		| "item"
+		| "code"
+		| "para"
+		| "table"
+		| "quote"
+		| "frontmatter";
 	/** Source lines of the text itself (0-based, inclusive). */
 	start: number;
 	end: number;
-	/** The text to render: heading markers and list bullets removed. */
+	/** The text to render: heading markers removed; items and quotes keep their markdown. */
 	text: string;
 	level: number;
 	/** Last line of the block including the threads after it: where a new comment goes. */
@@ -62,6 +69,7 @@ const isHeading = (l: string) => /^#{1,6}\s/.test(l);
 const isItem = (l: string) => /^\s*([-*+]|\d+[.)])\s/.test(l);
 const isTable = (l: string) => l.trimStart().startsWith("|");
 const isCallout = (l: string) => HEADER.test(l);
+const isQuote = (l: string) => l.startsWith(">") && !isCallout(l);
 
 export const isHuman = (who: string) => {
 	const w = who.trim().toLowerCase();
@@ -169,20 +177,23 @@ export function parseDocument(content: string): Block[] {
 			while (j + 1 < lines.length && isTable(lines[j + 1])) j++;
 			add("table", i, j, lines.slice(i, j + 1).join("\n"));
 			i = j + 1;
-		} else if (isItem(line)) {
+		} else if (isQuote(line)) {
 			let j = i;
-			while (
-				j + 1 < lines.length &&
-				/^\s+\S/.test(lines[j + 1]) &&
-				!isItem(lines[j + 1])
-			)
-				j++;
-			const text = lines
-				.slice(i, j + 1)
-				.map((l) => l.trim())
-				.join(" ")
-				.replace(/^([-*+]|\d+[.)])\s+/, "");
-			add("item", i, j, text);
+			while (j + 1 < lines.length && isQuote(lines[j + 1])) j++;
+			add("quote", i, j, lines.slice(i, j + 1).join("\n"));
+			i = j + 1;
+		} else if (isItem(line)) {
+			// One top-level item with everything under it (wrapped lines, nested items, code,
+			// blank-separated paragraphs), kept as source: the marker gives the number and the
+			// renderer does the nesting.
+			let j = i;
+			for (;;) {
+				let k = j + 1;
+				while (k < lines.length && isBlank(lines[k])) k++;
+				if (k >= lines.length || !/^\s{2,}\S/.test(lines[k])) break;
+				j = k;
+			}
+			add("item", i, j, lines.slice(i, j + 1).join("\n"));
 			i = j + 1;
 		} else {
 			let j = i;
@@ -192,6 +203,7 @@ export function parseDocument(content: string): Block[] {
 				!isFence(lines[j + 1]) &&
 				!isHeading(lines[j + 1]) &&
 				!isItem(lines[j + 1]) &&
+				!isQuote(lines[j + 1]) &&
 				!isTable(lines[j + 1]) &&
 				!isCallout(lines[j + 1])
 			)
@@ -310,27 +322,6 @@ export function easternStamp(at: Date = new Date()): string {
 	}).formatToParts(at);
 	const v = (t: string) => parts.find((p) => p.type === t)?.value ?? "";
 	return `${v("year")}-${v("month")}-${v("day")} ${v("hour")}:${v("minute")} ${v("timeZoneName")}`;
-}
-
-export type Segment = { text: string; mark: boolean };
-
-/** Splits `text` so the first occurrence of each quote is marked: what a comment is on. */
-export function markQuotes(text: string, quotes: string[]): Segment[] {
-	const spans = quotes
-		.filter((q) => q !== "")
-		.map((q) => ({ at: text.indexOf(q), len: q.length }))
-		.filter((s) => s.at >= 0)
-		.sort((a, b) => a.at - b.at);
-	const out: Segment[] = [];
-	let pos = 0;
-	for (const s of spans) {
-		if (s.at < pos) continue; // overlaps an earlier quote
-		if (s.at > pos) out.push({ text: text.slice(pos, s.at), mark: false });
-		out.push({ text: text.slice(s.at, s.at + s.len), mark: true });
-		pos = s.at + s.len;
-	}
-	if (pos < text.length) out.push({ text: text.slice(pos), mark: false });
-	return out.length ? out : [{ text, mark: false }];
 }
 
 /**

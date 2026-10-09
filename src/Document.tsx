@@ -15,7 +15,6 @@ import {
 	type Block,
 	easternStamp,
 	type Mark,
-	markQuotes,
 	markRead,
 	parseDocument,
 	quoteOf,
@@ -38,23 +37,6 @@ function extractTicketId(path: string): string | null {
 	return match ? match[1] : null;
 }
 
-// The text a comment is on is highlighted, like Google Docs. Markup spanning a highlight edge
-// shows plain: the quote is rendered text and may not match the source.
-function Marked({ text, quotes }: { text: string; quotes: string[] }) {
-	return markQuotes(text, quotes).map((s, i) => {
-		const key = `${i}:${s.text}`;
-		return s.mark ? (
-			<mark key={key} className="bg-amber-200">
-				<Md text={s.text} />
-			</mark>
-		) : (
-			<span key={key}>
-				<Md text={s.text} />
-			</span>
-		);
-	});
-}
-
 function FrontMatterTable({ text }: { text: string }) {
 	const { rows } = parseFrontMatter(text.split("\n"));
 	return (
@@ -75,8 +57,8 @@ function FrontMatterTable({ text }: { text: string }) {
 	);
 }
 
+// The text a comment is on is highlighted, like Google Docs, in the rendered output (see Md).
 function BlockText({ block, quotes }: { block: Block; quotes: string[] }) {
-	const t = <Marked text={block.text} quotes={quotes} />;
 	switch (block.kind) {
 		case "heading":
 			return (
@@ -84,11 +66,9 @@ function BlockText({ block, quotes }: { block: Block; quotes: string[] }) {
 					className="font-semibold"
 					style={{ fontSize: `${1.6 - block.level * 0.15}rem` }}
 				>
-					{t}
+					<Md text={block.text} quotes={quotes} />
 				</p>
 			);
-		case "item":
-			return <p className="pl-4">• {t}</p>;
 		case "frontmatter":
 			return <FrontMatterTable text={block.text} />;
 		case "code":
@@ -97,11 +77,8 @@ function BlockText({ block, quotes }: { block: Block; quotes: string[] }) {
 					{block.text}
 				</pre>
 			);
-		case "table":
-			return <Md text={block.text} />;
 		default:
-			// A div: the text may be markdown with blocks of its own (a blockquote).
-			return <div>{t}</div>;
+			return <Md block text={block.text} quotes={quotes} />;
 	}
 }
 

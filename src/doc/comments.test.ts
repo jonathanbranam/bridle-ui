@@ -3,7 +3,6 @@ import {
 	addComment,
 	addReply,
 	easternStamp,
-	markQuotes,
 	markRead,
 	parseDocument,
 	resolveOpen,
@@ -33,8 +32,8 @@ test("parses blocks and attaches threads to the block they follow", () => {
 	expect(blocks.map((b) => [b.kind, b.text])).toEqual([
 		["heading", "Title"],
 		["para", "Some text with **bold**."],
-		["item", "one continued"],
-		["item", "two"],
+		["item", "- one\n  continued"],
+		["item", "- two"],
 		["code", "> [!comment] not a comment"],
 	]);
 	const t = blocks[1].threads[0];
@@ -155,19 +154,26 @@ test("easternStamp is ASCII Eastern with the zone", () => {
 	);
 });
 
-test("markQuotes marks the quote and keeps the rest", () => {
-	expect(markQuotes("a big dog ran", ["big dog"])).toEqual([
-		{ text: "a ", mark: false },
-		{ text: "big dog", mark: true },
-		{ text: " ran", mark: false },
+test("a quote and a nested numbered list are whole blocks that keep their markdown", () => {
+	const blocks = parseDocument(
+		"> Why:\n>\n> 1. a\n>    wrapped\n> 2. b\n\n3. c\n   - nested\n\n   para\n4. d\n",
+	);
+	expect(blocks.map((b) => [b.kind, b.start, b.end])).toEqual([
+		["quote", 0, 4],
+		["item", 6, 9],
+		["item", 10, 10],
 	]);
+	expect(blocks[1].text).toBe("3. c\n   - nested\n\n   para");
 });
 
-test("markQuotes ignores absent quotes and overlaps", () => {
-	expect(markQuotes("abc", ["zzz"])).toEqual([{ text: "abc", mark: false }]);
-	expect(markQuotes("abcd", ["abc", "bcd"]).filter((s) => s.mark)).toHaveLength(
-		1,
+test("a comment after a list item or quote anchors to that block's last line", () => {
+	const blocks = parseDocument(
+		'> q\n\n> [!comment] c1 human, 2026-10-02 14:05 EDT, on "q"\n> hi\n\n- a\n  - b\n',
 	);
+	expect(blocks.map((b) => [b.kind, b.last, b.threads.length])).toEqual([
+		["quote", 3, 1],
+		["item", 6, 0],
+	]);
 });
 
 test("resolveOpen opens a path as typed and resolves a bare ID to the best match", () => {
@@ -183,7 +189,7 @@ test("a run of | lines is one table block, and paragraph lines keep their newlin
 	const blocks = parseDocument(
 		"intro\n\n| a | b |\n|---|---|\n| 1 | 2 |\n\n> q1\n> q2\n",
 	);
-	expect(blocks.map((b) => b.kind)).toEqual(["para", "table", "para"]);
+	expect(blocks.map((b) => b.kind)).toEqual(["para", "table", "quote"]);
 	expect(blocks[1].text).toBe("| a | b |\n|---|---|\n| 1 | 2 |");
 	expect([blocks[1].start, blocks[1].end]).toEqual([2, 4]);
 	expect(blocks[2].text).toBe("> q1\n> q2");

@@ -190,3 +190,45 @@ test("the Document page renders a markdown table as a table", async () => {
 	expect(await screen.findByRole("table")).toBeInTheDocument();
 	expect(screen.getByRole("cell", { name: "cell-y" })).toBeInTheDocument();
 });
+
+test("block mode renders a quote with a numbered, nested list", () => {
+	const { container } = render(
+		<Md
+			block
+			text={"> Why:\n>\n> 1. a\n>    wrapped\n> 2. b\n>    - nested"}
+		/>,
+	);
+	expect(container.querySelector("blockquote ol")).not.toBeNull();
+	expect(container.querySelectorAll("blockquote ol > li")).toHaveLength(2);
+	expect(container.querySelector("ol ul li")).not.toBeNull();
+	expect(container.querySelectorAll("p")).toHaveLength(1);
+});
+
+test("a numbered item keeps its number", () => {
+	const { container } = render(<Md block text={"3. c"} />);
+	expect(container.querySelector("ol")).toHaveAttribute("start", "3");
+});
+
+test("a highlight keeps bold, links and code intact, partly or wholly inside", () => {
+	const text =
+		"Ask **Stephen King** about `code here` and https://example.com/x ok";
+	const { container } = render(
+		<Md
+			block
+			text={text}
+			quotes={["Ask Stephen", "King about code", "example.com/x ok"]}
+		/>,
+	);
+	expect(container.querySelector("strong")?.textContent).toBe("Stephen King");
+	expect(container.textContent).not.toContain("*");
+	expect(container.textContent).not.toContain("`");
+	const marks = [...container.querySelectorAll("mark")].map(
+		(m) => m.textContent,
+	);
+	expect(marks.join("")).toContain("Stephen");
+	// The link still links, with the highlight inside it.
+	const a = container.querySelector("a");
+	expect(a).toHaveAttribute("href", "https://example.com/x");
+	expect(a?.querySelector("mark")).not.toBeNull();
+	expect(container.querySelector("code mark")?.textContent).toBe("code");
+});

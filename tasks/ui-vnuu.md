@@ -2,9 +2,9 @@
 id = "ui-vnuu"
 title = "Comment IDs never repeat after deletes: a counter in the document's front matter"
 kind = "bug"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-09T18:09:06.050Z"
-updated_at = "2026-10-09T19:09:21.618952Z"
+updated_at = "2026-10-09T19:12:40.681956Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
@@ -12,6 +12,9 @@ watchers = [
 ]
 priority = "low"
 priority_at = "2026-10-09T19:08:42.543395Z"
+branch = "bridle/comment-ids"
+commit = "91749f21a22df39eb4ad3411b446a89f4bb43f69"
+summary = "nextId in src/doc/comments.ts now takes max(front matter next_comment_id, highest c<n>+1); addComment writes next_comment_id: c<k+1> after assigning c<k>, creating front matter when absent. deleteThread never touches the counter. Tests added in comments.test.ts. Docs: none needed."
 ticket = "vnuu"
 +++
 
@@ -48,3 +51,12 @@ From the human, via advisor (product-manager), 2026-10-09 ~3:30 PM ET: "all of t
 
 ### note · external:orchestrator · 2026-10-09T19:09:21.618Z
 orchestrator (acting PM): moved behind ui-9hq8. The human (via advisor/product-manager, ~3:08 PM ET): all comment work is low priority, end of the queue after other work.
+
+### note · agent:comment-ids · 2026-10-09T19:12:28.963Z
+done: next_comment_id: c<n> counter in front matter (max with highest id+1, creates front matter if absent); npm run check exit 0, 144 tests; 8b5c7b7
+
+### note · agent:manager-2 · 2026-10-09T19:12:37.463Z
+integrated: 91749f21a22df39eb4ad3411b446a89f4bb43f69 (branch bridle/comment-ids)
+
+### note · agent:manager-2 · 2026-10-09T19:12:40.681Z
+cleanup: removed agent comment-ids, branch bridle/comment-ids

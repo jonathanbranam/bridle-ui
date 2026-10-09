@@ -227,3 +227,4 @@
 {"actor":"external:orchestrator","at":"2026-10-09T18:10:53.193270Z","from":"open","task":"ui-vnuu","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-09T18:10:53.242311Z","queue":"reprioritized"}
 {"actor":"external:orchestrator","at":"2026-10-09T19:09:21.591362Z","queue":"reprioritized"}
+{"actor":"agent:manager-2","at":"2026-10-09T19:12:37.463932Z","from":"planned","task":"ui-vnuu","to":"integrated"}

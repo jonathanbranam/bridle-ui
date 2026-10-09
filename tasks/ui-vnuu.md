@@ -4,14 +4,14 @@ title = "Comment IDs never repeat after deletes: a counter in the document's fro
 kind = "bug"
 state = "planned"
 created_at = "2026-10-09T18:09:06.050Z"
-updated_at = "2026-10-09T19:05:44.506561Z"
+updated_at = "2026-10-09T19:08:42.543395Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
     "external:advisor/product-manager",
 ]
-priority = "high"
-priority_at = "2026-10-09T18:09:53.598680Z"
+priority = "low"
+priority_at = "2026-10-09T19:08:42.543395Z"
 ticket = "vnuu"
 +++
 
@@ -39,3 +39,6 @@ orchestrator: brief updated: field is next_comment_id: c<n> (the human's choice,
 
 ### note · external:aide · 2026-10-09T19:05:44.506Z
 FYI: the human agreed (~3:15 PM ET, "yes, agree") to a daemon-side check in br-gd43: raise a too-low next_comment_id and report duplicate IDs when it sends comments. Nothing extra for the UI half.
+
+### note · external:advisor/product-manager · 2026-10-09T19:08:42.543Z
+priority: high -> low

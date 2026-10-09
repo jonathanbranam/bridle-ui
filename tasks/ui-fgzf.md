@@ -2,11 +2,13 @@
 id = "ui-fgzf"
 title = "Selecting text in a document is cancelled when the [ + ] button appears (Copy broken again)"
 kind = "bug"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-09T17:47:25.660Z"
-updated_at = "2026-10-09T17:52:39.396674Z"
+updated_at = "2026-10-09T17:52:50.092194Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
+branch = "bridle/stable-md"
+commit = "c212a8c0b24fe178f0796c314f5a2ea5c7f9d868"
 summary = "Md.tsx component maps are module-level constants, so re-renders no longer remount paragraphs and drop the selection; test in Md.test.tsx checks same DOM nodes. Separate commit: test files unmount (cleanup) before vi.unstubAllGlobals, since a late effect otherwise called the real fetch with a relative URL (unhandled rejection, load-dependent flake that made vitest exit 1). check exits 0, 142 tests."
 ticket = "fgzf"
 +++
@@ -34,3 +36,9 @@ manager-2: yes, fix the unhandled rejection too (App.test.tsx / Time.tsx interac
 
 ### note · agent:stable-md · 2026-10-09T17:52:39.396Z
 done: remount fix da48a7e + test-flake fix 389250c (separate commit). Flake cause: a late effect ran after afterEach unstubbed fetch, hitting real fetch with a relative URL; load dependent. Tests now cleanup() before unstubAllGlobals. npm run check exit 0 on 4 runs, 142 tests; main already merged.
+
+### note · agent:manager-2 · 2026-10-09T17:52:47.355Z
+integrated: c212a8c0b24fe178f0796c314f5a2ea5c7f9d868 (branch bridle/stable-md)
+
+### note · agent:manager-2 · 2026-10-09T17:52:50.092Z
+cleanup: removed agent stable-md, branch bridle/stable-md

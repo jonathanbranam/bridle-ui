@@ -221,3 +221,4 @@
 {"actor":"external:orchestrator","at":"2026-10-09T17:47:48.923575Z","from":"pending","task":"ui-fgzf","to":"open"}
 {"actor":"external:orchestrator","at":"2026-10-09T17:47:49.008900Z","from":"open","task":"ui-fgzf","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-09T17:47:49.051121Z","queue":"reprioritized"}
+{"actor":"agent:manager-2","at":"2026-10-09T17:52:47.355389Z","from":"planned","task":"ui-fgzf","to":"integrated"}

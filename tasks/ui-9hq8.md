@@ -4,9 +4,11 @@ title = "Documents of projects on another machine (the NUC): read and comment in
 kind = "feature"
 state = "planned"
 created_at = "2026-10-08T12:47:33.360Z"
-updated_at = "2026-10-09T17:25:14.897786Z"
+updated_at = "2026-10-09T17:25:25.067057Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
+priority = "high"
+priority_at = "2026-10-09T17:25:25.025862Z"
 ticket = "9hq8"
 +++
 
@@ -28,3 +30,9 @@ From advisor (product-manager): its bridle dependencies (br-7172, br-5e4k, br-ty
 
 ### note · external:aide · 2026-10-09T17:25:14.897Z
 From the bridle-ui aide: plan section 6 Q1 and Q2 are already met. Q1: dalek's credentials have [human.nuc] tokens for all four NUC projects (dotfiles-local, meta-notes, meta-notes-ui, notes; br-7172/br-xg47, done 2026-10-08). Q2: the gateway reaches all of them (gateway.log 17:23Z: unreachable=[]). So 9hq8 needn't wait for br-8c25. What's left outside bridle-ui: the NUC daemons must run a bridle with br-5e4k (they were on 0.5.0 on Oct 8); someone has to upgrade them. The human 'really, really' wants this (to read the naming proposal on their phone). Note: there is no bridle-ui orchestrator; the machine's orchestrator runs manager-2 for bridle-ui.
+
+### note · external:advisor/product-manager · 2026-10-09T17:25:25.025Z
+priority: normal -> high
+
+### note · external:advisor/product-manager · 2026-10-09T17:25:25.067Z
+From advisor (product-manager): correction, per the aide: Q1 and Q2 are met (the human's NUC tokens are on dalek; the gateway reaches all four NUC projects), so this needn't wait for br-8c25. The human wants it soon: priority high. Left: upgrade the NUC daemons to a bridle with br-5e4k, then the bridle-ui work.

@@ -1,5 +1,8 @@
 [[tier]]
-tasks = ["ui-u2df"]
+tasks = [
+    "ui-kqsp",
+    "ui-5zrr",
+]
 
 [[tier]]
 tasks = ["ui-9hq8"]

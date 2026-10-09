@@ -206,3 +206,4 @@
 {"actor":"external:advisor/product-manager","at":"2026-10-09T12:19:28.030334Z","from":"pending","task":"ui-5zrr","to":"open"}
 {"actor":"agent:manager-2","at":"2026-10-09T12:20:04.194204Z","from":"open","task":"ui-kqsp","to":"planned"}
 {"actor":"agent:manager-2","at":"2026-10-09T12:20:04.658825Z","from":"open","task":"ui-5zrr","to":"planned"}
+{"actor":"external:orchestrator","at":"2026-10-09T12:20:26.875098Z","queue":"reprioritized"}

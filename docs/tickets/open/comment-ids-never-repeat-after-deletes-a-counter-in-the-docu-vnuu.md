@@ -27,9 +27,9 @@ So since ui-ha6m (Delete on resolved threads), deleting the newest thread reuses
 
 ## The ask
 
-1. A document's comment IDs never repeat, even after deletes: a counter in the document's front matter, e.g. `comment_next: 7` (or `comment_last: 6`; pick one name and write it down), read and bumped by every writer.
+1. A document's comment IDs never repeat, even after deletes: the front-matter field `next_comment_id: c<n>` (the ID the next comment gets, written like the IDs themselves), read and bumped by every writer. The human chose this name, 2026-10-09 ~2:15 PM ET ("we should decide if possible not a worker", then picked `next_comment_id: c7` from three options).
 2. Both writers use it: bridle-ui's `nextId` and the daemon's `assign_ids`. The next ID is `max(counter, highest c<n> in the file + 1)`, so files without the field, and files edited by hand, still work, and the field is written on the first new ID.
-3. A document with no front matter gets a minimal one (`---\ncomment_next: N\n---`) when the first ID is assigned. Check that the Document page's front-matter table and other front-matter readers (tickets' `bridle ticket check`, specs) accept or ignore the new key.
+3. A document with no front matter gets a minimal one (`---\nnext_comment_id: c<n>\n---`) when the first ID is assigned. Check that the Document page's front-matter table and other front-matter readers (tickets' `bridle ticket check`, specs) accept or ignore the new key.
 4. Deleting a thread (ui-ha6m) never lowers the counter.
 5. Document the field in the comment format: `workflow/base/roles/document-reviewer.md` in bridle (and the design doc it points to), so agents writing comments by hand bump it too.
 6. Tests on both sides: delete the newest and then all threads, add a comment, and the ID keeps counting up.

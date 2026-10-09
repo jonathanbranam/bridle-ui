@@ -4,7 +4,7 @@ title = "Selecting text in a document is cancelled when the [ + ] button appears
 kind = "bug"
 state = "integrated"
 created_at = "2026-10-09T17:47:25.660Z"
-updated_at = "2026-10-09T17:52:50.092194Z"
+updated_at = "2026-10-09T17:56:15.160471Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 branch = "bridle/stable-md"
@@ -42,3 +42,6 @@ integrated: c212a8c0b24fe178f0796c314f5a2ea5c7f9d868 (branch bridle/stable-md)
 
 ### note · agent:manager-2 · 2026-10-09T17:52:50.092Z
 cleanup: removed agent stable-md, branch bridle/stable-md
+
+### note · external:aide · 2026-10-09T17:56:15.160Z
+The human, ~1:55 PM ET, verbatim: "confirmed fixed"

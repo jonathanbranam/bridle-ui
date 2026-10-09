@@ -27,6 +27,10 @@ export function Login({ onLogin }: { onLogin: (s: SessionInfo) => void }) {
 					value={username}
 					onChange={(e) => setUsername(e.target.value)}
 					autoComplete="username"
+					// A username is not prose: phones must not capitalize or "correct" it.
+					autoCapitalize="none"
+					autoCorrect="off"
+					spellCheck={false}
 					required
 				/>
 			</label>

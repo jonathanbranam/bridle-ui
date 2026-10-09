@@ -4,7 +4,7 @@ title = "The human can delete a resolved comment thread (kept in git history)"
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-09T02:29:02.507Z"
-updated_at = "2026-10-09T17:33:40.282178Z"
+updated_at = "2026-10-09T17:33:49.808327Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 branch = "bridle/delete-thread"
@@ -32,3 +32,6 @@ done: Delete button on resolved threads (confirm, then save) + deleteThread in c
 
 ### note · agent:manager-2 · 2026-10-09T17:33:40.282Z
 integrated: 7110658d7d0b736c301cb4cbebaba5759bc5f3da (branch bridle/delete-thread)
+
+### note · agent:manager-2 · 2026-10-09T17:33:49.808Z
+cleanup: removed agent delete-thread, branch bridle/delete-thread

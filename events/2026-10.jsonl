@@ -215,3 +215,4 @@
 {"actor":"external:orchestrator","at":"2026-10-09T17:25:37.581462Z","from":"open","task":"ui-ha6m","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-09T17:25:37.608239Z","queue":"reprioritized"}
 {"actor":"external:orchestrator","at":"2026-10-09T17:25:37.640503Z","queue":"reprioritized"}
+{"actor":"agent:manager-2","at":"2026-10-09T17:28:33.306376Z","from":"planned","task":"ui-wtr3","to":"integrated"}

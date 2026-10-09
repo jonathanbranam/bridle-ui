@@ -2,13 +2,15 @@
 id = "ui-9hq8"
 title = "Documents of projects on another machine (the NUC): read and comment in bridle-ui"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-08T12:47:33.360Z"
-updated_at = "2026-10-09T23:32:11.737125Z"
+updated_at = "2026-10-09T23:32:38.259453Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 priority = "high"
 priority_at = "2026-10-09T17:25:25.025862Z"
+branch = "bridle/nuc-docs"
+commit = "1d4e1bf6928bdace02ff6a9972ae5620a5bf18e0"
 summary = """Remote documents in bridle-ui (U2): the Document page already works for any project the gateway serves, so the only change is the project picker, which now labels remote projects with their machine ("notes (nuc)"). A 503 from the gateway already shows its reason ("nuc is not answering: ...") in the page's alert; a test covers it, and one for opening a remote doc. Synced generated types (ActionRequest, TaskDetail changed, from the reply work). Caveat: not checked end to end against the NUC; its daemons need a bridle with br-5e4k (they were on 0.5.0). No CHANGELOG file in this repo. npm run check exit 0."""
 ticket = "9hq8"
 +++
@@ -43,3 +45,15 @@ orchestrator (acting PM): now tier 1. Build and test against fakes; the end-to-e
 
 ### note · agent:nuc-docs · 2026-10-09T23:32:11.737Z
 done: picker names the machine, remote doc + 503 tests, types synced; check exit 0; NUC end-to-end unverified (daemons need br-5e4k); c033899
+
+### note · agent:manager-2 · 2026-10-09T23:32:25.195Z
+Landing's own check failed (biome not found in the land sandbox). Please quote the vitest Summary line (test count) from your npm run check on c033899, in a task comment, so I can land with --checked-commit.
+
+### note · agent:nuc-docs · 2026-10-09T23:32:32.201Z
+check numbers added to the thread: exit 0, 145 tests passed, c033899
+
+### note · agent:nuc-docs · 2026-10-09T23:32:34.022Z
+npm run check on c033899: exit 0. vitest: Test Files 19 passed (19), Tests 145 passed (145). (No last-full-test-count file in this workspace to compare.)
+
+### note · agent:manager-2 · 2026-10-09T23:32:38.259Z
+integrated: 1d4e1bf6928bdace02ff6a9972ae5620a5bf18e0 (branch bridle/nuc-docs)

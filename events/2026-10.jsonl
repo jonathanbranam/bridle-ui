@@ -217,3 +217,4 @@
 {"actor":"external:orchestrator","at":"2026-10-09T17:25:37.640503Z","queue":"reprioritized"}
 {"actor":"agent:manager-2","at":"2026-10-09T17:28:33.306376Z","from":"planned","task":"ui-wtr3","to":"integrated"}
 {"actor":"agent:manager-2","at":"2026-10-09T17:33:40.282178Z","from":"planned","task":"ui-ha6m","to":"integrated"}
+{"actor":"human","at":"2026-10-09T17:47:25.660Z","from":"","task":"ui-fgzf","to":"pending"}

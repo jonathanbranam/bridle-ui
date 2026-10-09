@@ -8,6 +8,7 @@ import {
 	parseDocument,
 	resolveOpen,
 	resolveThread,
+	type Thread,
 } from "./comments";
 
 const doc = `# Title
@@ -68,7 +69,7 @@ test("addComment writes a numbered, pending header after the line", () => {
 	expect(out).toContain(
 		'a\n\n> [!comment] c5 human, 2026-10-03 09:00 EDT, on "x y" [pending 2026-10-03 09:00 EDT]\n> hi\n>\n> there\n\n> [!comment] c4',
 	);
-	const t = parseDocument(out)[0].threads[0];
+	const t = parseDocument(out)[1].threads[0];
 	expect(t).toMatchObject({
 		id: "c5",
 		quote: "x y",
@@ -79,8 +80,48 @@ test("addComment writes a numbered, pending header after the line", () => {
 
 test("addComment after the last line adds no trailing blank, first thread is c1", () => {
 	expect(addComment("a", 0, "human", "w", "q", "c")).toBe(
-		'a\n\n> [!comment] c1 human, w, on "q" [pending w]\n> c',
+		'---\nnext_comment_id: c2\n---\n\na\n\n> [!comment] c1 human, w, on "q" [pending w]\n> c',
 	);
+});
+
+test("IDs keep counting up after deletes, via next_comment_id", () => {
+	const add = (c: string) =>
+		addComment(c, c.split("\n").length - 1, "human", "w", "q", "t");
+	const resolveAll = (c: string) => {
+		let out = c;
+		for (const t of parseDocument(c).flatMap((b) => b.threads))
+			out = resolveThread(
+				out,
+				parseDocument(out)
+					.flatMap((b) => b.threads)
+					.find((x) => x.id === t.id) as Thread,
+				"human",
+				"s",
+			);
+		for (const t of parseDocument(c).flatMap((b) => b.threads))
+			out = deleteThread(out, t.id);
+		return out;
+	};
+	let c = add(add("---\ntitle: x\n---\n\nbody"));
+	expect(c).toContain("title: x\nnext_comment_id: c3\n---");
+	c = resolveAll(c);
+	expect(parseDocument(c).flatMap((b) => b.threads)).toEqual([]);
+	c = add(c);
+	expect(c).toContain("[!comment] c3 ");
+	expect(c).toContain("next_comment_id: c4");
+});
+
+test("a file with comments but no counter starts after the highest ID", () => {
+	const out = addComment(
+		'a\n\n> [!comment] c7 human, w, on "a"\n> x',
+		0,
+		"human",
+		"w",
+		"q",
+		"t",
+	);
+	expect(out.startsWith("---\nnext_comment_id: c9\n---\n")).toBe(true);
+	expect(out).toContain("[!comment] c8 ");
 });
 
 test("addReply appends a pending human entry", () => {

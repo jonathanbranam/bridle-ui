@@ -223,14 +223,43 @@ export function parseDocument(content: string): Block[] {
 export const quoteOf = (selected: string) =>
 	selected.trim().replace(/\s+/g, " ");
 
-/** The next thread ID: the highest `c<n>` in any header, plus one. */
+const COUNTER = /^next_comment_id:\s*c(\d+)\s*$/;
+
+/** The front matter's closing `---` line, or -1 when the file has none. */
+const frontMatterEnd = (lines: string[]) =>
+	lines[0]?.trim() === "---"
+		? lines.findIndex((l, n) => n > 0 && l.trim() === "---")
+		: -1;
+
+/**
+ * The next thread ID: the larger of the front matter's `next_comment_id: c<n>` and the highest
+ * `c<n>` in any header plus one. The counter is what keeps an ID from coming back after a delete.
+ */
 export function nextId(content: string): string {
-	let max = 0;
-	for (const l of content.split("\n")) {
-		const n = l.match(HEADER)?.[1].match(/^c(\d+)\s/)?.[1];
-		if (n) max = Math.max(max, Number(n));
+	const lines = content.split("\n");
+	let next = 1;
+	const close = frontMatterEnd(lines);
+	for (let i = 1; i < close; i++) {
+		const n = lines[i].match(COUNTER)?.[1];
+		if (n) next = Math.max(next, Number(n));
 	}
-	return `c${max + 1}`;
+	for (const l of lines) {
+		const n = l.match(HEADER)?.[1].match(/^c(\d+)\s/)?.[1];
+		if (n) next = Math.max(next, Number(n) + 1);
+	}
+	return `c${next}`;
+}
+
+/** Writes `next_comment_id: c<n+1>` into the front matter, creating it when there is none. */
+function bumpCounter(content: string, assigned: string): string {
+	const field = `next_comment_id: c${Number(assigned.slice(1)) + 1}`;
+	const lines = content.split("\n");
+	const close = frontMatterEnd(lines);
+	if (close < 0) return `---\n${field}\n---\n\n${content}`;
+	const at = lines.findIndex((l, n) => n > 0 && n < close && COUNTER.test(l));
+	if (at > 0) lines[at] = field;
+	else lines.splice(close, 0, field);
+	return lines.join("\n");
 }
 
 /** Text lines for inside a callout: blank lines stay quoted so the callout doesn't break. */
@@ -251,15 +280,16 @@ export function addComment(
 ): string {
 	const lines = content.split("\n");
 	const [first, ...rest] = quoted(text);
+	const id = nextId(content);
 	const callout = [
-		`> [!comment] ${nextId(content)} ${who}, ${when}, on "${quoteOf(quote)}" [pending ${when}]`,
+		`> [!comment] ${id} ${who}, ${when}, on "${quoteOf(quote)}" [pending ${when}]`,
 		first,
 		...rest,
 	];
 	const insert = ["", ...callout];
 	if (after + 1 < lines.length && !isBlank(lines[after + 1])) insert.push("");
 	lines.splice(after + 1, 0, ...insert);
-	return lines.join("\n");
+	return bumpCounter(lines.join("\n"), id);
 }
 
 /** Appends a reply entry to the thread, its first line marked `[pending]`. */

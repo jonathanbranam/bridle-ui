@@ -2,9 +2,9 @@
 id = "ui-jafg"
 title = "Send-to-agent button on a task (UI half of rk7k)"
 kind = "feature"
-state = "open"
+state = "planned"
 created_at = "2026-10-09T23:27:58.550Z"
-updated_at = "2026-10-09T23:28:07.382012Z"
+updated_at = "2026-10-09T23:28:53.426110Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
 priority = "low"
@@ -17,3 +17,6 @@ Ticket: bridle's docs/tickets/open/bridle-ui-a-send-to-an-agent-button-on-a-task
 
 ### note · external:advisor/product-manager · 2026-10-09T23:27:58.551Z
 priority: normal -> low
+
+### note · external:orchestrator · 2026-10-09T23:28:53.382Z
+Orchestrator (acting PM for bridle-ui): model Sonnet (UI against the br-rk7k gateway route). Acceptance: the button lists the route's recipients, sends, and the project's usual check passes. Low priority, queued after ui-9hq8.

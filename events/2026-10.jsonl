@@ -232,3 +232,5 @@
 {"actor":"human","at":"2026-10-09T21:27:28.751Z","from":"","task":"ui-qfur","to":"pending"}
 {"actor":"human","at":"2026-10-09T23:27:58.550Z","from":"","task":"ui-jafg","to":"pending"}
 {"actor":"external:advisor/product-manager","at":"2026-10-09T23:28:07.382012Z","from":"pending","task":"ui-jafg","to":"open"}
+{"actor":"external:orchestrator","at":"2026-10-09T23:28:53.426110Z","from":"open","task":"ui-jafg","to":"planned"}
+{"actor":"external:orchestrator","at":"2026-10-09T23:28:53.450399Z","queue":"reprioritized"}

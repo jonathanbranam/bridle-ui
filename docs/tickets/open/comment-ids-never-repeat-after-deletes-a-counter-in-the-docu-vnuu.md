@@ -9,7 +9,7 @@ changes: []
 specs: []
 needs: []
 see: [ha6m]
-tasks: [ui-vnuu, br-gd43]
+tasks: [ui-vnuu]
 ---
 
 ## The ask
@@ -34,4 +34,4 @@ So since ui-ha6m (Delete on resolved threads), deleting the newest thread reuses
 5. Document the field in the comment format: `workflow/base/roles/document-reviewer.md` in bridle (and the design doc it points to), so agents writing comments by hand bump it too.
 6. Tests on both sides: delete the newest and then all threads, add a comment, and the ID keeps counting up.
 
-Two repos: this ticket covers both. The bridle half (daemon `assign_ids` and the reviewer role doc) needs its own bridle task.
+Two repos: this ticket covers both. The bridle half (daemon `assign_ids`, front-matter readers, the reviewer role doc) is bridle task br-gd43.

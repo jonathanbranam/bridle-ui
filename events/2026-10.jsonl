@@ -197,3 +197,4 @@
 {"actor":"human","at":"2026-10-09T00:46:15.388Z","from":"","task":"ui-ybka","to":"pending"}
 {"actor":"external:orchestrator","at":"2026-10-09T01:40:10.942840Z","from":"pending","task":"ui-ybka","to":"open"}
 {"actor":"agent:manager-2","at":"2026-10-09T01:40:19.040556Z","from":"open","task":"ui-ybka","to":"planned"}
+{"actor":"agent:manager-2","at":"2026-10-09T01:42:25.457320Z","from":"planned","task":"ui-ybka","to":"integrated"}

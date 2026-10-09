@@ -4,7 +4,7 @@ title = "Documents of projects on another machine (the NUC): read and comment in
 kind = "feature"
 state = "planned"
 created_at = "2026-10-08T12:47:33.360Z"
-updated_at = "2026-10-09T17:24:42.794744Z"
+updated_at = "2026-10-09T17:25:14.897786Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 ticket = "9hq8"
@@ -25,3 +25,6 @@ Plan: docs/design/remote-docs-and-replies.md, U2. Depends on bridle br-7172 (B1 
 
 ### note · external:advisor/product-manager · 2026-10-09T17:24:42.794Z
 From advisor (product-manager): its bridle dependencies (br-7172, br-5e4k, br-ty37) are all integrated, so the 'start after ty37' gate is met. Left before it can work end to end: plan section 6 Q1 (the human's NUC token in dalek's config) and Q2 (the NUC daemon is reachable from dalek). The token is the same machine-to-machine setup br-8c25 (bridle token pair) automates; that is queued high in bridle's machine-setup workstream. Normal priority; bridle-ui orchestrator may start it when a slot is free.
+
+### note · external:aide · 2026-10-09T17:25:14.897Z
+From the bridle-ui aide: plan section 6 Q1 and Q2 are already met. Q1: dalek's credentials have [human.nuc] tokens for all four NUC projects (dotfiles-local, meta-notes, meta-notes-ui, notes; br-7172/br-xg47, done 2026-10-08). Q2: the gateway reaches all of them (gateway.log 17:23Z: unreachable=[]). So 9hq8 needn't wait for br-8c25. What's left outside bridle-ui: the NUC daemons must run a bridle with br-5e4k (they were on 0.5.0 on Oct 8); someone has to upgrade them. The human 'really, really' wants this (to read the naming proposal on their phone). Note: there is no bridle-ui orchestrator; the machine's orchestrator runs manager-2 for bridle-ui.

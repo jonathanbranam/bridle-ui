@@ -2,9 +2,9 @@
 id = "ui-kqsp"
 title = "Document page: blockquotes and lists render as markdown (no indent, no numbers today)"
 kind = "bug"
-state = "open"
+state = "planned"
 created_at = "2026-10-09T12:19:06.477Z"
-updated_at = "2026-10-09T12:19:28.075389Z"
+updated_at = "2026-10-09T12:20:04.194204Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",

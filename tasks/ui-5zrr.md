@@ -4,7 +4,7 @@ title = "Comment highlights break markdown: bold shows asterisks, links show raw
 kind = "bug"
 state = "planned"
 created_at = "2026-10-09T02:29:02.388Z"
-updated_at = "2026-10-09T12:20:04.658825Z"
+updated_at = "2026-10-09T12:23:07.446731Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
@@ -12,6 +12,7 @@ watchers = [
 ]
 priority = "high"
 priority_at = "2026-10-09T12:19:28.053173Z"
+summary = "Highlights are applied to the rendered tree: Md takes quotes and a rehype pass wraps matching text nodes in <mark> (whitespace-collapsed match across elements), so bold, links (still clickable, mark inside the a) and code render unchanged. markQuotes and the source splitting are removed. Tests in Md.test.tsx. Commit f48a1d0."
 ticket = "5zrr"
 +++
 

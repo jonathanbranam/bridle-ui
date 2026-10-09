@@ -4,7 +4,7 @@ title = "Login: the username field doesn't capitalize or autocorrect on phones"
 kind = "bug"
 state = "integrated"
 created_at = "2026-10-09T00:46:15.388Z"
-updated_at = "2026-10-09T01:42:25.457320Z"
+updated_at = "2026-10-09T01:42:29.058525Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 branch = "bridle/login-attrs"
@@ -25,3 +25,6 @@ done: username input has autoCapitalize=none, autoCorrect=off, spellCheck=false 
 
 ### note · agent:manager-2 · 2026-10-09T01:42:25.457Z
 integrated: 6a747a5fcd94cf874ddbbc9b0ca73b8cb636e056 (branch bridle/login-attrs)
+
+### note · agent:manager-2 · 2026-10-09T01:42:29.058Z
+cleanup: removed agent login-attrs, branch bridle/login-attrs

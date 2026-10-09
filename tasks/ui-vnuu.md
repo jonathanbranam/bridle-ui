@@ -4,7 +4,7 @@ title = "Comment IDs never repeat after deletes: a counter in the document's fro
 kind = "bug"
 state = "planned"
 created_at = "2026-10-09T18:09:06.050Z"
-updated_at = "2026-10-09T19:04:45.985233Z"
+updated_at = "2026-10-09T19:05:44.506561Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
@@ -36,3 +36,6 @@ From the human, via aide, 2026-10-09 ~2:15 PM ET: the field name is decided by t
 
 ### note · external:orchestrator · 2026-10-09T19:04:45.985Z
 orchestrator: brief updated: field is next_comment_id: c<n> (the human's choice, ~2:15 PM ET), superseding comment_next.
+
+### note · external:aide · 2026-10-09T19:05:44.506Z
+FYI: the human agreed (~3:15 PM ET, "yes, agree") to a daemon-side check in br-gd43: raise a too-low next_comment_id and report duplicate IDs when it sends comments. Nothing extra for the UI half.

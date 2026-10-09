@@ -492,3 +492,29 @@ test("the comment box starts empty for a different selection, keeps the draft fo
 		((await screen.findByLabelText("Comment")) as HTMLTextAreaElement).value,
 	).toBe("");
 });
+
+test("Delete on a resolved thread asks to confirm, then saves the document without it", async () => {
+	const puts = stub(
+		undefined,
+		`# T
+
+Hello world.
+
+> [!comment] c2 human, 2026-10-02 14:05 EDT, on "Hello" [sent 2026-10-02 14:06 EDT]
+> Old note.
+>
+> **resolved by human, 2026-10-02 14:07 EDT**
+`,
+	);
+	const confirm = vi.spyOn(window, "confirm").mockReturnValueOnce(false);
+	const user = await openDoc();
+	await user.click(screen.getByRole("button", { name: /human.*Hello/ }));
+	await user.click(screen.getByRole("button", { name: "Delete" }));
+	expect(confirm).toHaveBeenCalledTimes(1);
+	expect(puts).toHaveLength(0);
+	confirm.mockReturnValueOnce(true);
+	await user.click(screen.getByRole("button", { name: "Delete" }));
+	await waitFor(() => expect(puts).toHaveLength(1));
+	expect(puts[0].content).toBe("# T\n\nHello world.\n");
+	expect(puts[0].hash).toBe("h1");
+});

@@ -2,6 +2,7 @@ import { expect, test } from "vitest";
 import {
 	addComment,
 	addReply,
+	deleteThread,
 	easternStamp,
 	markRead,
 	parseDocument,
@@ -193,4 +194,34 @@ test("a run of | lines is one table block, and paragraph lines keep their newlin
 	expect(blocks[1].text).toBe("| a | b |\n|---|---|\n| 1 | 2 |");
 	expect([blocks[1].start, blocks[1].end]).toEqual([2, 4]);
 	expect(blocks[2].text).toBe("> q1\n> q2");
+});
+
+test("deleteThread removes a resolved thread, keeps the text and other threads, refuses open ones", () => {
+	const d = `# T
+
+Hello world.
+
+> [!comment] c1 human, w, on "Hello"
+> Old.
+>
+> **resolved by human, 2026-10-04 11:17 EDT**
+
+More text.
+
+> [!comment] c2 human, w, on "More"
+> Open.
+`;
+	const out = deleteThread(d, "c1");
+	expect(out).toBe(`# T
+
+Hello world.
+
+More text.
+
+> [!comment] c2 human, w, on "More"
+> Open.
+`);
+	expect(deleteThread(d, "c2")).toBe(d);
+	expect(deleteThread(d, "c9")).toBe(d);
+	expect(deleteThread(d, "")).toBe(d);
 });

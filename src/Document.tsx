@@ -13,6 +13,7 @@ import {
 	addComment,
 	addReply,
 	type Block,
+	deleteThread,
 	easternStamp,
 	type Mark,
 	markRead,
@@ -94,6 +95,7 @@ type ThreadActions = {
 	onOpen: (t: Thread) => void;
 	onReply: (t: Thread, text: string) => Promise<boolean>;
 	onResolve: (t: Thread) => void;
+	onDelete: (t: Thread) => void;
 };
 
 function ThreadView({
@@ -101,6 +103,7 @@ function ThreadView({
 	onOpen,
 	onReply,
 	onResolve,
+	onDelete,
 }: { thread: Thread } & ThreadActions) {
 	// An unread agent entry stays folded until the human opens the thread, which reads it;
 	// a resolved thread stays collapsed to its header.
@@ -158,6 +161,15 @@ function ThreadView({
 						<MarkView mark={l.mark} />
 					</p>
 				))}
+			{open && thread.resolved && thread.id && (
+				<button
+					type="button"
+					className="mt-2 rounded border px-2 py-0.5"
+					onClick={() => onDelete(thread)}
+				>
+					Delete
+				</button>
+			)}
 			{open && !thread.resolved && (
 				<div className="mt-2 space-y-1">
 					<AutoTextarea
@@ -397,6 +409,16 @@ export function DocumentView({
 		if (doc) await save(resolveThread(doc.content, t, "human", easternStamp()));
 	};
 
+	const deleted = async (t: Thread) => {
+		// The text stays in git history, but the file loses it, so ask first.
+		if (
+			!doc ||
+			!window.confirm(`Delete thread ${t.id}? It stays in git history.`)
+		)
+			return;
+		await save(deleteThread(doc.content, t.id));
+	};
+
 	const blocks = doc ? parseDocument(doc.content) : [];
 
 	return (
@@ -537,6 +559,7 @@ export function DocumentView({
 											onOpen={opened}
 											onReply={replied}
 											onResolve={resolved}
+											onDelete={deleted}
 										/>
 									))}
 									{here && (

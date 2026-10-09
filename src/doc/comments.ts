@@ -308,6 +308,26 @@ export function resolveThread(
 	return lines.join("\n");
 }
 
+/**
+ * Removes a resolved thread by ID. The highlight is drawn from the header's quote at render
+ * time, so it goes with the callout and the highlighted text is untouched. An unresolved or
+ * unknown thread is returned unchanged. The blank line that separated it goes too.
+ */
+export function deleteThread(content: string, threadId: string): string {
+	if (!threadId) return content;
+	const lines = content.split("\n");
+	const t = parseDocument(content)
+		.flatMap((b) => b.threads)
+		.find((x) => x.id === threadId);
+	if (!t?.resolved) return content;
+	let from = t.start;
+	let to = t.end;
+	if (from > 0 && isBlank(lines[from - 1])) from--;
+	else if (to + 1 < lines.length && isBlank(lines[to + 1])) to++;
+	lines.splice(from, to - from + 1);
+	return lines.join("\n");
+}
+
 /** `YYYY-MM-DD HH:MM EDT`: US Eastern with its zone abbreviation, ASCII, as the daemon writes it. */
 export function easternStamp(at: Date = new Date()): string {
 	const parts = new Intl.DateTimeFormat("en-US", {

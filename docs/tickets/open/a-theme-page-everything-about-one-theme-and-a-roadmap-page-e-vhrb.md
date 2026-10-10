@@ -8,7 +8,7 @@ repos: [bridle-ui]
 changes: []
 specs: []
 needs: []
-see: [br-d9wq, br-22ab]
+see: []
 tasks: [ui-vhrb]
 ---
 
@@ -30,3 +30,5 @@ The human, 2026-10-09 ~5:00 PM ET, verbatim (to advisor product-manager):
 Context (advisor product-manager): the human's model, 2026-10-09 (bridle ticket br-d9wq): the roadmap orders epics, grouped by theme; an epic is a planned group of work with an outcome and "Done when", tagged to one theme; a theme is a lasting area named by a slug (`reliability`, `human-ui`), and epics and tickets are tagged to one. Today this lives only in bridle's hand-kept `docs/notes/roadmap.md`, which is the closest thing to a mock-up of both pages.
 
 Future work: waits on bridle's `theme:` field (br-syqn), `epic` and `parent` (br-bpku), and a gateway API exposing themes, epics and the roadmap order (not designed yet; the roadmap order has no home in bridle's data yet). Needs a design before build.
+
+Related in the bridle repo (see: takes only this repo's tickets): d9wq (the roadmap model), 22ab (`theme:` and `parent` on tickets).

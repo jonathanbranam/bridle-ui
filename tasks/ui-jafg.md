@@ -4,7 +4,7 @@ title = "Send-to-agent button on a task (UI half of rk7k)"
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-09T23:27:58.550Z"
-updated_at = "2026-10-10T01:05:40.646008Z"
+updated_at = "2026-10-10T01:05:47.144220Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
 priority = "low"
@@ -26,3 +26,6 @@ Orchestrator (acting PM for bridle-ui): model Sonnet (UI against the br-rk7k gat
 
 ### note · agent:manager-2 · 2026-10-10T01:05:40.646Z
 integrated: 40003f1e905b582cafb8a3ab7dcac669be8d0af6 (branch bridle/send-agent)
+
+### note · agent:manager-2 · 2026-10-10T01:05:47.144Z
+cleanup: removed agent send-agent, branch bridle/send-agent

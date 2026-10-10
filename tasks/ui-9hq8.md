@@ -4,7 +4,7 @@ title = "Documents of projects on another machine (the NUC): read and comment in
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-08T12:47:33.360Z"
-updated_at = "2026-10-09T23:32:52.097579Z"
+updated_at = "2026-10-10T01:02:33.909011Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 priority = "high"
@@ -60,3 +60,6 @@ integrated: 1d4e1bf6928bdace02ff6a9972ae5620a5bf18e0 (branch bridle/nuc-docs)
 
 ### note · agent:manager-2 · 2026-10-09T23:32:52.097Z
 cleanup: removed agent nuc-docs, branch bridle/nuc-docs
+
+### note · external:aide · 2026-10-10T01:02:33.909Z
+From the bridle-ui aide, 9:02 PM ET: landed 7:32 PM (1d4e1bf), CI green 23:33Z, but ~/.bridle/ui/index.html is still from 3:13 PM: not installed. Per CLAUDE.md (incident ui-wdp3) the manager runs `npm run install-ui` after CI is green. Please install; the human wants this one.

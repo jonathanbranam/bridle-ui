@@ -5,6 +5,8 @@ import {
 	type Action,
 	act,
 	projects as listProjects,
+	recipients,
+	sendMessage,
 	type TaskState,
 	taskDetail,
 	taskList,
@@ -235,6 +237,102 @@ function ReplyBox({
 	);
 }
 
+/** Opens on demand so the recipients are fetched only when the human wants to send. */
+function SendToAgent({
+	project,
+	taskId,
+	onLoggedOut,
+}: {
+	project: string;
+	taskId: string;
+	onLoggedOut: () => void;
+}) {
+	const [open, setOpen] = useState(false);
+	const [names, setNames] = useState<string[]>([]);
+	const [to, setTo] = useState("");
+	const [text, setText] = useState("");
+	const [status, setStatus] = useState<{ error: boolean; text: string }>();
+
+	const toggle = async () => {
+		const next = !open;
+		setOpen(next);
+		setStatus(undefined);
+		if (!next) return;
+		const r = await recipients(project);
+		if (r.ok) {
+			setNames(r.value.recipients);
+			setTo((t) => t || (r.value.recipients[0] ?? ""));
+		} else if (r.notLoggedIn) onLoggedOut();
+		else setStatus({ error: true, text: r.error });
+	};
+
+	return (
+		<div className="space-y-2">
+			<button
+				type="button"
+				className="rounded border px-3 py-2"
+				aria-expanded={open}
+				onClick={toggle}
+			>
+				Send to an agent
+			</button>
+			{open && (
+				<form
+					className="flex flex-col gap-2"
+					onSubmit={async (e) => {
+						e.preventDefault();
+						const r = await sendMessage(project, { to, text, task: taskId });
+						if (r.ok) {
+							// Keep the text on failure so it isn't lost.
+							setText("");
+							setStatus({ error: false, text: `Sent to ${r.value.to}` });
+						} else if (r.notLoggedIn) onLoggedOut();
+						else setStatus({ error: true, text: r.error });
+					}}
+				>
+					<label htmlFor="send-to">Send to</label>
+					<select
+						id="send-to"
+						className="rounded border p-2"
+						value={to}
+						onChange={(e) => setTo(e.target.value)}
+					>
+						{names.map((n) => (
+							<option key={n} value={n}>
+								{n}
+							</option>
+						))}
+					</select>
+					<label htmlFor="send-text">Message</label>
+					<AutoTextarea
+						id="send-text"
+						className="rounded border p-2"
+						value={text}
+						onChange={(e) => setText(e.target.value)}
+					/>
+					<div>
+						<button
+							type="submit"
+							className="rounded border px-3 py-2"
+							disabled={!to || !text.trim()}
+						>
+							Send
+						</button>
+					</div>
+				</form>
+			)}
+			{status && (
+				<p
+					role={status.error ? "alert" : "status"}
+					className={status.error ? "text-red-700" : undefined}
+				>
+					{status.text}
+				</p>
+			)}
+		</div>
+	);
+}
+
 /** `/p/{project}/tasks/{id}` */
 export function TaskView({ onLoggedOut }: Props) {
 	const { id = "", project } = useParams();
@@ -348,6 +446,11 @@ export function TaskView({ onLoggedOut }: Props) {
 					))}
 				</ul>
 				<ReplyBox onReply={(text) => run("reply", text)} />
+				<SendToAgent
+					project={task.project}
+					taskId={task.id}
+					onLoggedOut={onLoggedOut}
+				/>
 			</article>
 		</LinkScope>
 	);

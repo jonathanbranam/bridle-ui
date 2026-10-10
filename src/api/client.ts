@@ -13,8 +13,11 @@ import type { InteractionGroup } from "./generated/InteractionGroup";
 import type { InteractionReport } from "./generated/InteractionReport";
 import type { Items } from "./generated/Items";
 import type { LinkResolveRequest } from "./generated/LinkResolveRequest";
+import type { MessageRequest } from "./generated/MessageRequest";
+import type { MessageSent } from "./generated/MessageSent";
 import type { ProjectSpecs } from "./generated/ProjectSpecs";
 import type { Projects } from "./generated/Projects";
+import type { Recipients } from "./generated/Recipients";
 import type { ResolvedLinks } from "./generated/ResolvedLinks";
 import type { ReviewRequest } from "./generated/ReviewRequest";
 import type { ReviewResult } from "./generated/ReviewResult";
@@ -121,6 +124,16 @@ export const agentList = (project: string) =>
 /** Every spec file under the project's design/specs, with requirement and scenario IDs. */
 export const projectSpecs = (project: string) =>
 	call<ProjectSpecs>(`/projects/${encodeURIComponent(project)}/specs`);
+
+/** Who the human may message from `project`: its running agents, then the orchestrator. */
+export const recipients = (project: string) =>
+	call<Recipients>(`/projects/${encodeURIComponent(project)}/recipients`);
+
+export const sendMessage = (project: string, body: MessageRequest) =>
+	call<MessageSent>(`/projects/${encodeURIComponent(project)}/messages`, {
+		method: "POST",
+		body,
+	});
 
 export const projects = () => call<Projects>("/projects");
 

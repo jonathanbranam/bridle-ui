@@ -243,3 +243,36 @@ test("a failed reply shows the error and keeps the text", async () => {
 	expect(await screen.findByRole("alert")).toBeInTheDocument();
 	expect(screen.getByLabelText("Reply")).toHaveValue("hi");
 });
+
+test("Send to an agent lists the recipients and posts the message threaded on the task", async () => {
+	const fetchMock = gateway({ "x-1111": detail("x-1111", "working") });
+	const base = fetchMock.getMockImplementation();
+	fetchMock.mockImplementation(async (url: string, init?: RequestInit) => {
+		if (url.endsWith("/projects/p/recipients"))
+			return json({ project: "p", recipients: ["wk-1", "orchestrator"] });
+		if (url.endsWith("/projects/p/messages") && init?.method === "POST")
+			return json({ project: "p", to: "orchestrator" });
+		return base?.(url) as Promise<Response>;
+	});
+	app("/p/p/tasks/x-1111");
+	await userEvent.click(
+		await screen.findByRole("button", { name: "Send to an agent" }),
+	);
+	const select = await screen.findByLabelText("Send to");
+	await waitFor(() => expect(select).toHaveValue("wk-1"));
+	expect(screen.getAllByRole("option").map((o) => o.textContent)).toEqual([
+		"wk-1",
+		"orchestrator",
+	]);
+	await userEvent.selectOptions(select, "orchestrator");
+	await userEvent.type(screen.getByLabelText("Message"), "please look");
+	await userEvent.click(screen.getByRole("button", { name: "Send" }));
+	expect(await screen.findByText("Sent to orchestrator")).toBeInTheDocument();
+	const post = fetchMock.mock.calls.find(([, i]) => i?.method === "POST");
+	expect(JSON.parse(String(post?.[1]?.body))).toEqual({
+		to: "orchestrator",
+		text: "please look",
+		task: "x-1111",
+	});
+	expect(screen.getByLabelText("Message")).toHaveValue("");
+});

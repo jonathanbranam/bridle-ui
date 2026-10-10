@@ -235,3 +235,4 @@
 {"actor":"external:orchestrator","at":"2026-10-09T23:28:53.426110Z","from":"open","task":"ui-jafg","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-09T23:28:53.450399Z","queue":"reprioritized"}
 {"actor":"agent:manager-2","at":"2026-10-09T23:32:38.259453Z","from":"planned","task":"ui-9hq8","to":"integrated"}
+{"actor":"agent:manager-2","at":"2026-10-10T01:05:40.646008Z","from":"planned","task":"ui-jafg","to":"integrated"}

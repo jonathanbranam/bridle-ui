@@ -8,8 +8,8 @@ repos: [bridle-ui]
 changes: []
 specs: []
 needs: []
-see: [hu3k, m2pz]
-tasks: []
+see: []
+tasks: [ui-sxs3]
 ---
 
 ## The ask

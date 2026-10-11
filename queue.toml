@@ -12,3 +12,6 @@ tasks = ["ui-utp5"]
 
 [[tier]]
 tasks = ["ui-jgg8"]
+
+[[tier]]
+tasks = ["ui-gkdr"]

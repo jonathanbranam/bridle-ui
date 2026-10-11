@@ -250,3 +250,7 @@
 {"actor":"external:orchestrator","at":"2026-10-11T15:43:08.872386Z","queue":"reprioritized"}
 {"actor":"agent:manager-2","at":"2026-10-11T15:44:49.411163Z","from":"planned","task":"ui-jgg8","to":"integrated"}
 {"actor":"human","at":"2026-10-11T17:14:08.998Z","from":"","task":"ui-nvea","to":"pending"}
+{"actor":"external:advisor/product-manager","at":"2026-10-11T17:18:11.388952Z","from":"pending","task":"ui-tecf","to":"open"}
+{"actor":"external:advisor/product-manager","at":"2026-10-11T17:18:12.057950Z","from":"pending","task":"ui-gkdr","to":"open"}
+{"actor":"external:orchestrator","at":"2026-10-11T17:18:28.585840Z","from":"open","task":"ui-gkdr","to":"planned"}
+{"actor":"external:orchestrator","at":"2026-10-11T17:18:28.606481Z","queue":"reprioritized"}

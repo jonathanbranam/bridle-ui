@@ -8,7 +8,7 @@ repos: [bridle-ui]
 changes: []
 specs: []
 blocked_by: []
-related: [br-sxs3]
+related: [ui-sxs3]
 ---
 
 ## The ask

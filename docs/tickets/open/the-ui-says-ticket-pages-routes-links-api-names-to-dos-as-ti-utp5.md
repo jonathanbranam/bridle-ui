@@ -8,7 +8,7 @@ repos: [bridle-ui]
 changes: []
 specs: []
 blocked_by: []
-related: [br-tecf]
+related: [ui-tecf]
 ---
 
 ## The ask

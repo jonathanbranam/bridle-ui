@@ -1,4 +1,5 @@
 import {
+	act,
 	cleanup,
 	fireEvent,
 	render,
@@ -76,6 +77,17 @@ function stub(error?: string, content = original) {
 	return puts;
 }
 
+// Waits for the debounced select() to run (Document.tsx, 300 ms after the last selectionchange)
+// and for React to commit what it set. select() is the only caller of getSelection, so its call
+// count says the timer ran. A fixed sleep only guessed at that and flakes when the machine is loaded.
+async function selectionSettled(
+	spy: { mock: { calls: unknown[][] } },
+	before: number,
+) {
+	await waitFor(() => expect(spy.mock.calls.length).toBeGreaterThan(before));
+	await act(async () => {});
+}
+
 async function openDoc() {
 	const user = userEvent.setup();
 	render(
@@ -144,8 +156,9 @@ test("a touch selection (selectionchange, no mouseup) shows [ + ] only inside th
 		anchorNode: screen.getByLabelText("Project"),
 		toString: () => "outside",
 	} as unknown as Selection);
+	let before = spy.mock.calls.length;
 	document.dispatchEvent(new Event("selectionchange"));
-	await new Promise((r) => setTimeout(r, 450));
+	await selectionSettled(spy, before);
 	expect(
 		screen.queryByRole("button", { name: "Add comment on selection" }),
 	).toBeNull();
@@ -168,8 +181,9 @@ test("a touch selection (selectionchange, no mouseup) shows [ + ] only inside th
 		anchorNode: null,
 		toString: () => "",
 	} as unknown as Selection);
+	before = spy.mock.calls.length;
 	document.dispatchEvent(new Event("selectionchange"));
-	await new Promise((r) => setTimeout(r, 450));
+	await selectionSettled(spy, before);
 	fireEvent.click(plus);
 	expect(await screen.findByLabelText("Comment")).toBeTruthy();
 	expect(screen.getByText("world", { selector: "mark" })).toBeTruthy();

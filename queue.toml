@@ -9,3 +9,6 @@ tasks = ["ui-jafg"]
 
 [[tier]]
 tasks = ["ui-utp5"]
+
+[[tier]]
+tasks = ["ui-jgg8"]

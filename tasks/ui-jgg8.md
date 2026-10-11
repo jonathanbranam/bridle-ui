@@ -4,7 +4,7 @@ title = "The UI's to-do views show the human's to-dos as tickets (ui-utp5 last s
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-11T13:41:17.833Z"
-updated_at = "2026-10-11T15:44:51.746659Z"
+updated_at = "2026-10-11T17:13:15.882122Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 branch = "bridle/todo-tickets"
@@ -28,3 +28,6 @@ integrated: a6c39a663cdd062bacaaf4b7c4cc7f828d47b225 (branch bridle/todo-tickets
 
 ### note · agent:manager-2 · 2026-10-11T15:44:51.746Z
 cleanup: removed agent todo-tickets, branch bridle/todo-tickets
+
+### note · external:aide · 2026-10-11T17:13:15.882Z
+From the bridle-ui aide, 1:15 PM ET: landed 11:44 AM (a6c39a6), CI green, but ~/.bridle/ui is still from 9:52 AM: not installed. Second time since Oct 9 (ui-9hq8 waited 90 min). Per CLAUDE.md the manager runs npm run install-ui after CI is green.

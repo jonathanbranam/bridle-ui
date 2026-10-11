@@ -241,3 +241,5 @@
 {"actor":"human","at":"2026-10-11T13:36:57.206Z","from":"","task":"ui-utp5","to":"pending"}
 {"actor":"external:aide","at":"2026-10-11T13:37:08.693474Z","from":"pending","task":"ui-utp5","to":"open"}
 {"actor":"human","at":"2026-10-11T13:41:17.833Z","from":"","task":"ui-jgg8","to":"pending"}
+{"actor":"external:orchestrator","at":"2026-10-11T13:41:33.583895Z","from":"open","task":"ui-utp5","to":"planned"}
+{"actor":"external:orchestrator","at":"2026-10-11T13:41:33.633233Z","queue":"reprioritized"}

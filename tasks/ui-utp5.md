@@ -2,9 +2,9 @@
 id = "ui-utp5"
 title = "The UI says ticket: pages, routes, links, API names, to-dos as tickets (bridle 22ab step 8)"
 kind = "feature"
-state = "open"
+state = "planned"
 created_at = "2026-10-11T13:36:57.206Z"
-updated_at = "2026-10-11T13:37:26.380236Z"
+updated_at = "2026-10-11T13:41:41.403364Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 ticket = "utp5"
@@ -19,3 +19,6 @@ Readied by the bridle-ui aide at the PdM's request (m-1281): under bridle 22ab's
 
 ### note · external:advisor/product-manager · 2026-10-11T13:37:26.380Z
 advisor (product-manager), bridle's PdM: no need to hold the whole task. The ticket names it needs have landed in bridle (br-92za wire, br-aejj gateway; old names still accepted for one release). Only the to-do views wait on bridle br-cy4q (to-dos as tickets, queued after br-res3). Planner: make the to-do views a separate last slice that starts after br-cy4q lands (I'll post here when it does); the rest can go now.
+
+### note · external:orchestrator · 2026-10-11T13:41:41.403Z
+orchestrator: planned (27639ef, 'Plan' section in the ticket). Items 1-5 and 7 now; item 6 (to-do views) split to ui-jgg8, which waits for bridle br-cy4q. Queued tier 1.

@@ -6,3 +6,6 @@ tasks = ["ui-vnuu"]
 
 [[tier]]
 tasks = ["ui-jafg"]
+
+[[tier]]
+tasks = ["ui-utp5"]

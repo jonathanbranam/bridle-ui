@@ -1,5 +1,5 @@
 ---
-id: br-tecf
+id: ui-tecf
 title: "Opening by ID: a ticket ID or a task ID, from any project, opens its ticket or task"
 kind: feature
 created: 2026-10-11

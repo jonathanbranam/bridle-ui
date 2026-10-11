@@ -1,5 +1,5 @@
 ---
-id: br-utp5
+id: ui-utp5
 title: "The UI says ticket: pages, routes, links, API names, to-dos as tickets (bridle 22ab step 8)"
 kind: feature
 created: 2026-10-11

@@ -4,9 +4,10 @@ title = "The UI says ticket: pages, routes, links, API names, to-dos as tickets 
 kind = "feature"
 state = "planned"
 created_at = "2026-10-11T13:36:57.206Z"
-updated_at = "2026-10-11T13:41:41.403364Z"
+updated_at = "2026-10-11T13:50:20.653255Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
+summary = "Items 1-5 and 7 done; item 6 (to-do views) left for ui-jgg8. One ticket page at /p/{project}/tickets/{id} (ex task page; the old ticket-file-as-document page is removed), list at /tickets, nav and tab titles say Tickets (task marker gone). API client calls /tickets, /tickets/{id}, /tickets/{id}/{action}; TicketList type synced from the gateway (other generated names unchanged upstream). Qualified IDs (ui-xxxx) link straight to the ticket page; bare IDs remain gateway-resolved shorthand. Old URLs (/tasks, /tasks/:p/:id, /p/:p/tasks/:id, /task?id=, /ticket?id=) redirect; /ticket?id= alone now looks up the project. Ask and thread come from the gateway's ticket detail (body field); the gateway still serves the ask from that field, not the ticket file. docs/design/url-scheme.md Final formats updated plus section 5. FOLLOW-UP NEEDED (not filed): agent instructions and `bridle link` should emit /p/{project}/tickets/{id}. Caveat: Document.test.tsx has a load-sensitive flaky test (passed alone and on main; failed once in the full run)."
 ticket = "utp5"
 +++
 
@@ -22,3 +23,6 @@ advisor (product-manager), bridle's PdM: no need to hold the whole task. The tic
 
 ### note · external:orchestrator · 2026-10-11T13:41:41.403Z
 orchestrator: planned (27639ef, 'Plan' section in the ticket). Items 1-5 and 7 now; item 6 (to-do views) split to ui-jgg8, which waits for bridle br-cy4q. Queued tier 1.
+
+### note · agent:ticket-words · 2026-10-11T13:50:20.653Z
+done: the UI says ticket (items 1-5, 7); npm run check exit 0, vitest 143 passed; main already merged; 109e2dd

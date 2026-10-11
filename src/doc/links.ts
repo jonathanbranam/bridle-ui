@@ -1,5 +1,6 @@
-// Where link syntax is recognised, in one place: the ticket and task ID forms are going to
-// change (ticket j28f), so nothing else knows their shape.
+// Where link syntax is recognised, in one place, so nothing else knows the shape of an ID.
+// A written ticket ID is project-qualified (`ui-umaq`); a bare `umaq` is input shorthand, which
+// the gateway resolves to a ticket file.
 
 const ID_CHARS = "abcdefghjkmnpqrstuvwxyz23456789";
 const WORD = "(?<![\\w-])";
@@ -7,15 +8,15 @@ const END = "(?![\\w-])";
 
 const WIKI = "\\[\\[([^\\]|]+)(?:\\|([^\\]]+))?\\]\\]";
 const DOC_PATH = `${WORD}docs/[\\w./-]*\\w`;
-const TASK_ID = `${WORD}[a-z]{2,4}-[${ID_CHARS}]{4}${END}`;
+const QUALIFIED_ID = `${WORD}[a-z]{2,4}-[${ID_CHARS}]{4}${END}`;
 const SPEC_ID = `${WORD}[rs]-[${ID_CHARS}]{4}${END}`;
 const TICKET_ID = `${WORD}[${ID_CHARS}]{4}${END}`;
 // A ticket file stem: words then the ID (`some-title-ab12`). Needs two words before the ID so
 // ordinary hyphenated words ("re-test") are not candidates; the gateway still decides.
 const TICKET_STEM = `${WORD}[a-z0-9]+(?:-[a-z0-9]+)+-[${ID_CHARS}]{4}${END}`;
-/** True for a target in the task ID form (`ui-umaq`); those open the task page. */
-export const isTaskId = (target: string) =>
-	new RegExp(`^${TASK_ID.slice(WORD.length)}$`).test(target);
+/** True for a project-qualified ticket ID (`ui-umaq`); those open the ticket page. */
+export const isTicketId = (target: string) =>
+	new RegExp(`^${QUALIFIED_ID.slice(WORD.length)}$`).test(target);
 
 // The canonical URL formats, all project-first (docs/design/url-scheme.md). Every URL the UI
 // emits comes from here.
@@ -24,11 +25,7 @@ const projectBase = (project: string) => `/p/${encodeURIComponent(project)}`;
 /** A project's overview page. */
 export const projectHref = projectBase;
 
-/** The page a task opens. */
-export const taskHref = (project: string, id: string) =>
-	`${projectBase(project)}/tasks/${encodeURIComponent(id)}`;
-
-/** The page a ticket opens. */
+/** The page a ticket opens; ticket and task IDs are the same thing. */
 export const ticketHref = (project: string, id: string) =>
 	`${projectBase(project)}/tickets/${encodeURIComponent(id)}`;
 
@@ -43,7 +40,7 @@ export const specHref = (project: string, path: string) => {
 };
 
 const LINKABLE = new RegExp(
-	`${WIKI}|(${DOC_PATH})|(${TASK_ID})|(${SPEC_ID})|(${TICKET_STEM})|(${TICKET_ID})`,
+	`${WIKI}|(${DOC_PATH})|(${QUALIFIED_ID})|(${SPEC_ID})|(${TICKET_STEM})|(${TICKET_ID})`,
 	"g",
 );
 

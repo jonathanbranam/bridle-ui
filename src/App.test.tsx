@@ -151,8 +151,11 @@ const where = () => screen.getByLabelText("where").textContent;
 
 // Old URL forms keep working: each lands on the canonical one (docs/design/url-scheme.md).
 test.each([
-	["/tasks/p/x-1", "/p/p/tasks/x-1"],
-	["/task?id=x-1&project=p", "/p/p/tasks/x-1"],
+	["/tasks/p/x-1", "/p/p/tickets/x-1"],
+	["/p/p/tasks/x-1", "/p/p/tickets/x-1"],
+	["/task?id=x-1&project=p", "/p/p/tickets/x-1"],
+	["/ticket?id=x-1&project=p", "/p/p/tickets/x-1"],
+	["/tasks", "/tickets"],
 	["/ticket?project=p&id=ab3d", "/p/p/tickets/ab3d"],
 	["/document?project=p&path=docs%2Fa.md", "/p/p/docs?path=docs%2Fa.md"],
 	[
@@ -176,7 +179,7 @@ test.each([
 	await act(() => new Promise((r) => setTimeout(r, 20)));
 });
 
-test("/task?id= alone finds the task's project, then redirects", async () => {
+test("/task?id= alone finds the ticket's project, then redirects", async () => {
 	route({
 		...live,
 		"/api/v1/projects": () =>
@@ -186,7 +189,7 @@ test("/task?id= alone finds the task's project, then redirects", async () => {
 					{ project: "p", reachable: true },
 				],
 			}),
-		"/api/v1/projects/p/tasks/x-1": () =>
+		"/api/v1/projects/p/tickets/x-1": () =>
 			json(200, {
 				id: "x-1",
 				project: "p",
@@ -211,12 +214,12 @@ test("/task?id= alone finds the task's project, then redirects", async () => {
 			<Where />
 		</MemoryRouter>,
 	);
-	await waitFor(() => expect(where()).toBe("/p/p/tasks/x-1"));
-	// Let the task view finish rendering before the fetch stub is removed.
+	await waitFor(() => expect(where()).toBe("/p/p/tickets/x-1"));
+	// Let the ticket view finish rendering before the fetch stub is removed.
 	await screen.findByRole("heading", { name: "T" });
 });
 
-test("/task?id= for an unknown task says so", async () => {
+test("/task?id= for an unknown ticket says so", async () => {
 	route({
 		...live,
 		"/api/v1/projects": () =>
@@ -227,7 +230,7 @@ test("/task?id= for an unknown task says so", async () => {
 			<App />
 		</MemoryRouter>,
 	);
-	expect(await screen.findByRole("alert")).toHaveTextContent("No task x-9");
+	expect(await screen.findByRole("alert")).toHaveTextContent("No ticket x-9");
 });
 
 test("/document and /specs without a file stay the project pickers", async () => {
@@ -242,13 +245,13 @@ test("/document and /specs without a file stay the project pickers", async () =>
 	expect(where()).toBe("/document");
 });
 
-test("/p/{project} lists the open tasks and links to docs and specs", async () => {
+test("/p/{project} lists the open tickets and links to docs and specs", async () => {
 	route({
 		...live,
-		"/api/v1/projects/p/tasks?state=open": () =>
+		"/api/v1/projects/p/tickets?state=open": () =>
 			json(200, {
 				project: "p",
-				tasks: [
+				tickets: [
 					{ id: "x-1", title: "First", state: "working", priority: "normal" },
 				],
 			}),
@@ -260,7 +263,7 @@ test("/p/{project} lists the open tasks and links to docs and specs", async () =
 	);
 	expect(await screen.findByRole("link", { name: "First" })).toHaveAttribute(
 		"href",
-		"/p/p/tasks/x-1",
+		"/p/p/tickets/x-1",
 	);
 	expect(screen.getByRole("link", { name: "Documents" })).toHaveAttribute(
 		"href",

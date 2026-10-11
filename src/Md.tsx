@@ -14,10 +14,10 @@ import {
 	documentHref,
 	findLinks,
 	isSpecId,
-	isTaskId,
+	isTicketId,
 	specHref,
 	targetsIn,
-	taskHref,
+	ticketHref,
 } from "./doc/links";
 
 type Resolved = { project: string; paths: Map<string, string | null> };
@@ -80,10 +80,13 @@ function Anchor({ href, children }: { href?: string; children?: ReactNode }) {
 	const { project, paths } = useContext(Links);
 	if (href?.startsWith("bridle:")) {
 		const target = decodeURIComponent(href.slice(7));
-		// Task IDs always link: the task page says so itself if there is no such task.
-		if (isTaskId(target))
+		// Ticket IDs always link: the ticket page says so itself if there is no such ticket.
+		if (isTicketId(target))
 			return (
-				<a className="text-blue-700 underline" href={taskHref(project, target)}>
+				<a
+					className="text-blue-700 underline"
+					href={ticketHref(project, target)}
+				>
 					{children}
 				</a>
 			);

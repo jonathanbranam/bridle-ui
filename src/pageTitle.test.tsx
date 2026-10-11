@@ -5,8 +5,8 @@ import { expect, test } from "vitest";
 import { faviconHref, MARKERS, titleFor, usePageTitle } from "./pageTitle";
 
 test("names the open thing first, then the project", () => {
-	expect(titleFor("/p/bridle/tasks/br-1", "")).toBe(
-		`${MARKERS.task} br-1 - bridle`,
+	expect(titleFor("/p/bridle/tickets/br-1", "")).toBe(
+		`${MARKERS.ticket} br-1 - bridle`,
 	);
 	expect(titleFor("/p/bridle/tickets/qbbk", "")).toBe(
 		`${MARKERS.ticket} qbbk - bridle`,
@@ -40,8 +40,8 @@ test("the title follows route changes", () => {
 		</MemoryRouter>,
 	);
 	expect(document.title).toBe("System - bridle");
-	act(() => go("/p/x/tasks/x-2"));
-	expect(document.title).toBe(`${MARKERS.task} x-2 - x`);
+	act(() => go("/p/x/tickets/x-2"));
+	expect(document.title).toBe(`${MARKERS.ticket} x-2 - x`);
 });
 
 test("favicon colour is stable per machine and differs between machines", () => {

@@ -24,7 +24,7 @@ import type { ReviewResult } from "./generated/ReviewResult";
 import type { SessionInfo } from "./generated/SessionInfo";
 import type { SystemView } from "./generated/SystemView";
 import type { TaskDetail } from "./generated/TaskDetail";
-import type { TaskList } from "./generated/TaskList";
+import type { TicketList } from "./generated/TicketList";
 
 const BASE = "/api/v1";
 
@@ -78,7 +78,7 @@ export const items = () => call<Items>("/items");
 /** `text` is the reason for drop and the answer for answer; done ignores it. */
 export const act = (project: string, id: string, action: Action, text = "") => {
 	const body: ActionRequest = { text };
-	const path = `/projects/${encodeURIComponent(project)}/tasks/${encodeURIComponent(id)}/${action}`;
+	const path = `/projects/${encodeURIComponent(project)}/tickets/${encodeURIComponent(id)}/${action}`;
 	return call<ActionResult>(path, { method: "POST", body });
 };
 
@@ -102,17 +102,17 @@ export const interactionDay = (date: string) =>
 export const interactionHours = (from: string, to: string, days: string) =>
 	call<HoursReport>(`/interactions/hours?${qs({ from, to, days })}`);
 
-export type TaskState = "open" | "closed" | "all";
+export type TicketState = "open" | "closed" | "all";
 
-export const taskList = (project: string, state: TaskState = "open") =>
-	call<TaskList>(
-		`/projects/${encodeURIComponent(project)}/tasks?${qs({ state })}`,
+export const ticketList = (project: string, state: TicketState = "open") =>
+	call<TicketList>(
+		`/projects/${encodeURIComponent(project)}/tickets?${qs({ state })}`,
 	);
 
-/** A task in any state, so closed tasks open from links. */
-export const taskDetail = (project: string, id: string) =>
+/** A ticket in any state, so closed tickets open from links. */
+export const ticketDetail = (project: string, id: string) =>
 	call<TaskDetail>(
-		`/projects/${encodeURIComponent(project)}/tasks/${encodeURIComponent(id)}`,
+		`/projects/${encodeURIComponent(project)}/tickets/${encodeURIComponent(id)}`,
 	);
 
 export const systemView = (project: string) =>

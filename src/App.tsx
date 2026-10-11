@@ -7,11 +7,10 @@ import { ItemsView } from "./Items";
 import { Login } from "./Login";
 import { ProjectView } from "./Project";
 import { projectOf, setFavicon, usePageTitle } from "./pageTitle";
-import { OldFile, OldTaskPath, OldTaskQuery, OldTicket } from "./Redirects";
+import { OldFile, OldTaskPath, OldTicketQuery } from "./Redirects";
 import { SpecsView } from "./SpecPage";
 import { SystemView } from "./System";
-import { TasksView, TaskView } from "./Tasks";
-import { TicketView } from "./Ticket";
+import { TicketsView, TicketView } from "./Tickets";
 import { TimeView } from "./Time";
 
 // undefined while the first /session probe is in flight, null once known to be logged out.
@@ -76,7 +75,7 @@ export function App() {
 					{(
 						[
 							["/", "To-dos"],
-							["/tasks", "Tasks"],
+							["/tickets", "Tickets"],
 							["/system", "System"],
 							["/time", "Time"],
 							["/document", "Document"],
@@ -105,10 +104,6 @@ export function App() {
 						element={<ProjectView onLoggedOut={loggedOut} />}
 					/>
 					<Route
-						path="/p/:project/tasks/:id"
-						element={<TaskView onLoggedOut={loggedOut} />}
-					/>
-					<Route
 						path="/p/:project/tickets/:id"
 						element={<TicketView onLoggedOut={loggedOut} />}
 					/>
@@ -121,20 +116,25 @@ export function App() {
 						element={<SpecsView onLoggedOut={loggedOut} />}
 					/>
 					<Route
-						path="/tasks"
-						element={<TasksView onLoggedOut={loggedOut} />}
+						path="/tickets"
+						element={<TicketsView onLoggedOut={loggedOut} />}
 					/>
+					<Route path="/tasks" element={<Navigate to="/tickets" replace />} />
 					<Route
 						path="/system"
 						element={<SystemView onLoggedOut={loggedOut} />}
 					/>
 					{/* Old URL forms, and the project pickers (/document, /specs) without a file. */}
 					<Route path="/tasks/:project/:id" element={<OldTaskPath />} />
+					<Route path="/p/:project/tasks/:id" element={<OldTaskPath />} />
 					<Route
 						path="/task"
-						element={<OldTaskQuery onLoggedOut={loggedOut} />}
+						element={<OldTicketQuery onLoggedOut={loggedOut} />}
 					/>
-					<Route path="/ticket" element={<OldTicket />} />
+					<Route
+						path="/ticket"
+						element={<OldTicketQuery onLoggedOut={loggedOut} />}
+					/>
 					<Route
 						path="/document"
 						element={

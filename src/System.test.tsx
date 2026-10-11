@@ -84,7 +84,7 @@ test("an up daemon shows its status and the agents, stopped ones behind a toggle
 	);
 	expect(screen.getByRole("link", { name: "x-1" })).toHaveAttribute(
 		"href",
-		"/p/p/tasks/x-1",
+		"/p/p/tickets/x-1",
 	);
 	expect(screen.queryByText("w2")).toBeNull();
 	await userEvent.click(screen.getByLabelText(/Show stopped/));

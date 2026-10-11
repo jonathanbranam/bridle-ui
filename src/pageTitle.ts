@@ -4,7 +4,6 @@ import { useLocation } from "react-router";
 // One marker per kind, the same everywhere (rule web.page-title).
 export const MARKERS = {
 	todo: "☑️",
-	task: "\u{1F4CB}",
 	ticket: "\u{1F3AB}",
 	doc: "\u{1F4C4}",
 	spec: "\u{1F4D0}",
@@ -12,7 +11,7 @@ export const MARKERS = {
 
 const PAGES: Record<string, string> = {
 	"/": "To-dos",
-	"/tasks": "Tasks",
+	"/tickets": "Tickets",
 	"/system": "System",
 	"/time": "Time",
 	"/document": "Documents",
@@ -23,17 +22,14 @@ const base = (path: string) => path.split("/").pop() || path;
 
 /** Name first, project after; the page name when nothing is open. */
 export function titleFor(pathname: string, search: string): string {
-	const m =
-		/^\/p\/([^/]+)(?:\/(tasks|tickets|docs|specs)(?:\/([^/]+))?)?\/?$/.exec(
-			pathname,
-		);
+	const m = /^\/p\/([^/]+)(?:\/(tickets|docs|specs)(?:\/([^/]+))?)?\/?$/.exec(
+		pathname,
+	);
 	if (!m) return `${PAGES[pathname] ?? "bridle"} - bridle`;
 	const project = decodeURIComponent(m[1]);
 	const id = m[3] && decodeURIComponent(m[3]);
 	const path = new URLSearchParams(search).get("path");
 	switch (m[2]) {
-		case "tasks":
-			return `${MARKERS.task} ${id} - ${project}`;
 		case "tickets":
 			return `${MARKERS.ticket} ${id} - ${project}`;
 		case "docs":
@@ -49,9 +45,9 @@ export function titleFor(pathname: string, search: string): string {
 	}
 }
 
-/** The task page knows the task's title once loaded; the route only knows its ID. */
-export const taskTitle = (project: string, id: string, title: string) =>
-	`${MARKERS.task} ${id} ${title} - ${project}`;
+/** The ticket page knows the ticket's title once loaded; the route only knows its ID. */
+export const ticketTitle = (project: string, id: string, title: string) =>
+	`${MARKERS.ticket} ${id} ${title} - ${project}`;
 
 /** Project name in a `/p/{project}` path, if any. */
 export function projectOf(pathname: string): string | undefined {

@@ -23,7 +23,7 @@ describe("mobile input zoom", () => {
 			"Login",
 			"SpecPage",
 			"System",
-			"Tasks",
+			"Tickets",
 			"Time",
 		]) {
 			const src = read(`src/${f}.tsx`);

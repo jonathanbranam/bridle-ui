@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
-import { taskList } from "./api/client";
+import { ticketList } from "./api/client";
 import type { TaskSummary } from "./api/generated/TaskSummary";
-import { projectHref, taskHref } from "./doc/links";
-import { byState } from "./Tasks";
+import { projectHref, ticketHref } from "./doc/links";
+import { byState } from "./Tickets";
 
-/** `/p/{project}`: the project's open tasks and the way into its docs and specs. */
+/** `/p/{project}`: the project's open tickets and the way into its docs and specs. */
 export function ProjectView({ onLoggedOut }: { onLoggedOut: () => void }) {
 	const { project = "" } = useParams();
-	const [tasks, setTasks] = useState<TaskSummary[]>();
+	const [tickets, setTickets] = useState<TaskSummary[]>();
 	const [error, setError] = useState<string>();
 
 	useEffect(() => {
 		let stale = false;
-		setTasks(undefined);
-		taskList(project, "open").then((r) => {
+		setTickets(undefined);
+		ticketList(project, "open").then((r) => {
 			if (stale) return;
 			if (r.ok) {
-				setTasks(r.value.tasks);
+				setTickets(r.value.tickets);
 				setError(undefined);
 			} else if (r.notLoggedIn) onLoggedOut();
 			else setError(r.error);
@@ -45,10 +45,12 @@ export function ProjectView({ onLoggedOut }: { onLoggedOut: () => void }) {
 				</Link>
 			</p>
 			{error && <p role="alert">{error}</p>}
-			{!error && !tasks && <p>Loading tasks...</p>}
-			{tasks?.length === 0 && <p className="text-gray-500">No open tasks.</p>}
-			{tasks &&
-				byState(tasks).map(([state, group]) => (
+			{!error && !tickets && <p>Loading tickets...</p>}
+			{tickets?.length === 0 && (
+				<p className="text-gray-500">No open tickets.</p>
+			)}
+			{tickets &&
+				byState(tickets).map(([state, group]) => (
 					<div key={state} className="space-y-2">
 						<h3 className="text-sm font-medium uppercase text-gray-500">
 							{state} ({group.length})
@@ -58,7 +60,7 @@ export function ProjectView({ onLoggedOut }: { onLoggedOut: () => void }) {
 								<li key={t.id} className="rounded border p-3">
 									<Link
 										className="font-medium text-blue-700 underline"
-										to={taskHref(project, t.id)}
+										to={ticketHref(project, t.id)}
 									>
 										{t.title}
 									</Link>

@@ -70,12 +70,12 @@ test("logout posts and accepts an empty 204", async () => {
 });
 
 test.each(["done", "drop", "answer"] as const)(
-	"%s posts text to the task route",
+	"%s posts text to the ticket route",
 	async (action) => {
 		const fn = mockFetch(200, { project: "p q", task_id: "t-1", action });
 		await act("p q", "t-1", action, "because");
 		const [url, init] = fn.mock.calls[0] as unknown as [string, RequestInit];
-		expect(url).toBe(`/api/v1/projects/p%20q/tasks/t-1/${action}`);
+		expect(url).toBe(`/api/v1/projects/p%20q/tickets/t-1/${action}`);
 		expect(init.method).toBe("POST");
 		expect(init.body).toBe('{"text":"because"}');
 	},

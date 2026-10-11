@@ -92,7 +92,7 @@ test("done calls the client and refetches", async () => {
 	await screen.findByText("Buy milk");
 	await user.click(screen.getAllByRole("button", { name: "Done" })[0]);
 	await vi.waitFor(() => expect(gets()).toHaveLength(2));
-	expect(posts()[0][0]).toBe("/api/v1/projects/alpha/tasks/a-2/done");
+	expect(posts()[0][0]).toBe("/api/v1/projects/alpha/tickets/a-2/done");
 });
 
 test("decline needs a reason, then drops and refetches", async () => {
@@ -105,7 +105,7 @@ test("decline needs a reason, then drops and refetches", async () => {
 	await user.type(screen.getByLabelText(/Reason for declining/), "not now");
 	await user.click(screen.getByRole("button", { name: "Decline" }));
 	await vi.waitFor(() => expect(gets()).toHaveLength(2));
-	expect(posts()[0][0]).toBe("/api/v1/projects/alpha/tasks/a-2/drop");
+	expect(posts()[0][0]).toBe("/api/v1/projects/alpha/tickets/a-2/drop");
 	expect(JSON.parse(posts()[0][1]?.body as string)).toEqual({
 		text: "not now",
 	});
@@ -117,7 +117,7 @@ test("answer sends the text and refetches", async () => {
 	await user.type(await screen.findByLabelText("Answer Pick a color"), "blue");
 	await user.click(screen.getByRole("button", { name: "Answer" }));
 	await vi.waitFor(() => expect(gets()).toHaveLength(2));
-	expect(posts()[0][0]).toBe("/api/v1/projects/alpha/tasks/a-1/answer");
+	expect(posts()[0][0]).toBe("/api/v1/projects/alpha/tickets/a-1/answer");
 	expect(JSON.parse(posts()[0][1]?.body as string)).toEqual({ text: "blue" });
 });
 

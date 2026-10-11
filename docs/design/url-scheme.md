@@ -1,10 +1,11 @@
 # URL scheme (ticket 4u8g)
 
-Status: built (ui-judt). Sections 1 and 2 are the proposal as reviewed; section 3 records the
-decisions and the final formats.
+Status: built (ui-judt); the task kind became ticket in ui-utp5 (section 5). Sections 1 and 2 are
+the proposal as reviewed; section 3 records the decisions and the final formats, as amended by
+section 5.
 
 **The one reference for link formats.** The "Final formats" table in section 3 is the only
-authoritative list of link formats per kind (project, task, ticket, document, spec). Agent
+authoritative list of link formats per kind (project, ticket, document, spec). Agent
 instructions, `bridle link` and docs point here instead of copying a format. Sections 1 and 2
 describe the old and proposed forms and are not a source for links.
 
@@ -146,13 +147,12 @@ Final formats (the only ones the UI emits; builders are in `src/doc/links.ts`):
 | Kind | URL |
 |---|---|
 | project overview | `/p/{project}` |
-| task | `/p/{project}/tasks/{id}` |
-| ticket | `/p/{project}/tickets/{id}` |
+| ticket (what was a task or a ticket; `{id}` is `ui-xxxx`) | `/p/{project}/tickets/{id}` |
 | document | `/p/{project}/docs?path={file path}` |
 | spec | `/p/{project}/specs?path={file path}#{requirement or scenario id}` (the `#id` is optional) |
 | spec index of a project | `/p/{project}/specs` |
 | document picker of a project | `/p/{project}/docs` |
-| to-dos, task list across projects, system, time | `/`, `/tasks`, `/system`, `/time` |
+| to-dos, ticket list across projects, system, time | `/`, `/tickets`, `/system`, `/time` |
 
 `{project}` and `{id}` are percent-encoded path segments; `path` is a query value.
 
@@ -160,10 +160,10 @@ Redirects (client-side, `src/Redirects.tsx`, kept indefinitely):
 
 | Old | Lands on |
 |---|---|
-| `/tasks/{project}/{id}` | `/p/{project}/tasks/{id}` |
-| `/task?id=X&project=P` | `/p/P/tasks/X` |
-| `/task?id=X` | asks each project for X, then `/p/{project}/tasks/X` (error if none has it) |
-| `/ticket?project=P&id=X` | `/p/P/tickets/X` |
+| `/tasks/{project}/{id}`, `/p/{project}/tasks/{id}` | `/p/{project}/tickets/{id}` |
+| `/task?id=X&project=P`, `/ticket?id=X&project=P` | `/p/P/tickets/X` |
+| `/task?id=X`, `/ticket?id=X` | asks each project for X, then `/p/{project}/tickets/X` (error if none has it) |
+| `/tasks` | `/tickets` |
 | `/document?project=P&path=F` | `/p/P/docs?path=F` |
 | `/specs?project=P&path=F#X` | `/p/P/specs?path=F#X` |
 | `/specs?project=P&capability=C` | `/p/P/specs?path=design/specs/C.md` |
@@ -181,3 +181,21 @@ the title is the page name (`System - bridle`, `Documents - <project>`). The fav
 whose colour is a hash of the project's machine name (`machine` from `/projects`; `local` when
 null); it only changes on `/p/{project}/...` routes. The to-dos marker exists but to-dos have no
 page of their own yet.
+
+## 5. The UI says ticket (ui-utp5, bridle 22ab step 8)
+
+A task and a ticket are one record, so there is one page and one URL form:
+`/p/{project}/tickets/{id}`. The page shows the gateway's ticket detail (state, edges, ask, thread)
+and replaces both the old task page and the old ticket-file-as-document page. The list is at
+`/tickets` (nav "Tickets"); the project overview lists tickets. Tab titles use the ticket
+marker; the task marker is gone.
+
+- Written IDs are project-qualified (`ui-xxxx`). A qualified ID in text links straight to the
+  ticket page. A bare `xxxx` is input shorthand: in text it is still resolved by the gateway
+  (to the ticket file's document), and the lookup box and `/ticket?id=` accept it.
+- The API client calls the ticket routes (`/projects/{p}/tickets`, `.../tickets/{id}`,
+  `.../tickets/{id}/{action}`). The generated type names (`TaskDetail`, `TaskSummary`) are the
+  gateway's and unchanged; the list type is `TicketList` (`tickets`).
+- All old URLs in section 3 still redirect. Follow-up outside this repo: agent instructions and
+  `bridle link` still emit `/task?id=` and `/ticket?project=&id=`; both work through the
+  redirects, but should emit `/p/{project}/tickets/{id}`.

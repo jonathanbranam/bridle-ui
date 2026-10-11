@@ -4,7 +4,7 @@ import { agentList, projects as listProjects, systemView } from "./api/client";
 import type { AgentList } from "./api/generated/AgentList";
 import type { AgentView } from "./api/generated/AgentView";
 import type { SystemView as SystemData } from "./api/generated/SystemView";
-import { taskHref } from "./doc/links";
+import { ticketHref } from "./doc/links";
 import { easternClock, easternDate } from "./time/eastern";
 
 type Props = { onLoggedOut: () => void };
@@ -125,7 +125,7 @@ function Agent({ a, project }: { a: AgentView; project: string }) {
 			</div>
 			{a.task && (
 				<div>
-					<Link className="underline" to={taskHref(project, a.task)}>
+					<Link className="underline" to={ticketHref(project, a.task)}>
 						{a.task}
 					</Link>
 				</div>

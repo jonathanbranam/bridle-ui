@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { afterEach, expect, test, vi } from "vitest";
 import { LinkScope, Md } from "./Md";
-import { TasksView, TaskView } from "./Tasks";
+import { TicketsView, TicketView } from "./Tickets";
 
 afterEach(() => {
 	cleanup();
@@ -48,22 +48,22 @@ function gateway(tasks: Record<string, ReturnType<typeof detail>>) {
 					{ project: "q", machine: null, url: null, reachable: true },
 				],
 			});
-		const list = url.match(/\/projects\/(\w+)\/tasks\?state=(\w+)/);
+		const list = url.match(/\/projects\/(\w+)\/tickets\?state=(\w+)/);
 		if (list) {
 			const all = list[1] === "p" ? Object.values(tasks) : [];
 			const closed = (s: string) => s === "integrated" || s === "dropped";
 			return json({
 				project: list[1],
-				tasks: all.filter(
+				tickets: all.filter(
 					(t) =>
 						list[2] === "all" ||
 						list[2] === (closed(t.state) ? "closed" : "open"),
 				),
 			});
 		}
-		const one = url.match(/\/projects\/(\w+)\/tasks\/([\w-]+)$/);
+		const one = url.match(/\/projects\/(\w+)\/tickets\/([\w-]+)$/);
 		if (one && one[1] === "p" && tasks[one[2]]) return json(tasks[one[2]]);
-		return json({ error: "no such task" }, 404);
+		return json({ error: "no such ticket" }, 404);
 	});
 	vi.stubGlobal("fetch", fetchMock);
 	return fetchMock;
@@ -73,16 +73,19 @@ const app = (path: string) =>
 	render(
 		<MemoryRouter initialEntries={[path]}>
 			<Routes>
-				<Route path="/tasks" element={<TasksView onLoggedOut={() => {}} />} />
 				<Route
-					path="/p/:project/tasks/:id"
-					element={<TaskView onLoggedOut={() => {}} />}
+					path="/tickets"
+					element={<TicketsView onLoggedOut={() => {}} />}
+				/>
+				<Route
+					path="/p/:project/tickets/:id"
+					element={<TicketView onLoggedOut={() => {}} />}
 				/>
 			</Routes>
 		</MemoryRouter>,
 	);
 
-test("the list groups open tasks by state and names the worker", async () => {
+test("the list groups open tickets by state and names the worker", async () => {
 	gateway({
 		"x-1111": detail("x-1111", "working", {
 			agent: { name: "wk-1", role: "worker" },
@@ -91,7 +94,7 @@ test("the list groups open tasks by state and names the worker", async () => {
 		"x-3333": detail("x-3333", "planned"),
 		"x-4444": detail("x-4444", "integrated"),
 	});
-	app("/tasks");
+	app("/tickets");
 	expect(await screen.findByText("Title x-1111")).toBeInTheDocument();
 	expect(screen.getByText("working (1)")).toBeInTheDocument();
 	expect(screen.getByText("planned (1)")).toBeInTheDocument();
@@ -101,31 +104,31 @@ test("the list groups open tasks by state and names the worker", async () => {
 
 test("show closed refetches with all", async () => {
 	const f = gateway({ "x-4444": detail("x-4444", "integrated") });
-	app("/tasks");
+	app("/tickets");
 	await screen.findByText("p");
 	await userEvent.click(screen.getByLabelText("Show closed"));
 	expect(await screen.findByText("Title x-4444")).toBeInTheDocument();
 	expect(f).toHaveBeenCalledWith(
-		expect.stringContaining("/projects/p/tasks?state=all"),
+		expect.stringContaining("/projects/p/tickets?state=all"),
 		expect.anything(),
 	);
 });
 
-test("edges link to the other task's page", async () => {
+test("edges link to the other ticket's page", async () => {
 	gateway({
 		"x-1111": detail("x-1111", "working"),
 		"x-2222": detail("x-2222", "planned", { blocked_by: [] }),
 	});
-	app("/p/p/tasks/x-1111");
+	app("/p/p/tickets/x-1111");
 	const link = await screen.findByRole("link", { name: "x-2222" });
-	expect(link).toHaveAttribute("href", "/p/p/tasks/x-2222");
+	expect(link).toHaveAttribute("href", "/p/p/tickets/x-2222");
 	await userEvent.click(link);
 	await waitFor(() =>
 		expect(screen.getByText("Title x-2222")).toBeInTheDocument(),
 	);
 });
 
-test("a task ID in markdown links to the task page", async () => {
+test("a ticket ID in markdown links to the ticket page", async () => {
 	const fetchMock = vi.fn(async () => json({ project: "p", links: [] }));
 	vi.stubGlobal("fetch", fetchMock);
 	render(
@@ -135,7 +138,7 @@ test("a task ID in markdown links to the task page", async () => {
 	);
 	expect(screen.getByRole("link", { name: "ui-umaq" })).toHaveAttribute(
 		"href",
-		"/p/p/tasks/ui-umaq",
+		"/p/p/tickets/ui-umaq",
 	);
 	// Let the resolve call and its state update finish before the global is
 	// unstubbed, or a late call reaches the real fetch.
@@ -143,14 +146,14 @@ test("a task ID in markdown links to the task page", async () => {
 	await act(async () => {});
 });
 
-test("a task ID in the task's title links", async () => {
+test("a ticket ID in the ticket's title links", async () => {
 	gateway({
 		"x-1111": detail("x-1111", "working", { title: "follows ui-umaq" }),
 	});
-	app("/p/p/tasks/x-1111");
+	app("/p/p/tickets/x-1111");
 	expect(await screen.findByRole("link", { name: "ui-umaq" })).toHaveAttribute(
 		"href",
-		"/p/p/tasks/ui-umaq",
+		"/p/p/tickets/ui-umaq",
 	);
 });
 
@@ -167,7 +170,7 @@ test("a task claimed by the human has Done and Decline, and shows the new state"
 		}
 		return base?.(url) as Promise<Response>;
 	});
-	app("/p/p/tasks/x-1111");
+	app("/p/p/tickets/x-1111");
 	await userEvent.click(
 		await screen.findByRole("button", { name: "Decline…" }),
 	);
@@ -175,14 +178,14 @@ test("a task claimed by the human has Done and Decline, and shows the new state"
 	await userEvent.click(screen.getByRole("button", { name: "Decline" }));
 	expect(await screen.findByText(/p \/ dropped/)).toBeInTheDocument();
 	const post = fetchMock.mock.calls.find(([, i]) => i?.method === "POST");
-	expect(post?.[0]).toMatch(/\/projects\/p\/tasks\/x-1111\/drop$/);
+	expect(post?.[0]).toMatch(/\/projects\/p\/tickets\/x-1111\/drop$/);
 });
 
 test("a task claimed by an agent has no Done or Decline", async () => {
 	gateway({
 		"x-1111": detail("x-1111", "working", { claimed_by: "agent:wk-1" }),
 	});
-	app("/p/p/tasks/x-1111");
+	app("/p/p/tickets/x-1111");
 	await screen.findByText("Title x-1111");
 	expect(
 		screen.queryByRole("button", { name: "Done" }),
@@ -212,7 +215,7 @@ test("every task has a reply box; Reply posts the text, clears it and refetches"
 			}
 			return base?.(url) as Promise<Response>;
 		});
-		const { unmount } = app("/p/p/tasks/x-1111");
+		const { unmount } = app("/p/p/tickets/x-1111");
 		const box = await screen.findByLabelText("Reply");
 		const button = screen.getByRole("button", { name: "Reply" });
 		expect(button).toBeDisabled();
@@ -221,7 +224,7 @@ test("every task has a reply box; Reply posts the text, clears it and refetches"
 		expect(await screen.findByText("Hello there")).toBeInTheDocument();
 		expect(box).toHaveValue("");
 		const post = fetchMock.mock.calls.find(([, i]) => i?.method === "POST");
-		expect(post?.[0]).toMatch(/\/projects\/p\/tasks\/x-1111\/reply$/);
+		expect(post?.[0]).toMatch(/\/projects\/p\/tickets\/x-1111\/reply$/);
 		expect(JSON.parse(String(post?.[1]?.body))).toEqual({
 			text: "Hello there",
 		});
@@ -237,7 +240,7 @@ test("a failed reply shows the error and keeps the text", async () => {
 			? json({ error: "nope" }, 500)
 			: (base?.(url) as Promise<Response>),
 	);
-	app("/p/p/tasks/x-1111");
+	app("/p/p/tickets/x-1111");
 	await userEvent.type(await screen.findByLabelText("Reply"), "hi");
 	await userEvent.click(screen.getByRole("button", { name: "Reply" }));
 	expect(await screen.findByRole("alert")).toBeInTheDocument();
@@ -254,7 +257,7 @@ test("Send to an agent lists the recipients and posts the message threaded on th
 			return json({ project: "p", to: "orchestrator" });
 		return base?.(url) as Promise<Response>;
 	});
-	app("/p/p/tasks/x-1111");
+	app("/p/p/tickets/x-1111");
 	await userEvent.click(
 		await screen.findByRole("button", { name: "Send to an agent" }),
 	);

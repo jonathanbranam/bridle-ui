@@ -7,17 +7,17 @@ import {
 	projects as listProjects,
 	recipients,
 	sendMessage,
-	type TaskState,
-	taskDetail,
-	taskList,
+	type TicketState,
+	ticketDetail,
+	ticketList,
 } from "./api/client";
 import type { TaskDetail } from "./api/generated/TaskDetail";
 import type { TaskSummary } from "./api/generated/TaskSummary";
-import { taskHref } from "./doc/links";
+import { ticketHref } from "./doc/links";
 import { IdChip } from "./IdChip";
 import { TodoActions } from "./Items";
 import { LinkScope, Md } from "./Md";
-import { taskTitle } from "./pageTitle";
+import { ticketTitle } from "./pageTitle";
 
 type Props = { onLoggedOut: () => void };
 
@@ -31,18 +31,22 @@ export function byState(tasks: TaskSummary[]) {
 	return [...groups];
 }
 
-type ProjectTasks = { project: string; tasks: TaskSummary[]; error?: string };
+type ProjectTickets = {
+	project: string;
+	tickets: TaskSummary[];
+	error?: string;
+};
 
-export function TasksView({ onLoggedOut }: Props) {
+export function TicketsView({ onLoggedOut }: Props) {
 	const navigate = useNavigate();
 	const [showClosed, setShowClosed] = useState(false);
 	const [lookup, setLookup] = useState("");
-	const [data, setData] = useState<ProjectTasks[]>();
+	const [data, setData] = useState<ProjectTickets[]>();
 	const [error, setError] = useState<string>();
 
 	useEffect(() => {
 		let stale = false;
-		const state: TaskState = showClosed ? "all" : "open";
+		const state: TicketState = showClosed ? "all" : "open";
 		(async () => {
 			const p = await listProjects();
 			if (stale) return;
@@ -53,12 +57,12 @@ export function TasksView({ onLoggedOut }: Props) {
 			}
 			const reachable = p.value.projects.filter((x) => x.reachable);
 			const lists = await Promise.all(
-				reachable.map(async (x): Promise<ProjectTasks> => {
-					const r = await taskList(x.project, state);
-					if (r.ok) return { project: x.project, tasks: r.value.tasks };
+				reachable.map(async (x): Promise<ProjectTickets> => {
+					const r = await ticketList(x.project, state);
+					if (r.ok) return { project: x.project, tickets: r.value.tickets };
 					return {
 						project: x.project,
-						tasks: [],
+						tickets: [],
 						error: r.notLoggedIn ? "not logged in" : r.error,
 					};
 				}),
@@ -81,16 +85,16 @@ export function TasksView({ onLoggedOut }: Props) {
 						e.preventDefault();
 						const id = lookup.trim();
 						if (!id) return;
-						findTask(id, undefined).then((r) => {
-							if (r.ok) navigate(taskHref(r.value.project, r.value.id));
+						findTicket(id, undefined).then((r) => {
+							if (r.ok) navigate(ticketHref(r.value.project, r.value.id));
 							else if (r.notLoggedIn) onLoggedOut();
 							else setError(r.error);
 						});
 					}}
 				>
 					<input
-						aria-label="Task ID"
-						placeholder="Task ID"
+						aria-label="Ticket ID"
+						placeholder="Ticket ID"
 						className="rounded border px-2 py-1"
 						value={lookup}
 						onChange={(e) => setLookup(e.target.value)}
@@ -121,20 +125,20 @@ export function TasksView({ onLoggedOut }: Props) {
 							{p.error}
 						</p>
 					)}
-					{!p.error && p.tasks.length === 0 && (
-						<p className="text-gray-500">No tasks.</p>
+					{!p.error && p.tickets.length === 0 && (
+						<p className="text-gray-500">No tickets.</p>
 					)}
-					{byState(p.tasks).map(([state, tasks]) => (
+					{byState(p.tickets).map(([state, tickets]) => (
 						<div key={state} className="space-y-2">
 							<h3 className="text-sm font-medium uppercase text-gray-500">
-								{state} ({tasks.length})
+								{state} ({tickets.length})
 							</h3>
 							<ul className="space-y-2">
-								{tasks.map((t) => (
+								{tickets.map((t) => (
 									<li key={t.id} className="rounded border p-3">
 										<Link
 											className="font-medium text-blue-700 underline"
-											to={taskHref(p.project, t.id)}
+											to={ticketHref(p.project, t.id)}
 										>
 											{t.title}
 										</Link>
@@ -170,7 +174,7 @@ function EdgeList({
 				<Link
 					key={id}
 					className="mr-2 text-blue-700 underline"
-					to={taskHref(project, id)}
+					to={ticketHref(project, id)}
 				>
 					{id}
 				</Link>
@@ -182,14 +186,14 @@ function EdgeList({
 const paragraphs = (text: string) =>
 	text.split(/\n{2,}/).filter((s) => s.trim());
 
-/** Task IDs are globally unique, so with only the ID, ask each project until one has it. */
-export async function findTask(id: string, project: string | undefined) {
+/** Ticket IDs are globally unique, so with only the ID, ask each project until one has it. */
+export async function findTicket(id: string, project: string | undefined) {
 	const p = await listProjects();
 	if (!p.ok) return p;
 	const names = project
 		? [project]
 		: p.value.projects.filter((x) => x.reachable).map((x) => x.project);
-	const found = await Promise.all(names.map((n) => taskDetail(n, id)));
+	const found = await Promise.all(names.map((n) => ticketDetail(n, id)));
 	const hit = found.find((r) => r.ok);
 	if (hit) return hit;
 	return (
@@ -197,7 +201,7 @@ export async function findTask(id: string, project: string | undefined) {
 			ok: false as const,
 			notLoggedIn: false as const,
 			status: 404,
-			error: `No task ${id}`,
+			error: `No ticket ${id}`,
 		}
 	);
 }
@@ -217,9 +221,9 @@ function ReplyBox({
 				if (await onReply(text)) setText("");
 			}}
 		>
-			<label htmlFor="task-reply">Reply</label>
+			<label htmlFor="ticket-reply">Reply</label>
 			<AutoTextarea
-				id="task-reply"
+				id="ticket-reply"
 				className="rounded border p-2"
 				value={text}
 				onChange={(e) => setText(e.target.value)}
@@ -240,11 +244,11 @@ function ReplyBox({
 /** Opens on demand so the recipients are fetched only when the human wants to send. */
 function SendToAgent({
 	project,
-	taskId,
+	ticketId,
 	onLoggedOut,
 }: {
 	project: string;
-	taskId: string;
+	ticketId: string;
 	onLoggedOut: () => void;
 }) {
 	const [open, setOpen] = useState(false);
@@ -281,7 +285,7 @@ function SendToAgent({
 					className="flex flex-col gap-2"
 					onSubmit={async (e) => {
 						e.preventDefault();
-						const r = await sendMessage(project, { to, text, task: taskId });
+						const r = await sendMessage(project, { to, text, task: ticketId });
 						if (r.ok) {
 							// Keep the text on failure so it isn't lost.
 							setText("");
@@ -333,24 +337,24 @@ function SendToAgent({
 	);
 }
 
-/** `/p/{project}/tasks/{id}` */
-export function TaskView({ onLoggedOut }: Props) {
+/** `/p/{project}/tickets/{id}` */
+export function TicketView({ onLoggedOut }: Props) {
 	const { id = "", project } = useParams();
-	const [task, setTask] = useState<TaskDetail>();
+	const [ticket, setTicket] = useState<TaskDetail>();
 	const [error, setError] = useState<string>();
 	const [actionError, setActionError] = useState<string>();
 
 	useEffect(() => {
 		let stale = false;
-		setTask(undefined);
+		setTicket(undefined);
 		setError(undefined);
 		if (!id) {
-			setError("Missing task ID");
+			setError("Missing ticket ID");
 			return;
 		}
-		findTask(id, project).then((r) => {
+		findTicket(id, project).then((r) => {
 			if (stale) return;
-			if (r.ok) setTask(r.value);
+			if (r.ok) setTicket(r.value);
 			else if (r.notLoggedIn) onLoggedOut();
 			else setError(r.error);
 		});
@@ -360,43 +364,44 @@ export function TaskView({ onLoggedOut }: Props) {
 	}, [id, project, onLoggedOut]);
 
 	useEffect(() => {
-		if (task) document.title = taskTitle(task.project, task.id, task.title);
-	}, [task]);
+		if (ticket)
+			document.title = ticketTitle(ticket.project, ticket.id, ticket.title);
+	}, [ticket]);
 
 	// Refetch after every attempt so the view shows the gateway's truth, even on failure.
 	const run = async (action: Action, text?: string) => {
-		if (!task) return false;
-		const r = await act(task.project, task.id, action, text);
+		if (!ticket) return false;
+		const r = await act(ticket.project, ticket.id, action, text);
 		if (r.ok) setActionError(undefined);
 		else if (r.notLoggedIn) {
 			onLoggedOut();
 			return false;
 		} else setActionError(r.error);
-		const fresh = await findTask(task.id, task.project);
-		if (fresh.ok) setTask(fresh.value);
+		const fresh = await findTicket(ticket.id, ticket.project);
+		if (fresh.ok) setTicket(fresh.value);
 		return r.ok;
 	};
 
 	if (error) return <p role="alert">{error}</p>;
-	if (!task) return <p>Loading task...</p>;
+	if (!ticket) return <p>Loading ticket...</p>;
 
 	return (
 		<LinkScope
-			project={task.project}
-			texts={[task.title, task.body, ...task.thread.map((m) => m.body)]}
+			project={ticket.project}
+			texts={[ticket.title, ticket.body, ...ticket.thread.map((m) => m.body)]}
 		>
 			<article className="space-y-3">
 				<h2 className="text-xl font-semibold">
-					<Md text={task.title} />
+					<Md text={ticket.title} />
 				</h2>
-				<IdChip id={task.id} />
+				<IdChip id={ticket.id} />
 				<p className="text-sm text-gray-600">
-					{task.project} / {task.state} / {task.priority} / {task.kind}
+					{ticket.project} / {ticket.state} / {ticket.priority} / {ticket.kind}
 				</p>
-				{task.claimed_by && (
+				{ticket.claimed_by && (
 					<p>
-						Claimed by: {task.agent?.name ?? task.claimed_by}
-						{task.agent && ` (${task.agent.role})`}
+						Claimed by: {ticket.agent?.name ?? ticket.claimed_by}
+						{ticket.agent && ` (${ticket.agent.role})`}
 					</p>
 				)}
 				{actionError && (
@@ -404,29 +409,29 @@ export function TaskView({ onLoggedOut }: Props) {
 						{actionError}
 					</p>
 				)}
-				{task.claimed_by === "human" && (
+				{ticket.claimed_by === "human" && (
 					<TodoActions
-						title={task.title}
+						title={ticket.title}
 						onDone={() => run("done")}
 						onDecline={(reason) => run("drop", reason)}
 					/>
 				)}
-				{task.branch && (
+				{ticket.branch && (
 					<p>
-						Branch: <code>{task.branch}</code>
+						Branch: <code>{ticket.branch}</code>
 					</p>
 				)}
-				{task.watchers.length > 0 && (
-					<p>Watchers: {task.watchers.join(", ")}</p>
+				{ticket.watchers.length > 0 && (
+					<p>Watchers: {ticket.watchers.join(", ")}</p>
 				)}
-				<EdgeList label="Blocks" project={task.project} ids={task.blocks} />
+				<EdgeList label="Blocks" project={ticket.project} ids={ticket.blocks} />
 				<EdgeList
 					label="Blocked by"
-					project={task.project}
-					ids={task.blocked_by}
+					project={ticket.project}
+					ids={ticket.blocked_by}
 				/>
 				<div className="space-y-2">
-					{paragraphs(task.body).map((s) => (
+					{paragraphs(ticket.body).map((s) => (
 						<p key={s} className="whitespace-pre-wrap">
 							<Md text={s} />
 						</p>
@@ -434,7 +439,7 @@ export function TaskView({ onLoggedOut }: Props) {
 				</div>
 				<h3 className="font-medium">Thread</h3>
 				<ul className="space-y-2">
-					{task.thread.map((m) => (
+					{ticket.thread.map((m) => (
 						<li key={`${m.at}${m.from}`} className="rounded border p-2">
 							<p className="text-sm text-gray-500">
 								[{m.kind}] {m.from}, {m.at}
@@ -447,8 +452,8 @@ export function TaskView({ onLoggedOut }: Props) {
 				</ul>
 				<ReplyBox onReply={(text) => run("reply", text)} />
 				<SendToAgent
-					project={task.project}
-					taskId={task.id}
+					project={ticket.project}
+					ticketId={ticket.id}
 					onLoggedOut={onLoggedOut}
 				/>
 			</article>

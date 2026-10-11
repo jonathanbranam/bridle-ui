@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router";
 import { AutoTextarea } from "./AutoTextarea";
 import { type Action, act, items } from "./api/client";
 import type { Items as ItemsData } from "./api/generated/Items";
@@ -86,9 +87,15 @@ export function ItemsView({ onLoggedOut }: Props) {
 							{p.todos.map((t) => (
 								<li key={t.task_id} className="rounded border p-3">
 									<p className="font-medium">
-										{t.title} <Badge priority={t.priority} />
+										<Link
+											className="underline"
+											to={`/p/${encodeURIComponent(p.project)}/tickets/${encodeURIComponent(t.ticket ?? t.task_id)}`}
+										>
+											{t.title}
+										</Link>{" "}
+										<Badge priority={t.priority} />
 									</p>
-									<IdChip id={t.task_id} />
+									<IdChip id={t.ticket ?? t.task_id} />
 									{t.body && (
 										<p className="my-2 whitespace-pre-wrap text-sm">
 											<Md text={t.body} />

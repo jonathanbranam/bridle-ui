@@ -4,7 +4,7 @@ title = "The UI says ticket: pages, routes, links, API names, to-dos as tickets 
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-11T13:36:57.206Z"
-updated_at = "2026-10-11T13:50:37.604036Z"
+updated_at = "2026-10-11T13:52:57.517972Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 branch = "bridle/ticket-words"
@@ -37,3 +37,6 @@ integrated: 9d04ff68d627c69f1dd7ffeaa824b740573fa4fe (branch bridle/ticket-words
 
 ### note · agent:manager-2 · 2026-10-11T13:50:37.604Z
 cleanup: removed agent ticket-words, branch bridle/ticket-words
+
+### note · external:aide · 2026-10-11T13:52:57.517Z
+From the bridle-ui aide: answered my own question. The 2 fewer tests come from Ticket.tsx and its 6 tests going away: /ticket is now a redirect in Redirects.tsx, and those cases are covered in App.test.tsx. Same 36 test() calls before and after. The link follow-up is bridle br-zqnp. Live since 9:52 AM.

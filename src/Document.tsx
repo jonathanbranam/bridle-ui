@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router";
 import { AutoTextarea } from "./AutoTextarea";
 import {
 	projects as listProjects,
 	readDocument,
 	requestReview,
 	searchDocuments,
+	ticketDetail,
 	writeDocument,
 } from "./api/client";
 import type { Document } from "./api/generated/Document";
@@ -15,6 +16,8 @@ import {
 	type Block,
 	deleteThread,
 	easternStamp,
+	findIdMatches,
+	type IdMatch,
 	type Mark,
 	markRead,
 	parseDocument,
@@ -23,7 +26,7 @@ import {
 	resolveThread,
 	type Thread,
 } from "./doc/comments";
-import { documentHref, parseFrontMatter } from "./doc/links";
+import { documentHref, parseFrontMatter, ticketHref } from "./doc/links";
 import { IdChip } from "./IdChip";
 import { LinkScope, Md } from "./Md";
 
@@ -225,6 +228,7 @@ export function DocumentView({
 	// Project -> machine, for projects not on the gateway's own machine.
 	const [machines, setMachines] = useState<Record<string, string>>({});
 	const [matches, setMatches] = useState<string[]>([]);
+	const [idMatches, setIdMatches] = useState<IdMatch[]>([]);
 	const [captured, setCaptured] = useState<Captured>();
 	const tapping = useRef(false);
 	const pathInputRef = useRef<HTMLInputElement>(null);
@@ -299,6 +303,21 @@ export function DocumentView({
 
 	const open = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
+		setIdMatches([]);
+		// An ID opens its ticket in whichever project has it; several matches are listed.
+		const hits = await findIdMatches(path, known, async (p, id) => {
+			const r = await ticketDetail(p, id);
+			return r.ok ? r.value.id : undefined;
+		});
+		if (hits.length === 1) {
+			navigate(ticketHref(hits[0].project, hits[0].id));
+			return;
+		}
+		if (hits.length > 1) {
+			setIdMatches(hits);
+			setError(undefined);
+			return;
+		}
 		// A bare ticket ID needs a fresh search: the list above may be for the last keystroke.
 		const found = await searchDocuments(project, path.trim());
 		if (!found.ok) return fail(found);
@@ -492,6 +511,17 @@ export function DocumentView({
 							Open
 						</button>
 					</form>
+				)}
+				{idMatches.length > 1 && (
+					<ul aria-label="Matching tickets" className="list-disc pl-5">
+						{idMatches.map((m) => (
+							<li key={m.project}>
+								<Link to={ticketHref(m.project, m.id)} className="underline">
+									{m.project}: {m.id}
+								</Link>
+							</li>
+						))}
+					</ul>
 				)}
 				{error && (
 					<p role="alert" className="text-red-700">

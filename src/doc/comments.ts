@@ -387,3 +387,30 @@ export function resolveOpen(
 	if (t.includes("/") || t.endsWith(".md")) return t;
 	return matches[0];
 }
+
+/** A ticket or task ID as typed: `sxs3`, `ui-sxs3`, `br-57nt` (no slash, no extension). */
+export const looksLikeId = (typed: string) =>
+	/^[a-z0-9]+(-[a-z0-9]+)?$/i.test(typed.trim());
+
+export type IdMatch = { project: string; id: string };
+
+/**
+ * Opening by ID: ask every project (ticket and task IDs are the same thing, and a bare ID may
+ * be in several) and return the projects that have it. `lookup` is injected so tests need no
+ * gateway; it returns the ticket's canonical ID, or undefined for no such ticket.
+ */
+export async function findIdMatches(
+	typed: string,
+	projects: string[],
+	lookup: (project: string, id: string) => Promise<string | undefined>,
+): Promise<IdMatch[]> {
+	const id = typed.trim();
+	if (!looksLikeId(id)) return [];
+	const found = await Promise.all(
+		projects.map(async (project) => ({
+			project,
+			id: await lookup(project, id),
+		})),
+	);
+	return found.flatMap((f) => (f.id ? [{ project: f.project, id: f.id }] : []));
+}

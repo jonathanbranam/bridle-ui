@@ -4,6 +4,7 @@ import {
 	addReply,
 	deleteThread,
 	easternStamp,
+	findIdMatches,
 	markRead,
 	parseDocument,
 	resolveOpen,
@@ -265,4 +266,40 @@ More text.
 	expect(deleteThread(d, "c2")).toBe(d);
 	expect(deleteThread(d, "c9")).toBe(d);
 	expect(deleteThread(d, "")).toBe(d);
+});
+
+describe("findIdMatches", () => {
+	// Fake gateway: task ids and ticket ids both resolve to the canonical id in their project.
+	const has: Record<string, Record<string, string>> = {
+		bridle: { "br-57nt": "br-57nt", sxs3: "sxs3", dup1: "dup1" },
+		"bridle-ui": { "ui-sxs3": "ui-sxs3", sxs3: "sxs3", dup1: "dup1" },
+	};
+	const lookup = async (p: string, id: string) => has[p]?.[id];
+	const projects = ["bridle", "bridle-ui"];
+
+	test("a task id finds its project", async () => {
+		expect(await findIdMatches("br-57nt", projects, lookup)).toEqual([
+			{ project: "bridle", id: "br-57nt" },
+		]);
+		expect(await findIdMatches(" ui-sxs3 ", projects, lookup)).toEqual([
+			{ project: "bridle-ui", id: "ui-sxs3" },
+		]);
+	});
+
+	test("a bare id in several projects lists them all", async () => {
+		const m = await findIdMatches("dup1", projects, lookup);
+		expect(m.map((x) => x.project)).toEqual(["bridle", "bridle-ui"]);
+	});
+
+	test("a bare id in one project finds it", async () => {
+		const only = { bridle: {}, "bridle-ui": { sxs3: "sxs3" } } as typeof has;
+		expect(
+			await findIdMatches("sxs3", projects, async (p, id) => only[p]?.[id]),
+		).toEqual([{ project: "bridle-ui", id: "sxs3" }]);
+	});
+
+	test("no match, or a path, finds nothing", async () => {
+		expect(await findIdMatches("zzzz", projects, lookup)).toEqual([]);
+		expect(await findIdMatches("docs/a.md", projects, lookup)).toEqual([]);
+	});
 });

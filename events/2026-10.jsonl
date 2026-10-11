@@ -255,3 +255,4 @@
 {"actor":"external:orchestrator","at":"2026-10-11T17:18:28.585840Z","from":"open","task":"ui-gkdr","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-11T17:18:28.606481Z","queue":"reprioritized"}
 {"actor":"agent:manager-2","at":"2026-10-11T17:21:03.641168Z","from":"planned","task":"ui-gkdr","to":"integrated"}
+{"actor":"system","at":"2026-10-11T21:18:35.202599Z","from":"open","task":"ui-tecf","to":"pending"}

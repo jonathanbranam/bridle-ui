@@ -248,3 +248,4 @@
 {"actor":"external:orchestrator","at":"2026-10-11T15:43:08.823668Z","from":"pending","task":"ui-jgg8","to":"open"}
 {"actor":"external:orchestrator","at":"2026-10-11T15:43:08.848946Z","from":"open","task":"ui-jgg8","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-11T15:43:08.872386Z","queue":"reprioritized"}
+{"actor":"agent:manager-2","at":"2026-10-11T15:44:49.411163Z","from":"planned","task":"ui-jgg8","to":"integrated"}

@@ -56,3 +56,20 @@ step 10.
 - tecf (open by ticket or task ID from any project): do it in this change or right after.
 - bridle tickets 22ab (the plan), cy4q (to-dos as tickets), enx3 (URL scheme). Named here
   because related: takes only this repo's tickets.
+
+## Plan (orchestrator, 2026-10-11)
+
+Build items 1-5 and 7 now; the names they need have landed in bridle (br-92za wire, br-aejj gateway;
+old names still accepted for one release). Item 6 (to-do views) is split out to ui-jgg8, which starts
+after bridle br-cy4q lands (the PdM's call, on this thread).
+
+- Files: those listed in item 1 and their tests, plus `src/api/generated/` (re-sync with the sync
+  script against the current bridle gateway). Not `src/Items.tsx`'s to-do actions (ui-jgg8).
+- Acceptance: `npm run check` passes; the UI says ticket, not task, on every page and title; the API
+  client calls the ticket routes; an old `/task?id=<id>` link redirects to the ticket page; written
+  IDs are project-qualified (`ui-xxxx`, `br-xxxx`); ticket and task IDs open the same ticket page.
+- If a URL format changes (item 7): update bridle's url-scheme "Final formats" table in the same
+  change set and file the bridle ticket for agent instructions and `bridle link`.
+- Model: Sonnet. If context nears 150K, land pages/routes/links first and say what remains.
+- Out of scope: the to-do views (ui-jgg8); tecf (open by ID from any project), unless it falls out
+  naturally; removing old-name support (bridle 22ab step 10).

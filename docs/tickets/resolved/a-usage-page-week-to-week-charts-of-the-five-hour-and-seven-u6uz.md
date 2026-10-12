@@ -11,6 +11,7 @@ specs: []
 blocked_by: [br-yydm]
 related: [br-rdkn, br-xxw9]
 parent: br-rdkn
+resolved: 2026-10-12T23:16:05Z
 ---
 
 ## The ask

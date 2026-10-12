@@ -14,6 +14,7 @@ const PAGES: Record<string, string> = {
 	"/tickets": "Tickets",
 	"/system": "System",
 	"/time": "Time",
+	"/usage": "Usage",
 	"/document": "Documents",
 	"/specs": "Specs",
 };

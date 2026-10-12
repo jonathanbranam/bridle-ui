@@ -25,6 +25,7 @@ import type { SessionInfo } from "./generated/SessionInfo";
 import type { SystemView } from "./generated/SystemView";
 import type { TaskDetail } from "./generated/TaskDetail";
 import type { TicketList } from "./generated/TicketList";
+import type { UsageHistory } from "./generated/UsageHistory";
 
 const BASE = "/api/v1";
 
@@ -117,6 +118,16 @@ export const ticketDetail = (project: string, id: string) =>
 
 export const systemView = (project: string) =>
 	call<SystemView>(`/projects/${encodeURIComponent(project)}/system`);
+
+/** Account-wide limit readings, oldest first; the project only picks which daemon answers. */
+export const usageHistory = (
+	project: string,
+	window: "five_hour" | "seven_day",
+	since: string,
+) =>
+	call<UsageHistory>(
+		`/projects/${encodeURIComponent(project)}/usage/history?window=${window}&since=${encodeURIComponent(since)}`,
+	);
 
 export const agentList = (project: string) =>
 	call<AgentList>(`/projects/${encodeURIComponent(project)}/agents`);

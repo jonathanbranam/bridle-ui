@@ -12,6 +12,7 @@ import { SpecsView } from "./SpecPage";
 import { SystemView } from "./System";
 import { TicketsView, TicketView } from "./Tickets";
 import { TimeView } from "./Time";
+import { UsageView } from "./Usage";
 
 // undefined while the first /session probe is in flight, null once known to be logged out.
 export function App() {
@@ -78,6 +79,7 @@ export function App() {
 							["/tickets", "Tickets"],
 							["/system", "System"],
 							["/time", "Time"],
+							["/usage", "Usage"],
 							["/document", "Document"],
 							["/specs", "Specs"],
 						] as const
@@ -99,6 +101,10 @@ export function App() {
 				<Routes>
 					<Route path="/" element={<ItemsView onLoggedOut={loggedOut} />} />
 					<Route path="/time" element={<TimeView onLoggedOut={loggedOut} />} />
+					<Route
+						path="/usage"
+						element={<UsageView onLoggedOut={loggedOut} />}
+					/>
 					<Route
 						path="/p/:project"
 						element={<ProjectView onLoggedOut={loggedOut} />}

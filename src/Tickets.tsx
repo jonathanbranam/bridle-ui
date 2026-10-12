@@ -6,6 +6,7 @@ import {
 	act,
 	projects as listProjects,
 	recipients,
+	resolveLinks,
 	sendMessage,
 	type TicketState,
 	ticketDetail,
@@ -13,6 +14,7 @@ import {
 } from "./api/client";
 import type { TaskDetail } from "./api/generated/TaskDetail";
 import type { TaskSummary } from "./api/generated/TaskSummary";
+import { DocumentView } from "./Document";
 import { ticketHref } from "./doc/links";
 import { IdChip } from "./IdChip";
 import { TodoActions } from "./Items";
@@ -343,10 +345,13 @@ export function TicketView({ onLoggedOut }: Props) {
 	const [ticket, setTicket] = useState<TaskDetail>();
 	const [error, setError] = useState<string>();
 	const [actionError, setActionError] = useState<string>();
+	// Not every ticket file has a daemon row; the file stands in when there is none.
+	const [file, setFile] = useState<{ project: string; path: string }>();
 
 	useEffect(() => {
 		let stale = false;
 		setTicket(undefined);
+		setFile(undefined);
 		setError(undefined);
 		if (!id) {
 			setError("Missing ticket ID");
@@ -356,7 +361,15 @@ export function TicketView({ onLoggedOut }: Props) {
 			if (stale) return;
 			if (r.ok) setTicket(r.value);
 			else if (r.notLoggedIn) onLoggedOut();
-			else setError(r.error);
+			else if (!project) setError(r.error);
+			else
+				resolveLinks(project, [id]).then((l) => {
+					if (stale) return;
+					const path = l.ok ? l.value.links[0]?.path : undefined;
+					if (path) setFile({ project, path });
+					else if (!l.ok && l.notLoggedIn) onLoggedOut();
+					else setError(r.error);
+				});
 		});
 		return () => {
 			stale = true;
@@ -383,6 +396,19 @@ export function TicketView({ onLoggedOut }: Props) {
 	};
 
 	if (error) return <p role="alert">{error}</p>;
+	if (file)
+		return (
+			<div className="space-y-3">
+				{file.path.includes("/resolved/") && (
+					<p role="status">Ticket {id} is resolved.</p>
+				)}
+				<DocumentView
+					onLoggedOut={onLoggedOut}
+					initialProject={file.project}
+					initialPath={file.path}
+				/>
+			</div>
+		);
 	if (!ticket) return <p>Loading ticket...</p>;
 
 	return (

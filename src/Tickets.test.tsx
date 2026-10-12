@@ -279,3 +279,48 @@ test("Send to an agent lists the recipients and posts the message threaded on th
 	});
 	expect(screen.getByLabelText("Message")).toHaveValue("");
 });
+
+function fileOnly(path: string | null) {
+	vi.stubGlobal(
+		"fetch",
+		vi.fn(async (url: string) => {
+			if (url.endsWith("/projects"))
+				return json({
+					projects: [
+						{ project: "p", machine: null, url: null, reachable: true },
+					],
+				});
+			if (url.includes("/links/resolve"))
+				return json({ project: "p", links: [{ target: "p-k1k1", path }] });
+			if (url.includes("/documents/"))
+				return json({
+					project: "p",
+					path,
+					content: "# Old ticket\n\nFile body.\n",
+					hash: "h1",
+					branch: "main",
+				});
+			return json({ error: "no such ticket" }, 404);
+		}),
+	);
+}
+
+test("a ticket with a file and no daemon row opens the file", async () => {
+	fileOnly("docs/tickets/open/old-k1k1.md");
+	app("/p/p/tickets/p-k1k1");
+	expect(await screen.findByText("File body.")).toBeInTheDocument();
+	expect(screen.queryByText(/is resolved/)).toBeNull();
+});
+
+test("a resolved ticket file with no row says it is resolved", async () => {
+	fileOnly("docs/tickets/resolved/old-k1k1.md");
+	app("/p/p/tickets/p-k1k1");
+	expect(await screen.findByText("File body.")).toBeInTheDocument();
+	expect(screen.getByText("Ticket p-k1k1 is resolved.")).toBeInTheDocument();
+});
+
+test("no row and no file says no ticket", async () => {
+	fileOnly(null);
+	app("/p/p/tickets/p-k1k1");
+	expect(await screen.findByRole("alert")).toHaveTextContent("No ticket");
+});

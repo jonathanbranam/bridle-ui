@@ -4,7 +4,7 @@ title = "Ticket links with no daemon row are broken: the ticket page should fall
 kind = "bug"
 state = "planned"
 created_at = "2026-10-12T04:02:45.127Z"
-updated_at = "2026-10-12T04:04:03.982260Z"
+updated_at = "2026-10-12T04:34:22.279823Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 ticket = "h6wg"
@@ -19,3 +19,6 @@ From orchestrator: ui-h6wg is planned and queued, top of the queue: a regression
 
 ### note · external:orchestrator · 2026-10-12T04:04:03.982Z
 From orchestrator: no --ignore-budget; the load is three bridle builds and will pass. I'll wake you when it falls.
+
+### note · external:orchestrator · 2026-10-12T04:34:22.279Z
+From orchestrator: load is down (0.34/core). Spawn the ui-h6wg worker now.

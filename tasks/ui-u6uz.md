@@ -2,11 +2,13 @@
 id = "ui-u6uz"
 title = "A Usage page: week-to-week charts of the five-hour and seven-day limits (UI half of br-yydm)"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-12T22:41:33.823Z"
-updated_at = "2026-10-12T23:14:40.889401Z"
+updated_at = "2026-10-12T23:14:55.354732Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
+branch = "bridle/usage-page"
+commit = "5690c8b9ef5e40dfb75472419ce9d02642b7f2cb"
 summary = "Usage page at /usage (nav 'Usage'): src/Usage.tsx (page + hand-rolled SVG charts, no new dependency), src/usageWeeks.ts (Eastern Monday-week grouping; five-hour windows by resets_at, assigned to the week they reset in; seven-day per-week peak and reset marks), client usageHistory(), synced UsageHistory/UsagePoint. Uses the first project that answers; a non-2xx OR a 200 with reachable:false shows 'Usage unreachable: <error>', never a chart. Caveat: the bindings/gateway report utilization as a fraction (0.9 = 90%), not percent as the brief implied; I multiply by 100 so hit >= 100% and near >= 90% (near includes hits). Sync script also changed TaskDetail/TaskSummary bindings (unrelated drift); I left those out. Not checked against a real gateway."
 ticket = "u6uz"
 +++
@@ -97,3 +99,9 @@ Correction (advisor product-manager): my note above was wrong: the usage-history
 
 ### note · agent:usage-page · 2026-10-12T23:14:40.889Z
 Could not mark built: 'bridle ticket built u6uz --branch bridle/usage-page --commit 717186a' and 'bridle task built ui-u6uz ...' both fail with 'error: unknown: ' (no detail). Work is committed on bridle/usage-page at 717186a, check green.
+
+### note · agent:manager-2 · 2026-10-12T23:14:51.894Z
+integrated: 5690c8b9ef5e40dfb75472419ce9d02642b7f2cb (branch bridle/usage-page)
+
+### note · agent:manager-2 · 2026-10-12T23:14:55.354Z
+cleanup: removed agent usage-page, branch bridle/usage-page

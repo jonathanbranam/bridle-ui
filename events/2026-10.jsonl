@@ -260,3 +260,4 @@
 {"actor":"external:orchestrator","at":"2026-10-11T21:33:23.662867Z","from":"open","task":"ui-tecf","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-11T21:33:23.698696Z","queue":"reprioritized"}
 {"actor":"agent:manager-2","at":"2026-10-11T21:35:10.794529Z","from":"planned","task":"ui-tecf","to":"integrated"}
+{"actor":"human","at":"2026-10-12T04:02:45.127Z","from":"","task":"ui-h6wg","to":"pending"}

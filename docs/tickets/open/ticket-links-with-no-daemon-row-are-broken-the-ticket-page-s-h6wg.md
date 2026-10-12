@@ -53,3 +53,13 @@ This is a **regression from ui-utp5** (9d04ff6). Before it, `/ticket?project=&id
 - A test: a qualified ID with a file and no row opens the file.
 - Out of scope here: the daemon giving every ticket a row (bridle 22ab, "A row for every
   ticket"). That's bridle's side; until then the UI must not depend on it.
+
+## The human's follow-up
+
+The human, 2026-10-12 ~12:10 AM ET, verbatim:
+
+> ok, so, resolved tickets, looked up by direct ID should still open and show that they are resolved.
+
+So, by direct ID (a link, `/p/{project}/tickets/{id}`, or the open-by-ID box from ui-tecf), a
+resolved ticket opens and says plainly that it's resolved: from the row's state when there's a
+row, otherwise from the file (`resolved/` folder, or its `resolved:` field).

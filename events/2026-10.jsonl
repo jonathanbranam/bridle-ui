@@ -264,3 +264,4 @@
 {"actor":"external:orchestrator","at":"2026-10-12T04:03:25.141225Z","from":"pending","task":"ui-h6wg","to":"open"}
 {"actor":"external:orchestrator","at":"2026-10-12T04:03:29.531347Z","from":"open","task":"ui-h6wg","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-12T04:03:33.090053Z","queue":"reprioritized"}
+{"actor":"agent:manager-2","at":"2026-10-12T04:42:16.425175Z","from":"planned","task":"ui-h6wg","to":"integrated"}

@@ -26,6 +26,8 @@ import type { SystemView } from "./generated/SystemView";
 import type { TaskDetail } from "./generated/TaskDetail";
 import type { TicketList } from "./generated/TicketList";
 import type { UsageHistory } from "./generated/UsageHistory";
+import type { UsageInstances } from "./generated/UsageInstances";
+import type { UsageSeriesView } from "./generated/UsageSeriesView";
 
 const BASE = "/api/v1";
 
@@ -127,6 +129,22 @@ export const usageHistory = (
 ) =>
 	call<UsageHistory>(
 		`/projects/${encodeURIComponent(project)}/usage/history?window=${window}&since=${encodeURIComponent(since)}`,
+	);
+
+/** Per-project: the agent instances with usage since the instant, latest turn first. */
+export const usageInstances = (project: string, since: string) =>
+	call<UsageInstances>(
+		`/projects/${encodeURIComponent(project)}/usage/agents?since=${encodeURIComponent(since)}`,
+	);
+
+export const usageSeries = (
+	project: string,
+	agentId: string,
+	since: string,
+	bucket: "hour" | "day",
+) =>
+	call<UsageSeriesView>(
+		`/projects/${encodeURIComponent(project)}/usage/agents/${encodeURIComponent(agentId)}/series?since=${encodeURIComponent(since)}&bucket=${bucket}`,
 	);
 
 export const agentList = (project: string) =>

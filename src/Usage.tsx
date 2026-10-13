@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { projects as listProjects, usageHistory } from "./api/client";
 import type { UsageHistory } from "./api/generated/UsageHistory";
 import { addDays, easternDate, weekStart } from "./time/eastern";
+import { InstanceUsage } from "./UsageInstance";
 import {
 	easternLabel,
 	type FiveHourWeek,
@@ -32,6 +33,15 @@ const unreachableBody = (v: unknown): string | null => {
 };
 
 export function UsageView({ onLoggedOut }: Props) {
+	return (
+		<div className="space-y-8">
+			<Limits onLoggedOut={onLoggedOut} />
+			<InstanceUsage onLoggedOut={onLoggedOut} />
+		</div>
+	);
+}
+
+function Limits({ onLoggedOut }: Props) {
 	const [state, setState] = useState<State>({ kind: "loading" });
 
 	useEffect(() => {

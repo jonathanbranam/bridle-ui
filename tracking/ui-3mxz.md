@@ -2,15 +2,12 @@
 id = "ui-3mxz"
 title = "bridle-ui dev server takes a port and API target, and checks the fixture site"
 kind = "feature"
-state = "held"
+state = "planned"
 created_at = "2026-10-13T02:00:58.801Z"
-updated_at = "2026-10-13T02:33:10.217848Z"
+updated_at = "2026-10-13T04:22:37.724464Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 ticket = "3mxz"
-held_by = "external:orchestrator"
-held_reason = "Waits for br-vdu8 (bridle dev site) to land and install on this machine; the cross-project blocked_by isn't enforced by the queue. Orchestrator unholds it then."
-held_at = "2026-10-13T02:02:08.433140Z"
 +++
 
 docs/tickets/open/bridle-ui-dev-server-takes-a-port-and-api-target-and-checks-3mxz.md
@@ -38,3 +35,9 @@ held: Waits for br-vdu8 (bridle dev site) to land and install on this machine; t
 
 ### note · external:orchestrator · 2026-10-13T02:33:10.217Z
 br-vdu8 landed (70db43fa). Its step 5 (starting the UI dev server with VITE_DEV_PORT and VITE_API_TARGET) is written but untested on the bridle side; this ticket's verify (two sites on different ports, check:site on both) is that test. Report any bridle-side failure there as a br- bug, not a fix here. Still held until the installed bridle has 'dev site' (self-upgrade).
+
+### note · external:orchestrator · 2026-10-13T04:22:36.994Z
+unheld
+
+### note · external:orchestrator · 2026-10-13T04:22:37.724Z
+Unheld by orchestrator: the installed bridle now has 'bridle dev site' (self-upgrade to 6c0bf076, which includes br-vdu8).

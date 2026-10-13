@@ -6,24 +6,25 @@ const STEP = { hour: 3_600_000, day: 86_400_000 } as const;
 /** A bucket with plain numbers: the generated type says bigint, JSON.parse gives numbers. */
 export type Point = {
 	t: number;
-	turns: number;
+	/** null is "not measured" (external sessions), never zero. */
+	turns: number | null;
 	input: number;
 	output: number;
 	cacheRead: number;
 	cacheWrite: number;
 	cost: number;
-	busySeconds: number;
+	busySeconds: number | null;
 };
 
 export const toPoint = (b: UsageSeriesBucket): Point => ({
 	t: Date.parse(b.start),
-	turns: Number(b.turns),
+	turns: b.turns === null ? null : Number(b.turns),
 	input: Number(b.input_tokens),
 	output: Number(b.output_tokens),
 	cacheRead: Number(b.cache_read_tokens),
 	cacheWrite: Number(b.cache_write_tokens),
 	cost: Number(b.cost_usd),
-	busySeconds: Number(b.busy_seconds),
+	busySeconds: b.busy_seconds === null ? null : Number(b.busy_seconds),
 });
 
 const zero = (t: number): Point => ({

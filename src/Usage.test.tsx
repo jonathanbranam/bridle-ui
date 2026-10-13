@@ -136,3 +136,65 @@ test("a series error is shown as unreachable, not an empty chart", async () => {
 	expect((await screen.findByRole("alert")).textContent).toContain("no route");
 	expect(screen.queryByRole("img", { name: "Tokens per day" })).toBeNull();
 });
+
+test("an external session is marked, listed after hosted agents, and its turns are not measured", async () => {
+	const ext = "external:advisor/product-manager";
+	const f = vi.fn(async (url: string) =>
+		url.includes("/usage/history")
+			? json({ project: "bridle", window: "x", points: [] })
+			: url.includes("/series")
+				? json({
+						project: "bridle",
+						agent_id: ext,
+						bucket: "day",
+						points: [
+							{
+								start: "2026-10-12T00:00:00Z",
+								turns: null,
+								input_tokens: 100,
+								output_tokens: 50,
+								cache_read_tokens: 0,
+								cache_write_tokens: 0,
+								cost_usd: 0.5,
+								busy_seconds: null,
+							},
+						],
+					})
+				: url.includes("/usage/agents")
+					? json({
+							project: "bridle",
+							instances: [
+								{
+									...instance("x", "product-manager"),
+									agent_id: ext,
+									role: "advisor",
+									external: true,
+									turns: null,
+								},
+								{ ...instance("a1", "alpha"), external: false },
+							],
+						})
+					: json({ projects: [{ project: "bridle", machine: null }] }),
+	);
+	vi.stubGlobal("fetch", f);
+	render(<UsageView onLoggedOut={() => {}} />);
+	await screen.findByText("alpha, worker, sonnet");
+	const opts = screen
+		.getAllByRole("option")
+		.map((o) => o.textContent)
+		.filter((t) => t?.includes(","));
+	expect(opts).toEqual([
+		"alpha, worker, sonnet",
+		"product-manager, advisor, sonnet, external",
+	]);
+	fireEvent.change(screen.getByLabelText("Agent instance"), {
+		target: { value: ext },
+	});
+	await screen.findByText(/not measured/);
+	expect(screen.queryByRole("img", { name: "Turns per day" })).toBeNull();
+	expect(
+		f.mock.calls.some((c) =>
+			String(c[0]).includes(`/usage/agents/${encodeURIComponent(ext)}/series`),
+		),
+	).toBe(true);
+});

@@ -17,7 +17,7 @@ const PERIODS = {
 type Period = keyof typeof PERIODS;
 
 const instanceLabel = (i: UsageInstanceView) =>
-	`${i.name}, ${i.role}, ${i.model}${i.removed ? ", removed" : ""}`;
+	`${i.name}, ${i.role}, ${i.model}${i.external ? ", external" : ""}${i.removed ? ", removed" : ""}`;
 
 type Async<T> =
 	| { kind: "loading" }
@@ -73,7 +73,10 @@ export function InstanceUsage({ onLoggedOut }: Props) {
 				else setInstances({ kind: "unreachable", error: r.error });
 				return;
 			}
-			const list = r.value.instances ?? [];
+			// Hosted agents first; Array.sort is stable, so each group keeps the gateway's order.
+			const list = [...(r.value.instances ?? [])].sort(
+				(a, b) => Number(a.external) - Number(b.external),
+			);
 			setInstances({ kind: "ok", value: list });
 			setAgent((cur) =>
 				list.some((i) => i.agent_id === cur) ? cur : (list[0]?.agent_id ?? ""),
@@ -181,6 +184,10 @@ export function InstanceUsage({ onLoggedOut }: Props) {
 				instances={instances}
 				series={series}
 				bucket={bucket}
+				external={
+					instances.kind === "ok" &&
+					instances.value.some((i) => i.agent_id === agent && i.external)
+				}
 			/>
 		</section>
 	);
@@ -191,11 +198,13 @@ function Body({
 	instances,
 	series,
 	bucket,
+	external,
 }: {
 	projects: Async<string[]>;
 	instances: Async<UsageInstanceView[]>;
 	series: Async<{ view: UsageSeriesView; since: number; until: number }>;
 	bucket: Bucket;
+	external: boolean;
 }) {
 	const bad = (what: string, error: string) => (
 		<p role="alert">
@@ -231,12 +240,16 @@ function Body({
 				fmt={(n) => `$${n.toFixed(2)}`}
 				parts={[{ name: "Cost", color: "#dc2626", of: (p) => p.cost }]}
 			/>
-			<BarChart
-				title="Turns"
-				points={points}
-				bucket={bucket}
-				parts={[{ name: "Turns", color: "#6b7280", of: (p) => p.turns }]}
-			/>
+			{external ? (
+				<p>Turns and busy time: not measured for an external session.</p>
+			) : (
+				<BarChart
+					title="Turns"
+					points={points}
+					bucket={bucket}
+					parts={[{ name: "Turns", color: "#6b7280", of: (p) => p.turns ?? 0 }]}
+				/>
+			)}
 		</div>
 	);
 }

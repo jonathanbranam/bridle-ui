@@ -31,3 +31,14 @@ test("omitted buckets are filled with zero, not joined", () => {
 	expect(out.map((p) => p.turns)).toEqual([0, 2, 0, 0, 4]);
 	expect(out[0].t).toBe(Date.parse("2026-10-12T00:00:00Z"));
 });
+
+test("null turns and busy time stay null, not zero", () => {
+	const p = toPoint({
+		...b("2026-10-12T00:00:00Z", 3),
+		turns: null,
+		busy_seconds: null,
+	});
+	expect(p.turns).toBeNull();
+	expect(p.busySeconds).toBeNull();
+	expect(p.input).toBe(3);
+});

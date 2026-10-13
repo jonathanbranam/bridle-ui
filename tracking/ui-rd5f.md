@@ -4,9 +4,10 @@ title = "Usage page: external sessions in the instance picker, marked, nulls sho
 kind = "feature"
 state = "planned"
 created_at = "2026-10-13T00:57:41.086Z"
-updated_at = "2026-10-13T00:58:39.817273Z"
+updated_at = "2026-10-13T01:03:49.267071Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
+summary = "Usage instance picker now lists external sessions (marked ', external', after hosted agents). toPoint keeps null turns/busy_seconds as null (no Number(null)); for an external session the Turns chart is replaced by a 'not measured' note; token/cost charts as before. Series URL already used encodeURIComponent; test asserts the encoded external id. Types re-synced (UsageInstanceView.external, nullable turns/busy_seconds); unrelated TaskDetail/TaskSummary drift left out. Needs a gateway/daemon with br-njjt; tested with fakes only, end-to-end unverified (incl. gateway accepting an encoded '/' in the path)."
 ticket = "rd5f"
 +++
 

@@ -7,7 +7,7 @@ created_by: external:advisor/product-manager
 repos: [bridle-ui]
 changes: []
 specs: []
-blocked_by: [br-ktgd]
+blocked_by: [br-v6cg]
 related: [br-n4p9, ui-u6uz]
 theme: performance
 parent: br-rdkn

@@ -4,7 +4,7 @@ title = "bridle-ui dev server takes a port and API target, and checks the fixtur
 kind = "feature"
 state = "held"
 created_at = "2026-10-13T02:00:58.801Z"
-updated_at = "2026-10-13T02:02:08.433140Z"
+updated_at = "2026-10-13T02:33:10.217848Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 ticket = "3mxz"
@@ -35,3 +35,6 @@ Out of scope: the rule and role text (br-tgxy, bridle side); any change to the h
 
 ### note · external:orchestrator · 2026-10-13T02:02:08.433Z
 held: Waits for br-vdu8 (bridle dev site) to land and install on this machine; the cross-project blocked_by isn't enforced by the queue. Orchestrator unholds it then.
+
+### note · external:orchestrator · 2026-10-13T02:33:10.217Z
+br-vdu8 landed (70db43fa). Its step 5 (starting the UI dev server with VITE_DEV_PORT and VITE_API_TARGET) is written but untested on the bridle side; this ticket's verify (two sites on different ports, check:site on both) is that test. Report any bridle-side failure there as a br- bug, not a fix here. Still held until the installed bridle has 'dev site' (self-upgrade).

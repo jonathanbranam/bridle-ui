@@ -282,3 +282,4 @@
 {"actor":"external:orchestrator","at":"2026-10-13T00:58:39.840030Z","queue":"reprioritized"}
 {"actor":"agent:manager-2","at":"2026-10-13T01:03:56.704608Z","from":"planned","task":"ui-rd5f","to":"integrated"}
 {"actor":"human","at":"2026-10-13T02:00:58.801Z","from":"","task":"ui-3mxz","to":"pending"}
+{"actor":"external:orchestrator","at":"2026-10-13T02:01:12.755748Z","from":"pending","task":"ui-3mxz","to":"open"}

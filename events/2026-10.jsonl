@@ -273,3 +273,5 @@
 {"actor":"external:orchestrator","at":"2026-10-12T23:11:33.813451Z","from":"open","task":"ui-u6uz","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-12T23:11:33.836483Z","queue":"reprioritized"}
 {"actor":"agent:manager-2","at":"2026-10-12T23:14:51.894847Z","from":"planned","task":"ui-u6uz","to":"integrated"}
+{"actor":"external:orchestrator","at":"2026-10-13T00:15:06.011801Z","from":"open","task":"ui-mxkj","to":"planned"}
+{"actor":"external:orchestrator","at":"2026-10-13T00:15:06.033701Z","queue":"reprioritized"}

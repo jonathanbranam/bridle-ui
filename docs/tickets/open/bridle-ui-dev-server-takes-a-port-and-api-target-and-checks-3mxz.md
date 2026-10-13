@@ -7,7 +7,7 @@ created_by: external:orchestrator
 repos: [bridle-ui]
 changes: []
 specs: []
-blocked_by: []
+blocked_by: [br-vdu8]
 related: [br-vwqt, br-dgef, br-vdu8]
 ---
 

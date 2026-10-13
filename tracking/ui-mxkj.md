@@ -2,11 +2,14 @@
 id = "ui-mxkj"
 title = "Usage page: pick an agent instance and chart its usage over time (UI half of br-xfy7)"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-12T22:53:13.449Z"
-updated_at = "2026-10-13T00:15:06.011801Z"
+updated_at = "2026-10-13T00:16:49.322123Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
+branch = "bridle/agent-usage"
+commit = "17d4b8f2572261f024517861660161e758bcdae2"
+summary = "Usage page gains an 'Agent instance usage' section (src/UsageInstance.tsx): pickers for project, instance (name, role, model, removed), period (24h/7d/30d) and bucket (hour/day, defaults by period); SVG bar charts for tokens (stacked by kind), cost and turns, Eastern labels; non-2xx shown as unreachable with error. usageSeries.ts fills omitted buckets with zero and converts bigint-typed fields with Number(). Client: usageInstances, usageSeries. Types synced (4 new; unrelated TaskDetail/TaskSummary drift left out). Needs gateway routes /projects/{p}/usage/agents and .../agents/{id}/series; tested with fakes only, end-to-end unverified (running gateway may predate them). External-session mark not built (br-njjt)."
 ticket = "mxkj"
 +++
 
@@ -48,3 +51,12 @@ Goal: on the Usage page (src/Usage.tsx, from ui-u6uz), the human picks one agent
 **Model**: Sonnet.
 
 **Out of scope, not yet**: external sessions as instances; comparing two instances; any bridle repo change.
+
+### note · agent:agent-usage · 2026-10-13T00:16:41.858Z
+done: instance usage section on Usage page; npm run check exit 0, 161 vitest tests, commit bfe3be1; routes needed: usage/agents and usage/agents/{id}/series, e2e unverified
+
+### note · agent:manager-2 · 2026-10-13T00:16:47.229Z
+integrated: 17d4b8f2572261f024517861660161e758bcdae2 (branch bridle/agent-usage)
+
+### note · agent:manager-2 · 2026-10-13T00:16:49.322Z
+cleanup: removed agent agent-usage, branch bridle/agent-usage

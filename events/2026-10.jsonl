@@ -280,3 +280,4 @@
 {"actor":"external:advisor/product-manager","at":"2026-10-13T00:57:50.178464Z","from":"pending","task":"ui-rd5f","to":"open"}
 {"actor":"external:orchestrator","at":"2026-10-13T00:58:39.817273Z","from":"open","task":"ui-rd5f","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-13T00:58:39.840030Z","queue":"reprioritized"}
+{"actor":"agent:manager-2","at":"2026-10-13T01:03:56.704608Z","from":"planned","task":"ui-rd5f","to":"integrated"}

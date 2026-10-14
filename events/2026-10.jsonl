@@ -292,3 +292,6 @@
 {"actor":"human","at":"2026-10-14T02:32:53.536Z","from":"","task":"ui-evy7","to":"pending"}
 {"actor":"external:advisor/product-manager","at":"2026-10-14T02:33:09.231224Z","from":"pending","task":"ui-evy7","to":"open"}
 {"actor":"system","at":"2026-10-14T02:53:28.149913Z","from":"open","task":"ui-h79b","to":"pending"}
+{"actor":"external:orchestrator","at":"2026-10-14T02:53:53.520757Z","from":"pending","task":"ui-h79b","to":"open"}
+{"actor":"external:orchestrator","at":"2026-10-14T02:54:00.256730Z","from":"open","task":"ui-h79b","to":"planned"}
+{"actor":"external:orchestrator","at":"2026-10-14T02:54:00.302137Z","from":"open","task":"ui-evy7","to":"planned"}

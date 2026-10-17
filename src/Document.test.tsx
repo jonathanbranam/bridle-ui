@@ -106,6 +106,34 @@ async function openDoc() {
 	return user;
 }
 
+test("picking a datalist suggestion opens the document without an Open click", async () => {
+	stub();
+	render(
+		<MemoryRouter initialEntries={["/p/p/docs"]}>
+			<Routes>
+				<Route
+					path="/p/:project/docs"
+					element={<DocumentView onLoggedOut={() => {}} />}
+				/>
+			</Routes>
+		</MemoryRouter>,
+	);
+	const field = screen.getByLabelText("Document");
+	await waitFor(() =>
+		expect((screen.getByLabelText("Project") as HTMLSelectElement).value).toBe(
+			"p",
+		),
+	);
+	// A typed key is an insertion and must not open; a pick is a replacement.
+	fireEvent.input(field, { target: { value: "a" }, inputType: "insertText" });
+	expect(screen.queryByText(/on feature/)).toBeNull();
+	fireEvent.input(field, {
+		target: { value: "a.md" },
+		inputType: "insertReplacementText",
+	});
+	await screen.findByText(/on feature/);
+});
+
 test("opening an unread thread writes [read] back with the hash", async () => {
 	const puts = stub();
 	const user = await openDoc();

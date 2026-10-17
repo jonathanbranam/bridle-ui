@@ -301,11 +301,11 @@ export function DocumentView({
 		};
 	}, [project, path]);
 
-	const open = async (e: { preventDefault: () => void }) => {
+	const open = async (e: { preventDefault: () => void }, value = path) => {
 		e.preventDefault();
 		setIdMatches([]);
 		// An ID opens its ticket in whichever project has it; several matches are listed.
-		const hits = await findIdMatches(path, known, async (p, id) => {
+		const hits = await findIdMatches(value, known, async (p, id) => {
 			const r = await ticketDetail(p, id);
 			return r.ok ? r.value.id : undefined;
 		});
@@ -319,11 +319,11 @@ export function DocumentView({
 			return;
 		}
 		// A bare ticket ID needs a fresh search: the list above may be for the last keystroke.
-		const found = await searchDocuments(project, path.trim());
+		const found = await searchDocuments(project, value.trim());
 		if (!found.ok) return fail(found);
-		const target = resolveOpen(path, found.value.paths);
+		const target = resolveOpen(value, found.value.paths);
 		if (target) navigate(documentHref(project, target));
-		else setError(`No document matches "${path.trim()}".`);
+		else setError(`No document matches "${value.trim()}".`);
 	};
 
 	// The write carries the hash we read; on success the new hash is the base for the next edit.
@@ -485,7 +485,15 @@ export function DocumentView({
 									list="document-matches"
 									placeholder="Search tickets and docs, or paste a ticket ID"
 									value={path}
-									onChange={(e) => setPath(e.target.value)}
+									onChange={(e) => {
+										setPath(e.target.value);
+										// A datalist pick arrives as a replacement, typing as an insertion:
+										// the pick opens the document at once, no Open click.
+										const picked =
+											(e.nativeEvent as InputEvent).inputType ===
+											"insertReplacementText";
+										if (picked) void open(e, e.target.value);
+									}}
 								/>
 								<button
 									type="button"

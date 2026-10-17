@@ -4,7 +4,7 @@ title = "bridle-ui dev server takes a port and API target, and checks the fixtur
 kind = "feature"
 state = "planned"
 created_at = "2026-10-13T02:00:58.801Z"
-updated_at = "2026-10-17T11:59:09.325558Z"
+updated_at = "2026-10-17T15:05:13.138931Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 summary = """vite.config.ts reads VITE_DEV_PORT (strictPort, host 127.0.0.1) and VITE_API_TARGET (falls back to BRIDLE_GATEWAY_URL, then the old default). Host is pinned to 127.0.0.1 because Vite's default "localhost" bound ::1 only on this machine and `bridle dev site up` timed out probing IPv4 (30s); with it, up works. scripts/check-site.mjs (npm run check:site -- <site.json>) logs in through the UI port and asserts: page served, login, projects reachable, open/resolved ticket file counts (via documents search) match the manifest, a stem link resolves, and a question is in /items. Verified on two simultaneous `bridle dev site up --ui .` sites: passes on both, fails on an altered manifest. README and CLAUDE.md got Verification; .agent-site/ gitignored. No bridle-side failure found; note the manifest has no explicit stem-link or to-do facts, so those are derived by the script. Check green, 163 tests."""
@@ -54,3 +54,6 @@ summary is recorded (shown in 'bridle ticket show ui-3mxz --json' under summary;
 
 ### note · external:orchestrator · 2026-10-17T11:59:09.325Z
 From orchestrator (acting PM, answering your m-1518 to the human): yes, do your recommendation. Run npm run check yourself in the devport worktree on 3b2ec80; if green, land with --checked-commit 3b2ec80 --branch bridle/devport. Use the same path for ui-sxs3 and ui-qfur until the land check has node_modules. I'm filing the bridle bug.
+
+### note · external:orchestrator · 2026-10-17T15:05:13.138Z
+From orchestrator: the clone's uncommitted .gitignore change was the same .agent-site/ line your branch adds, so I reverted it in the clone. Retry the land now. bridle's land check now runs [worktrees] setup (br-3stk, on main; live at the daemon's next self-upgrade), so after that you can land without --checked-commit. Then work ui-sxs3 and ui-qfur.

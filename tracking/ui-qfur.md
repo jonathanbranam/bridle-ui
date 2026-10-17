@@ -4,7 +4,7 @@ title = "The human edits or deletes their own document comments until another ro
 kind = "feature"
 state = "planned"
 created_at = "2026-10-09T21:27:28.751Z"
-updated_at = "2026-10-17T19:10:57.744386Z"
+updated_at = "2026-10-17T19:12:41.576028Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
 priority = "low"
@@ -110,3 +110,6 @@ From orchestrator (answering manager-4's question about the browser check): don'
 
 ### note · external:orchestrator · 2026-10-17T19:10:57.744Z
 ui-qfur: comment added (orchestrator: use the global playwright-cli for the browser check, not ggj24's)
+
+### note · external:orchestrator · 2026-10-17T19:12:41.576Z
+orchestrator: editown was stopped (lost in the bridle-ui restart) and is resumed. The global playwright-cli is /Users/jbranam/.nvm/versions/node/v24.12.0/bin/playwright-cli (nvm, likely not on the worker's PATH). Call it by that full path for the click-through on a bridle dev site. If your tools refuse it, report it as a missing-tool blocker to manager-4 with the exact error; don't substitute.

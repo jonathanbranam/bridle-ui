@@ -414,3 +414,133 @@ export async function findIdMatches(
 	);
 	return found.flatMap((f) => (f.id ? [{ project: f.project, id: f.id }] : []));
 }
+
+/** One entry of a thread: the header's own text, or a reply. Line numbers are in the file. */
+export type Entry = {
+	who: string;
+	when: string;
+	/** First line (the header for entry 0) and last line, trailing `>` separators excluded. */
+	start: number;
+	end: number;
+	mark?: Mark;
+	/** The entry's text as typed: no `> ` prefix, no author prefix, no mark. */
+	text: string;
+	/** The human wrote it, the thread is open, and nobody else's entry follows it. */
+	editable: boolean;
+};
+
+const REPLY = /^\*\*([^,*]+),\s*(.*?):\*\*\s?(.*)$/;
+const dequote = (l: string) => l.replace(/^> ?/, "");
+
+/** The thread's entries in order (see `Entry`); `lines` is the file split on newlines. */
+export function threadEntries(lines: string[], thread: Thread): Entry[] {
+	const starts: number[] = [];
+	for (let i = thread.start + 1; i <= thread.end; i++) {
+		const l = dequote(lines[i]);
+		if (REPLY.test(l) && !classify(l).resolved) starts.push(i);
+	}
+	const bounds = [thread.start, ...starts];
+	const entries = bounds.map((start, k): Entry => {
+		let end = (bounds[k + 1] ?? thread.end + 1) - 1;
+		while (end > start && dequote(lines[end]).trim() === "") end--;
+		const rest = lines.slice(start + 1, end + 1).map(dequote);
+		const first = k === 0 ? undefined : splitMark(dequote(lines[start]));
+		const reply = first ? first.text.match(REPLY) : undefined;
+		return {
+			who: k === 0 ? thread.who : (reply?.[1] ?? ""),
+			when: k === 0 ? thread.when : (reply?.[2] ?? ""),
+			start,
+			end,
+			mark: k === 0 ? thread.mark : first?.mark,
+			text: (k === 0 ? rest : [reply?.[3] ?? "", ...rest]).join("\n").trim(),
+			editable: false,
+		};
+	});
+	if (!thread.resolved) {
+		for (let k = entries.length - 1; k >= 0 && isHuman(entries[k].who); k--)
+			entries[k].editable = true;
+	}
+	return entries;
+}
+
+const withMark = (line: string, stamp: string) =>
+	`${splitMark(line).text} [pending ${stamp}]`;
+
+/**
+ * Replaces the text of one editable entry and marks it `[pending]`, so the daemon's watcher
+ * sends it again if the old text was already `[sent]`. Anything else is returned unchanged.
+ */
+export function editEntry(
+	content: string,
+	thread: Thread,
+	index: number,
+	text: string,
+	stamp: string,
+): string {
+	const lines = content.split("\n");
+	const e = threadEntries(lines, thread)[index];
+	if (!e?.editable || !text.trim()) return content;
+	const [first, ...rest] = text.trim().split("\n");
+	if (index === 0) {
+		lines.splice(
+			e.start,
+			e.end - e.start + 1,
+			withMark(lines[e.start], stamp),
+			...quoted(text),
+		);
+	} else {
+		lines.splice(
+			e.start,
+			e.end - e.start + 1,
+			`> **${e.who}, ${e.when}:** ${first} [pending ${stamp}]`,
+			...rest.map((l) => (l.trim() === "" ? ">" : `> ${l}`)),
+		);
+	}
+	return lines.join("\n");
+}
+
+/**
+ * Removes one editable entry. Deleting the only entry deletes the thread; deleting the first of
+ * several promotes the next one to the header. `next_comment_id` is pinned so the ID is not
+ * handed out again.
+ */
+export function deleteEntry(
+	content: string,
+	thread: Thread,
+	index: number,
+): string {
+	const lines = content.split("\n");
+	const entries = threadEntries(lines, thread);
+	const e = entries[index];
+	if (!e?.editable) return content;
+	if (entries.length === 1) {
+		let from = thread.start;
+		let to = thread.end;
+		if (from > 0 && isBlank(lines[from - 1])) from--;
+		else if (to + 1 < lines.length && isBlank(lines[to + 1])) to++;
+		lines.splice(from, to - from + 1);
+	} else if (index > 0) {
+		const from = lines[e.start - 1] === ">" ? e.start - 1 : e.start;
+		lines.splice(from, e.end - from + 1);
+	} else {
+		const n = entries[1];
+		const mark = n.mark ? ` [${n.mark.state} ${n.mark.stamp}]` : "";
+		const id = thread.id ? `${thread.id} ` : "";
+		const firstText = n.text.split("\n")[0];
+		lines.splice(
+			thread.start,
+			n.end - thread.start + 1,
+			`> [!comment] ${id}${n.who}, ${n.when}, on "${thread.quote}"${mark}`,
+			...quoted(firstText),
+			...lines.slice(n.start + 1, n.end + 1),
+		);
+	}
+	return pinCounter(lines.join("\n"), content);
+}
+
+/** Keeps the next ID from going down when a delete removed the highest-numbered header. */
+function pinCounter(after: string, before: string): string {
+	const want = Number(nextId(before).slice(1));
+	if (Number(nextId(after).slice(1)) >= want) return after;
+	return bumpCounter(after, `c${want - 1}`);
+}

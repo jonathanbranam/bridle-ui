@@ -2,14 +2,18 @@ import { expect, test } from "vitest";
 import {
 	addComment,
 	addReply,
+	deleteEntry,
 	deleteThread,
 	easternStamp,
+	editEntry,
 	findIdMatches,
 	markRead,
+	nextId,
 	parseDocument,
 	resolveOpen,
 	resolveThread,
 	type Thread,
+	threadEntries,
 } from "./comments";
 
 const doc = `# Title
@@ -302,4 +306,89 @@ describe("findIdMatches", () => {
 		expect(await findIdMatches("zzzz", projects, lookup)).toEqual([]);
 		expect(await findIdMatches("docs/a.md", projects, lookup)).toEqual([]);
 	});
+});
+
+const open2 = `---
+next_comment_id: c3
+---
+
+Text here.
+
+> [!comment] c2 human, 2026-10-02 14:05 EDT, on "Text" [sent 2026-10-02 14:06 EDT]
+> do ABC
+>
+> **human, 2026-10-02 14:07 EDT:** no do XYZ [sent 2026-10-02 14:08 EDT]
+`;
+
+const thread = (c: string) => parseDocument(c).flatMap((b) => b.threads)[0];
+
+test("every human entry with no other principal's entry after it is editable", () => {
+	const lines = open2.split("\n");
+	expect(threadEntries(lines, thread(open2)).map((e) => e.editable)).toEqual([
+		true,
+		true,
+	]);
+	const answered = `${open2}>\n> **doc-3haz, 2026-10-02 14:09 EDT:** ok\n`;
+	expect(
+		threadEntries(answered.split("\n"), thread(answered)).map(
+			(e) => e.editable,
+		),
+	).toEqual([false, false, false]);
+	const resolved = `${open2}>\n> **resolved by human, 2026-10-02 14:09 EDT**\n`;
+	expect(
+		threadEntries(resolved.split("\n"), thread(resolved)).some(
+			(e) => e.editable,
+		),
+	).toBe(false);
+});
+
+test("editing resets the mark to pending and changes only that entry", () => {
+	const out = editEntry(
+		open2,
+		thread(open2),
+		1,
+		"no, XYZ",
+		"2026-10-02 15:00 EDT",
+	);
+	expect(out).toContain(
+		"> **human, 2026-10-02 14:07 EDT:** no, XYZ [pending 2026-10-02 15:00 EDT]\n",
+	);
+	expect(out).toContain("> do ABC\n");
+	const head = editEntry(
+		open2,
+		thread(open2),
+		0,
+		"do ABD",
+		"2026-10-02 15:00 EDT",
+	);
+	expect(head).toContain(
+		`on "Text" [pending 2026-10-02 15:00 EDT]\n> do ABD\n>\n> **human, 2026-10-02 14:07`,
+	);
+});
+
+test("deleting the second entry leaves the first; deleting the first promotes the second", () => {
+	const second = deleteEntry(open2, thread(open2), 1);
+	expect(second).toBe(
+		open2.replace(
+			"\n>\n> **human, 2026-10-02 14:07 EDT:** no do XYZ [sent 2026-10-02 14:08 EDT]",
+			"",
+		),
+	);
+	const first = deleteEntry(open2, thread(open2), 0);
+	expect(first).toContain(
+		`> [!comment] c2 human, 2026-10-02 14:07 EDT, on "Text" [sent 2026-10-02 14:08 EDT]\n> no do XYZ\n`,
+	);
+	expect(first).not.toContain("do ABC");
+});
+
+test("deleting the last entry deletes the thread and never lowers next_comment_id", () => {
+	const one = `Text here.
+
+> [!comment] c7 human, 2026-10-02 14:05 EDT, on "Text" [pending 2026-10-02 14:05 EDT]
+> only
+`;
+	const out = deleteEntry(one, thread(one), 0);
+	expect(out).not.toContain("[!comment]");
+	expect(nextId(out)).toBe("c8");
+	expect(out).toContain("next_comment_id: c8");
 });

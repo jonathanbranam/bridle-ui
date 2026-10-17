@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router";
 import { AutoTextarea } from "./AutoTextarea";
 import {
@@ -14,8 +14,11 @@ import {
 	addComment,
 	addReply,
 	type Block,
+	deleteEntry,
 	deleteThread,
+	type Entry,
 	easternStamp,
+	editEntry,
 	findIdMatches,
 	type IdMatch,
 	type Mark,
@@ -25,6 +28,7 @@ import {
 	resolveOpen,
 	resolveThread,
 	type Thread,
+	threadEntries,
 } from "./doc/comments";
 import { documentHref, parseFrontMatter, ticketHref } from "./doc/links";
 import { IdChip } from "./IdChip";
@@ -99,19 +103,85 @@ type ThreadActions = {
 	onReply: (t: Thread, text: string) => Promise<boolean>;
 	onResolve: (t: Thread) => void;
 	onDelete: (t: Thread) => void;
+	onEdit: (t: Thread, index: number, text: string) => Promise<boolean>;
+	onDeleteEntry: (t: Thread, index: number) => void;
 };
 
 function ThreadView({
 	thread,
+	entries,
 	onOpen,
 	onReply,
 	onResolve,
 	onDelete,
-}: { thread: Thread } & ThreadActions) {
+	onEdit,
+	onDeleteEntry,
+}: { thread: Thread; entries: Entry[] } & ThreadActions) {
 	// An unread agent entry stays folded until the human opens the thread, which reads it;
 	// a resolved thread stays collapsed to its header.
 	const [open, setOpen] = useState(!thread.unread && !thread.resolved);
 	const [reply, setReply] = useState("");
+	// The entry being edited, and its draft.
+	const [editing, setEditing] = useState<number>();
+	const [draft, setDraft] = useState("");
+	// The buttons for entry `k` go right after its last line (-1: before the body, for a
+	// header with no text of its own).
+	const actions = (after: number) =>
+		entries.flatMap((e, k) =>
+			e.editable && e.end - thread.start - 1 === after ? [k] : [],
+		);
+	const entryActions = (after: number) =>
+		actions(after).map((k) =>
+			editing === k ? (
+				<div key={k} className="space-y-1">
+					<AutoTextarea
+						aria-label="Edit entry"
+						className="w-full rounded border bg-white p-1"
+						value={draft}
+						onChange={(e) => setDraft(e.target.value)}
+					/>
+					<div className="flex gap-2">
+						<button
+							type="button"
+							className="rounded border px-2 py-0.5"
+							disabled={!draft.trim()}
+							onClick={async () => {
+								if (await onEdit(thread, k, draft)) setEditing(undefined);
+							}}
+						>
+							Save
+						</button>
+						<button
+							type="button"
+							className="rounded border px-2 py-0.5"
+							onClick={() => setEditing(undefined)}
+						>
+							Cancel
+						</button>
+					</div>
+				</div>
+			) : (
+				<div key={k} className="flex gap-2">
+					<button
+						type="button"
+						className="rounded border px-2 py-0.5"
+						onClick={() => {
+							setDraft(entries[k].text);
+							setEditing(k);
+						}}
+					>
+						Edit
+					</button>
+					<button
+						type="button"
+						className="rounded border px-2 py-0.5"
+						onClick={() => onDeleteEntry(thread, k)}
+					>
+						Delete entry
+					</button>
+				</div>
+			),
+		);
 	return (
 		<aside
 			className={`rounded border p-2 text-sm ${thread.resolved ? "border-gray-300 bg-gray-50 text-gray-500" : "border-amber-300 bg-amber-50"}`}
@@ -156,13 +226,17 @@ function ThreadView({
 					</>
 				)}
 			</div>
+			{open && entryActions(-1)}
 			{open &&
 				thread.body.map((l, i) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: lines have no identity
-					<p key={i} className="min-h-2">
-						<Md text={l.text} />
-						<MarkView mark={l.mark} />
-					</p>
+					<Fragment key={i}>
+						<p className="min-h-2">
+							<Md text={l.text} />
+							<MarkView mark={l.mark} />
+						</p>
+						{entryActions(i)}
+					</Fragment>
 				))}
 			{open && thread.resolved && thread.id && (
 				<button
@@ -447,6 +521,16 @@ export function DocumentView({
 		await save(deleteThread(doc.content, t.id));
 	};
 
+	const edited = async (t: Thread, index: number, text: string) =>
+		doc ? save(editEntry(doc.content, t, index, text, easternStamp())) : false;
+
+	const entryDeleted = async (t: Thread, index: number) => {
+		if (!doc || !window.confirm("Delete this entry? It stays in git history."))
+			return;
+		await save(deleteEntry(doc.content, t, index));
+	};
+
+	const lines = doc ? doc.content.split("\n") : [];
 	const blocks = doc ? parseDocument(doc.content) : [];
 
 	return (
@@ -605,10 +689,13 @@ export function DocumentView({
 										<ThreadView
 											key={`${t.start}:${t.unread}:${t.resolved}`}
 											thread={t}
+											entries={threadEntries(lines, t)}
 											onOpen={opened}
 											onReply={replied}
 											onResolve={resolved}
 											onDelete={deleted}
+											onEdit={edited}
+											onDeleteEntry={entryDeleted}
 										/>
 									))}
 									{here && (

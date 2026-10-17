@@ -613,3 +613,39 @@ test("a project on another machine is named in the picker, opens, and a 503 show
 		"nuc is not answering: connection refused",
 	);
 });
+
+test("the human edits and deletes their own entries in an open thread, not after a reply", async () => {
+	const puts = stub(
+		undefined,
+		`# T
+
+Hello world.
+
+> [!comment] c2 human, 2026-10-02 14:05 EDT, on "Hello" [sent 2026-10-02 14:06 EDT]
+> Old note.
+>
+> **human, 2026-10-02 14:07 EDT:** Second.
+`,
+	);
+	const user = await openDoc();
+	await user.click(screen.getAllByRole("button", { name: "Edit" })[1]);
+	const box = screen.getByLabelText("Edit entry");
+	await user.clear(box);
+	await user.type(box, "Better.");
+	await user.click(screen.getByRole("button", { name: "Save" }));
+	await waitFor(() => expect(puts).toHaveLength(1));
+	expect(puts[0].content).toMatch(
+		/> \*\*human, 2026-10-02 14:07 EDT:\*\* Better\. \[pending /,
+	);
+	vi.spyOn(window, "confirm").mockReturnValue(true);
+	await user.click(screen.getAllByRole("button", { name: "Delete entry" })[1]);
+	await waitFor(() => expect(puts).toHaveLength(2));
+	expect(puts[1].content).not.toContain("Better");
+});
+
+test("an entry followed by another role's reply has no Edit button", async () => {
+	stub();
+	const user = await openDoc();
+	await user.click(screen.getByRole("button", { name: /human.*Hello/ }));
+	expect(screen.queryByRole("button", { name: "Edit" })).toBeNull();
+});

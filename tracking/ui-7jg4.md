@@ -2,9 +2,9 @@
 id = "ui-7jg4"
 title = "[at restart] Test the new comment selection (ui-bpsd) on laptop and phone"
 kind = "feature"
-state = "claimed"
+state = "integrated"
 created_at = "2026-10-08T23:25:16.272Z"
-updated_at = "2026-10-08T23:31:44.729518Z"
+updated_at = "2026-10-17T02:01:51.806646Z"
 created_by = "external:orchestrator"
 watchers = [
     "external:orchestrator",
@@ -37,3 +37,6 @@ The human, ~7:35 PM ET, verbatim: "when opening the comment box a second time, i
 
 ### note · external:aide · 2026-10-08T23:31:44.729Z
 The human, ~7:45 PM ET, verbatim: "comments working well on mobile also. Great!" Mobile passes too; ui-bpsd tested on both.
+
+### note · human@vesta · 2026-10-17T02:01:51.806Z
+done

@@ -4,12 +4,12 @@ title = "The human edits or deletes their own document comments until another ro
 kind = "feature"
 state = "planned"
 created_at = "2026-10-09T21:27:28.751Z"
-updated_at = "2026-10-17T19:12:41.576028Z"
+updated_at = "2026-10-17T19:13:54.710024Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
 priority = "low"
 priority_at = "2026-10-09T21:27:31.271333Z"
-summary = "On the Document page, each human entry in an unresolved thread with no other principal's entry after it gets Edit and Delete entry buttons (src/Document.tsx; logic in src/doc/comments.ts: threadEntries, editEntry, deleteEntry). Resolved threads and entries followed by an agent reply stay read-only. Deleting the only entry deletes the thread; deleting the first of several promotes the next entry to the header; next_comment_id is pinned so it never drops. The [sent] question: an edit sets the entry's mark to [pending <stamp>], which the daemon's pending_threads already resends (pending = newest entry unmarked or pending), so no bridle-side change is needed. Noted, not changed: deleteThread (resolved threads) does not pin the counter. Browser check pending: no browser tool in this worktree (asked the manager)."
+summary = "On the Document page, each human entry in an unresolved thread with no other principal's entry after it gets Edit and Delete entry buttons (src/Document.tsx; logic in src/doc/comments.ts: threadEntries, editEntry, deleteEntry). Resolved threads and entries followed by an agent reply stay read-only. Deleting the only entry deletes the thread; deleting the first of several promotes the next entry to the header; next_comment_id is pinned so it never drops (unit-tested). The [sent] question: an edit sets the entry's mark to [pending <stamp>], which the daemon's pending_threads already resends, so no bridle-side change is needed. Not changed: deleteThread (resolved threads) does not pin the counter. Browser-checked on a throwaway site with playwright-cli: edit saved with pending mark, delete first entry promoted the second, delete last removed the thread, thread ending in an agent reply showed no buttons."
 ticket = "qfur"
 +++
 
@@ -113,3 +113,9 @@ ui-qfur: comment added (orchestrator: use the global playwright-cli for the brow
 
 ### note · external:orchestrator · 2026-10-17T19:12:41.576Z
 orchestrator: editown was stopped (lost in the bridle-ui restart) and is resumed. The global playwright-cli is /Users/jbranam/.nvm/versions/node/v24.12.0/bin/playwright-cli (nvm, likely not on the worker's PATH). Call it by that full path for the click-through on a bridle dev site. If your tools refuse it, report it as a missing-tool blocker to manager-4 with the exact error; don't substitute.
+
+### note · agent:editown · 2026-10-17T19:13:54.071Z
+Browser check (playwright-cli, throwaway site editown, acme-docs doc with two threads): c1 (two human entries) showed Edit/Delete entry on both; c2 (ends in an agent reply) showed none. Edited entry 2: file got the new text with [pending <now>]. Deleted entry 1: second entry became the header (c1 kept). Deleted the last: thread gone. Site brought down.
+
+### note · agent:editown · 2026-10-17T19:13:54.710Z
+done: edit/delete own entries in open threads, browser-checked; check exit 0, 170 tests; a1e2edc (main already merged)

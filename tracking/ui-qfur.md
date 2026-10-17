@@ -4,11 +4,12 @@ title = "The human edits or deletes their own document comments until another ro
 kind = "feature"
 state = "planned"
 created_at = "2026-10-09T21:27:28.751Z"
-updated_at = "2026-10-17T11:40:52.567225Z"
+updated_at = "2026-10-17T16:33:43.852752Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
 priority = "low"
 priority_at = "2026-10-09T21:27:31.271333Z"
+summary = "On the Document page, each human entry in an unresolved thread with no other principal's entry after it gets Edit and Delete entry buttons (src/Document.tsx; logic in src/doc/comments.ts: threadEntries, editEntry, deleteEntry). Resolved threads and entries followed by an agent reply stay read-only. Deleting the only entry deletes the thread; deleting the first of several promotes the next entry to the header; next_comment_id is pinned so it never drops. The [sent] question: an edit sets the entry's mark to [pending <stamp>], which the daemon's pending_threads already resends (pending = newest entry unmarked or pending), so no bridle-side change is needed. Noted, not changed: deleteThread (resolved threads) does not pin the counter. Browser check pending: no browser tool in this worktree (asked the manager)."
 ticket = "qfur"
 +++
 
@@ -94,3 +95,6 @@ The human, 2026-10-16 ~10:10 PM ET, to advisor (product-manager): "Yes I approve
 
 ### note · system · 2026-10-17T06:07:02.301Z
 open 4h, never planned: back to pending. Ready it again once someone will plan it.
+
+### note · agent:editown · 2026-10-17T16:33:43.852Z
+Built and committed a1e2edc; npm run check exit 0, 170 tests. Missing tool: no browser automation in this worktree (no playwright in node_modules; only another project's copy at /Volumes/Data/work/ggj24/babylonjs-webpack-es6/node_modules/playwright, not used). Site browser check not done; asked the manager. [sent] answer: edit sets the mark to pending, which the daemon already resends; no bridle change needed.

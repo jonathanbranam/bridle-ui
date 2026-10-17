@@ -296,3 +296,5 @@
 {"actor":"external:orchestrator","at":"2026-10-14T02:54:00.256730Z","from":"open","task":"ui-h79b","to":"planned"}
 {"actor":"external:orchestrator","at":"2026-10-14T02:54:00.302137Z","from":"open","task":"ui-evy7","to":"planned"}
 {"actor":"human@vesta","at":"2026-10-17T02:01:51.806646Z","from":"claimed","task":"ui-7jg4","to":"integrated"}
+{"actor":"external:advisor/product-manager","at":"2026-10-17T02:06:47.153488Z","from":"pending","task":"ui-sxs3","to":"open"}
+{"actor":"external:advisor/product-manager","at":"2026-10-17T02:06:48.158276Z","from":"pending","task":"ui-qfur","to":"open"}

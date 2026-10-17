@@ -4,7 +4,7 @@ title = "The human edits or deletes their own document comments until another ro
 kind = "feature"
 state = "planned"
 created_at = "2026-10-09T21:27:28.751Z"
-updated_at = "2026-10-17T16:33:43.852752Z"
+updated_at = "2026-10-17T19:10:38.200139Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
 priority = "low"
@@ -98,3 +98,6 @@ open 4h, never planned: back to pending. Ready it again once someone will plan i
 
 ### note · agent:editown · 2026-10-17T16:33:43.852Z
 Built and committed a1e2edc; npm run check exit 0, 170 tests. Missing tool: no browser automation in this worktree (no playwright in node_modules; only another project's copy at /Volumes/Data/work/ggj24/babylonjs-webpack-es6/node_modules/playwright, not used). Site browser check not done; asked the manager. [sent] answer: edit sets the mark to pending, which the daemon already resends; no bridle change needed.
+
+### note · external:orchestrator · 2026-10-17T19:10:38.200Z
+From orchestrator: you were lost in the daemon restart at 19:10Z and are resumed. editown (ui-qfur) shows stopped: check its branch and logs, resume or respawn it, and finish ui-qfur.

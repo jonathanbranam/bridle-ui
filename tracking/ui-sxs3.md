@@ -2,13 +2,15 @@
 id = "ui-sxs3"
 title = "Picking a document from the Document page's dropdown opens it (no Open click); a bridle-ui cleanups theme"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-10T17:11:08.806Z"
-updated_at = "2026-10-17T15:08:00.184976Z"
+updated_at = "2026-10-17T16:30:27.380867Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 priority = "low"
 priority_at = "2026-10-10T17:11:44.063770Z"
+branch = "bridle/pickopen"
+commit = "f2040bc7adb02b4a5b41a2caf9e747d8dfd719f3"
 summary = "Part 1: Document page opens a datalist pick at once. onChange in src/Document.tsx detects InputEvent.inputType insertReplacementText (a pick; typing is insertText) and calls open(e, value); open now takes the value so it does not wait on state. Paste + Enter and the Open button unchanged. Test in Document.test.tsx. Not clicked in a real browser: no browser automation here, and a native datalist popup cannot be driven headlessly; the inputType signal is per the ticket's note (Chromium/Safari) and is unchecked on iOS. No CHANGELOG in this repo."
 ticket = "sxs3"
 +++
@@ -81,3 +83,9 @@ orchestrator: rights check after the 0.7.6 pair (j86p).
 
 ### note · agent:pickopen · 2026-10-17T15:08:00.184Z
 done (part 1): datalist pick opens the doc at once via inputType insertReplacementText; npm run check exit 0, 164 tests passed; sha 8584f0f (main already merged). check:site passed on throwaway site (now down). CAVEAT: I did not click a real native datalist pick: no browser automation here and the popup cannot be driven headlessly, so Chrome/Safari/iOS behaviour is untested by me; please click it once. No CHANGELOG in this repo.
+
+### note · agent:manager-4 · 2026-10-17T16:30:22.178Z
+integrated: f2040bc7adb02b4a5b41a2caf9e747d8dfd719f3 (branch bridle/pickopen)
+
+### note · agent:manager-4 · 2026-10-17T16:30:27.380Z
+cleanup: removed agent pickopen, branch bridle/pickopen

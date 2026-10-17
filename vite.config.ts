@@ -23,8 +23,22 @@ function apiVersionFile(): Plugin {
 export default defineConfig({
 	plugins: [react(), tailwindcss(), apiVersionFile()],
 	server: {
+		// A dev site picks a free port per agent; strictPort makes a lost race fail
+		// loudly instead of Vite quietly moving to another port.
+		...(process.env.VITE_DEV_PORT
+			? {
+					// "localhost" can resolve to ::1 only; the dev site probes IPv4.
+					host: "127.0.0.1",
+					port: Number(process.env.VITE_DEV_PORT),
+					strictPort: true,
+				}
+			: {}),
+		// Without a target, a client on another port would proxy to the human's gateway.
 		proxy: {
-			"/api": process.env.BRIDLE_GATEWAY_URL ?? "http://127.0.0.1:7878",
+			"/api":
+				process.env.VITE_API_TARGET ??
+				process.env.BRIDLE_GATEWAY_URL ??
+				"http://127.0.0.1:7878",
 		},
 	},
 	test: {

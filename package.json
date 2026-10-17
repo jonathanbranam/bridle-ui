@@ -9,7 +9,8 @@
 		"check": "biome check . && tsc --noEmit && (command -v bridle >/dev/null && npm run check:specs || echo \"bridle not on PATH: skipping check:specs\") && vitest run && vite build",
 		"install-ui": "node scripts/install-ui.mjs",
 		"sync-types": "node scripts/sync-types.mjs",
-		"check:specs": "bridle spec check --require-ids"
+		"check:specs": "bridle spec check --require-ids",
+		"check:site": "node scripts/check-site.mjs"
 	},
 	"dependencies": {
 		"react": "^19.3.0",

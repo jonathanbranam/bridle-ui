@@ -39,6 +39,20 @@ npm run check   # biome check + tsc --noEmit + vitest run + vite build: must pas
 npm run dev     # Vite dev server, /api proxied to the gateway
 ```
 
+## Verification
+
+A task that changes what the user sees is not done until you have used it in a browser, on a
+throwaway site of your own (never the human's gateway or data):
+
+```
+bridle dev site up --ui .      # daemons, gateway and this dev server on free ports; prints URL and login
+npm run check:site -- .agent-site/<name>/site.json   # asserts the fixture facts through the UI port
+bridle dev site down <name>    # when done
+```
+
+`vite.config.ts` reads `VITE_DEV_PORT` (strictPort) and `VITE_API_TARGET`; the site sets both.
+Say in your done message what you clicked and saw.
+
 ## Conventions
 
 - Keep it small (YAGNI): v1 is to-dos and decisions only. No state library, no router until a

@@ -2,13 +2,15 @@
 id = "ui-qfur"
 title = "The human edits or deletes their own document comments until another role replies (unresolved threads)"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-09T21:27:28.751Z"
-updated_at = "2026-10-17T19:13:54.710024Z"
+updated_at = "2026-10-17T19:14:21.602454Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
 priority = "low"
 priority_at = "2026-10-09T21:27:31.271333Z"
+branch = "bridle/editown"
+commit = "c90288306610990bb452c66a7c6f8cb07ed89ffa"
 summary = "On the Document page, each human entry in an unresolved thread with no other principal's entry after it gets Edit and Delete entry buttons (src/Document.tsx; logic in src/doc/comments.ts: threadEntries, editEntry, deleteEntry). Resolved threads and entries followed by an agent reply stay read-only. Deleting the only entry deletes the thread; deleting the first of several promotes the next entry to the header; next_comment_id is pinned so it never drops (unit-tested). The [sent] question: an edit sets the entry's mark to [pending <stamp>], which the daemon's pending_threads already resends, so no bridle-side change is needed. Not changed: deleteThread (resolved threads) does not pin the counter. Browser-checked on a throwaway site with playwright-cli: edit saved with pending mark, delete first entry promoted the second, delete last removed the thread, thread ending in an agent reply showed no buttons."
 ticket = "qfur"
 +++
@@ -119,3 +121,9 @@ Browser check (playwright-cli, throwaway site editown, acme-docs doc with two th
 
 ### note · agent:editown · 2026-10-17T19:13:54.710Z
 done: edit/delete own entries in open threads, browser-checked; check exit 0, 170 tests; a1e2edc (main already merged)
+
+### note · agent:manager-4 · 2026-10-17T19:14:18.699Z
+integrated: c90288306610990bb452c66a7c6f8cb07ed89ffa (branch bridle/editown)
+
+### note · agent:manager-4 · 2026-10-17T19:14:21.602Z
+cleanup: removed agent editown, branch bridle/editown

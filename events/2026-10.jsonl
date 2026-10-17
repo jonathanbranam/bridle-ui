@@ -309,3 +309,4 @@
 {"actor":"agent:manager-3","at":"2026-10-17T15:05:17.508959Z","from":"planned","task":"ui-3mxz","to":"integrated"}
 {"actor":"agent:manager-4","at":"2026-10-17T16:30:22.178816Z","from":"planned","task":"ui-sxs3","to":"integrated"}
 {"actor":"external:orchestrator","at":"2026-10-17T17:45:14.594294Z","from":"pending","task":"ui-nvea","to":"open"}
+{"actor":"agent:manager-4","at":"2026-10-17T19:14:18.699640Z","from":"planned","task":"ui-qfur","to":"integrated"}

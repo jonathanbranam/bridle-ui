@@ -2,9 +2,9 @@
 id = "ui-sxs3"
 title = "Picking a document from the Document page's dropdown opens it (no Open click); a bridle-ui cleanups theme"
 kind = "feature"
-state = "pending"
+state = "open"
 created_at = "2026-10-10T17:11:08.806Z"
-updated_at = "2026-10-17T06:07:02.580503Z"
+updated_at = "2026-10-17T11:36:26.017456Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 priority = "low"

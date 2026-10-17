@@ -9,7 +9,7 @@ repos: [bridle-ui]
 changes: []
 specs: []
 blocked_by: []
-related: [ui-utp5]
+related: [ui-utp5, br-tj7q]
 ---
 
 ## The ask
@@ -59,3 +59,12 @@ epic br-kx5u in the UI), verbatim:
 
 Open for the human: the shape of the page (TOC always or only when long; tabs vs one scrolling
 page). A design pass comes first, once the human has reviewed this.
+
+## Part of epic br-tj7q (2026-10-16)
+
+The human, 2026-10-16 ~10:30 PM ET, to advisor (product-manager): "I want UI as part of this. I
+want attachments as tabs or document picker inside a ticket." and "where is the ticket to combine
+task and ticket in the UI? File that here as well". This ticket is the UI part of bridle epic
+br-tj7q (change stages on every ticket): one ticket page with the document, state and thread,
+plus the ticket's attachments (proposal, design, specs, tasks and other files) as tabs or a
+document picker. Designed with br-tj7q's design pass.

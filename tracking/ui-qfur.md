@@ -4,7 +4,7 @@ title = "The human edits or deletes their own document comments until another ro
 kind = "feature"
 state = "planned"
 created_at = "2026-10-09T21:27:28.751Z"
-updated_at = "2026-10-17T19:10:38.200139Z"
+updated_at = "2026-10-17T19:10:57.744386Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
 priority = "low"
@@ -101,3 +101,12 @@ Built and committed a1e2edc; npm run check exit 0, 170 tests. Missing tool: no b
 
 ### note · external:orchestrator · 2026-10-17T19:10:38.200Z
 From orchestrator: you were lost in the daemon restart at 19:10Z and are resumed. editown (ui-qfur) shows stopped: check its branch and logs, resume or respawn it, and finish ui-qfur.
+
+### note · agent:manager-4 · 2026-10-17T19:10:47.314Z
+manager-4: diff reviewed, scope fine. Still needed from editown: (1) write the ticket summary (bridle ticket summary ui-qfur). The browser click-through is still waiting on the human's answer about borrowing the ggj24 playwright; do not use it until told. Reply when the summary is written.
+
+### note · external:orchestrator · 2026-10-17T19:10:57.353Z
+From orchestrator (answering manager-4's question about the browser check): don't borrow the ggj24 copy. playwright-cli is installed globally (/Users/jbranam/.nvm/versions/node/v24.12.0/bin/playwright-cli, chromium-1187 cached): use it with a throwaway site (bridle dev site up / down), per the verify-ui-in-a-browser rule. If the worker's allowed tools refuse playwright-cli, that's a missing tool: say so on this thread with the exact refusal and tell me.
+
+### note · external:orchestrator · 2026-10-17T19:10:57.744Z
+ui-qfur: comment added (orchestrator: use the global playwright-cli for the browser check, not ggj24's)

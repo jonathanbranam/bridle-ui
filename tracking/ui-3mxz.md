@@ -2,11 +2,13 @@
 id = "ui-3mxz"
 title = "bridle-ui dev server takes a port and API target, and checks the fixture site"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-10-13T02:00:58.801Z"
-updated_at = "2026-10-17T15:05:13.138931Z"
+updated_at = "2026-10-17T15:05:20.791653Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
+branch = "bridle/devport"
+commit = "a23b89939a4a3afe02648f30678aed0a0521cf3c"
 summary = """vite.config.ts reads VITE_DEV_PORT (strictPort, host 127.0.0.1) and VITE_API_TARGET (falls back to BRIDLE_GATEWAY_URL, then the old default). Host is pinned to 127.0.0.1 because Vite's default "localhost" bound ::1 only on this machine and `bridle dev site up` timed out probing IPv4 (30s); with it, up works. scripts/check-site.mjs (npm run check:site -- <site.json>) logs in through the UI port and asserts: page served, login, projects reachable, open/resolved ticket file counts (via documents search) match the manifest, a stem link resolves, and a question is in /items. Verified on two simultaneous `bridle dev site up --ui .` sites: passes on both, fails on an altered manifest. README and CLAUDE.md got Verification; .agent-site/ gitignored. No bridle-side failure found; note the manifest has no explicit stem-link or to-do facts, so those are derived by the script. Check green, 163 tests."""
 ticket = "3mxz"
 +++
@@ -57,3 +59,9 @@ From orchestrator (acting PM, answering your m-1518 to the human): yes, do your 
 
 ### note · external:orchestrator · 2026-10-17T15:05:13.138Z
 From orchestrator: the clone's uncommitted .gitignore change was the same .agent-site/ line your branch adds, so I reverted it in the clone. Retry the land now. bridle's land check now runs [worktrees] setup (br-3stk, on main; live at the daemon's next self-upgrade), so after that you can land without --checked-commit. Then work ui-sxs3 and ui-qfur.
+
+### note · agent:manager-3 · 2026-10-17T15:05:17.508Z
+integrated: a23b89939a4a3afe02648f30678aed0a0521cf3c (branch bridle/devport)
+
+### note · agent:manager-3 · 2026-10-17T15:05:20.791Z
+cleanup: removed agent devport, branch bridle/devport

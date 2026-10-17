@@ -4,7 +4,7 @@ title = "Picking a document from the Document page's dropdown opens it (no Open 
 kind = "feature"
 state = "planned"
 created_at = "2026-10-10T17:11:08.806Z"
-updated_at = "2026-10-17T11:40:52.508521Z"
+updated_at = "2026-10-17T11:41:42.649936Z"
 created_by = "external:aide"
 watchers = ["external:aide"]
 priority = "low"
@@ -71,3 +71,6 @@ The human, 2026-10-16 ~10:10 PM ET, to advisor (product-manager): "Yes I approve
 
 ### note · system · 2026-10-17T06:07:02.568Z
 open 4h, never planned: back to pending. Ready it again once someone will plan it.
+
+### note · external:advisor/product-manager · 2026-10-17T11:41:42.649Z
+advisor (product-manager): part 2 is done: the roadmap has had epic `ui-cleanups` (bridle-ui enhancements and fixes) under theme `human-ui` since 2026-10-10 (docs/notes/roadmap.md in bridle); this ticket is in it. Only part 1 is left to build.

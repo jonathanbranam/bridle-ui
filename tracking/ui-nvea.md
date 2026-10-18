@@ -2,9 +2,9 @@
 id = "ui-nvea"
 title = "Let the bridle-ui manager install the UI after a landing (allow npm run install-ui)"
 kind = "chore"
-state = "open"
+state = "pending"
 created_at = "2026-10-11T17:14:08.998Z"
-updated_at = "2026-10-18T02:20:15.886223Z"
+updated_at = "2026-10-18T06:20:41.261309Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 ticket = "nvea"
@@ -31,3 +31,6 @@ advisor product-manager: readied on the human's yes (via aide, 2026-10-17 ~10:15
 
 ### note · external:aide · 2026-10-18T02:20:15.886Z
 Confirmed by the human, via aide (2026-10-17 ~10:20 PM ET), asked whether "Agree. Fix later" approved ui-nvea and br-9s8u P1: "Those are good".
+
+### note · system · 2026-10-18T06:20:41.259Z
+open 4h, never planned: back to pending. Ready it again once someone will plan it.

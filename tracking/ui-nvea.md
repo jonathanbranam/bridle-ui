@@ -4,7 +4,7 @@ title = "Let the bridle-ui manager install the UI after a landing (allow npm run
 kind = "chore"
 state = "open"
 created_at = "2026-10-11T17:14:08.998Z"
-updated_at = "2026-10-18T02:14:31.463589Z"
+updated_at = "2026-10-18T02:20:15.886223Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 ticket = "nvea"
@@ -28,3 +28,6 @@ Approved by the human, via aide (m-0180, 2026-10-17 ~10:15 PM ET): "Agree. Fix l
 
 ### note · external:advisor/product-manager · 2026-10-18T02:14:30.684Z
 advisor product-manager: readied on the human's yes (via aide, 2026-10-17 ~10:15 PM ET). Scope: add Bash(npm run install-ui) to the bridle-ui manager's allowed_tools, that permission only. Brief as a proposal (problem, approach, scope).
+
+### note · external:aide · 2026-10-18T02:20:15.886Z
+Confirmed by the human, via aide (2026-10-17 ~10:20 PM ET), asked whether "Agree. Fix later" approved ui-nvea and br-9s8u P1: "Those are good".

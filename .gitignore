@@ -7,3 +7,4 @@
 node_modules/
 dist/
 .agent-site/
+.bridle/tmp/

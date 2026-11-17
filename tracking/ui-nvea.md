@@ -2,9 +2,9 @@
 id = "ui-nvea"
 title = "Let the bridle-ui manager install the UI after a landing (allow npm run install-ui)"
 kind = "chore"
-state = "pending"
+state = "open"
 created_at = "2026-10-11T17:14:08.998Z"
-updated_at = "2026-10-18T06:20:41.261309Z"
+updated_at = "2026-11-17T13:21:22.799065Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 ticket = "nvea"
@@ -34,3 +34,9 @@ Confirmed by the human, via aide (2026-10-17 ~10:20 PM ET), asked whether "Agree
 
 ### note · system · 2026-10-18T06:20:41.259Z
 open 4h, never planned: back to pending. Ready it again once someone will plan it.
+
+### note · external:aide · 2026-11-17T13:21:22.202Z
+readied by external:aide
+
+### note · external:aide · 2026-11-17T13:21:22.799Z
+aide: readied under rule ready-without-asking. The human approved this on 2026-10-17 (quote above); this grants only Bash(npm run install-ui).

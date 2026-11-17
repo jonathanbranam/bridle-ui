@@ -4,7 +4,7 @@ title = "Let the bridle-ui manager install the UI after a landing (allow npm run
 kind = "chore"
 state = "pending"
 created_at = "2026-10-11T17:14:08.998Z"
-updated_at = "2026-11-17T17:21:37.368751Z"
+updated_at = "2026-11-17T22:39:49.074367Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 ticket = "nvea"
@@ -43,3 +43,6 @@ aide: readied under rule ready-without-asking. The human approved this on 2026-1
 
 ### note · system · 2026-11-17T17:21:37.367Z
 open 4h, never planned: back to pending. Ready it again once someone will plan it.
+
+### note · external:orchestrator · 2026-11-17T22:39:49.074Z
+Orchestrator, 2026-11-17: tried the one-line edit; Claude Code auto mode refused it as widening an agent's permissions. Planning won't help (no bridle-ui manager runs, and a worker would hit the same refusal). Steps sent to the human via aide (m-0755): add "Bash(npm run install-ui)" after "Bash(gh run *)" in .bridle/config.toml line 56, commit only that file, push, bridle --project bridle-ui daemon restart.

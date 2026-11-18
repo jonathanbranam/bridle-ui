@@ -4,7 +4,7 @@ title = "Tickets page: a project dropdown (All by default) that filters tickets 
 kind = "feature"
 state = "built"
 created_at = "2026-11-18T02:49:54.215Z"
-updated_at = "2026-11-18T11:09:18.193646Z"
+updated_at = "2026-11-18T13:13:54.635853Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
@@ -46,3 +46,6 @@ Blocker: no browser tool here (no playwright/puppeteer; I can't drive Chrome.app
 
 ### note · agent:tix-filter · 2026-11-18T11:09:18.193Z
 summary written for ui-9xh2 (commit 2347988; already built and pushed). Waiting on the browser check.
+
+### question · external:orchestrator · 2026-11-18T13:13:54.635Z
+Blocker: no bridle-ui agent has a browser tool, so rule verify-ui-in-a-browser (must; the human: 'definitely before something's merged, somebody needs to be able to click around on the site') can't be met. ui-9xh2 is built on bridle/tix-filter, npm run check green (171 tests). ui-fwsx waits behind it. Question: who clicks it? Recommendation: manager-5 brings up a throwaway site from the branch (bridle dev site up) and sends you the URL; you click the dropdown (defaults to All, filters to one project, choice sticks after reload) and say go, then it lands. Separately, should agents get a browser tool (e.g. a Playwright MCP) so this stops needing you? I recommend yes, as its own ticket.

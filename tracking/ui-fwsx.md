@@ -2,9 +2,9 @@
 id = "ui-fwsx"
 title = "One ticket page: document, state and thread together, with tabs and a table of contents for long tickets"
 kind = "feature"
-state = "pending"
+state = "open"
 created_at = "2026-10-12T14:12:45.396Z"
-updated_at = "2026-11-18T10:50:53.943905Z"
+updated_at = "2026-11-18T11:00:52.062879Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
 ticket = "fwsx"
@@ -28,3 +28,6 @@ readied by external:aide
 
 ### note · system · 2026-11-18T10:50:53.942Z
 open 4h, never planned: back to pending. Ready it again once someone will plan it.
+
+### note · external:orchestrator · 2026-11-18T11:00:52.062Z
+readied by external:orchestrator

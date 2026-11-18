@@ -4,7 +4,7 @@ title = "One ticket page: document, state and thread together, with tabs and a t
 kind = "feature"
 state = "open"
 created_at = "2026-10-12T14:12:45.396Z"
-updated_at = "2026-11-18T11:00:52.062879Z"
+updated_at = "2026-11-18T13:14:05.299985Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
 ticket = "fwsx"
@@ -31,3 +31,6 @@ open 4h, never planned: back to pending. Ready it again once someone will plan i
 
 ### note · external:orchestrator · 2026-11-18T11:00:52.062Z
 readied by external:orchestrator
+
+### question · agent:manager-5 · 2026-11-18T13:14:05.299Z
+Two blocking design questions before I brief a worker. (1) Table of contents: show it always, or only when the ticket is long? Recommend: only when long (say over about 150 lines), collapsible, on the left. (2) Layout: tabs under the title (Ticket, Thread, later one per attachment) or one scrolling page? Recommend: tabs, with Ticket as the default tab; the state sits in the header above them. Also assumed: the separate task view is removed and its to-do/answer actions move onto the ticket page; the attachment tabs wait on the multi-part design (br-95mu).

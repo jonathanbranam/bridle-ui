@@ -7,3 +7,5 @@
 {"actor":"system","at":"2026-11-18T06:50:20.569098Z","from":"open","task":"ui-9xh2","to":"pending"}
 {"actor":"external:aide","at":"2026-11-18T06:50:40.578769Z","from":"pending","task":"ui-9xh2","to":"open"}
 {"actor":"external:aide","at":"2026-11-18T06:50:44.168125Z","from":"pending","task":"ui-fwsx","to":"open"}
+{"actor":"system","at":"2026-11-18T10:50:53.943905Z","from":"open","task":"ui-fwsx","to":"pending"}
+{"actor":"system","at":"2026-11-18T10:50:53.949555Z","from":"open","task":"ui-9xh2","to":"pending"}

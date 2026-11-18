@@ -85,6 +85,26 @@ const app = (path: string) =>
 		</MemoryRouter>,
 	);
 
+test("the project dropdown filters the list and persists across reloads", async () => {
+	localStorage.clear();
+	gateway({ "x-1111": detail("x-1111", "planned") });
+	app("/tickets");
+	expect(await screen.findByText("Title x-1111")).toBeInTheDocument();
+	expect(screen.getByRole("heading", { name: "q" })).toBeInTheDocument();
+	await userEvent.selectOptions(screen.getByLabelText("Project"), "q");
+	expect(screen.queryByText("Title x-1111")).not.toBeInTheDocument();
+	expect(screen.queryByRole("heading", { name: "p" })).not.toBeInTheDocument();
+	cleanup();
+	app("/tickets");
+	await screen.findByRole("heading", { name: "q" });
+	expect(screen.getByLabelText("Project")).toHaveValue("q");
+	cleanup();
+	localStorage.setItem("tickets.project", "gone");
+	app("/tickets");
+	expect(await screen.findByText("Title x-1111")).toBeInTheDocument();
+	expect(screen.getByLabelText("Project")).toHaveValue("");
+});
+
 test("the list groups open tickets by state and names the worker", async () => {
 	gateway({
 		"x-1111": detail("x-1111", "working", {
@@ -105,7 +125,7 @@ test("the list groups open tickets by state and names the worker", async () => {
 test("show closed refetches with all", async () => {
 	const f = gateway({ "x-4444": detail("x-4444", "integrated") });
 	app("/tickets");
-	await screen.findByText("p");
+	await screen.findByRole("heading", { name: "p" });
 	await userEvent.click(screen.getByLabelText("Show closed"));
 	expect(await screen.findByText("Title x-4444")).toBeInTheDocument();
 	expect(f).toHaveBeenCalledWith(

@@ -2,11 +2,14 @@
 id = "ui-9xh2"
 title = "Tickets page: a project dropdown (All by default) that filters tickets to one project; the choice sticks"
 kind = "feature"
-state = "planned"
+state = "claimed"
 created_at = "2026-11-18T02:49:54.215Z"
-updated_at = "2026-11-18T11:07:13.745590Z"
+updated_at = "2026-11-18T11:07:25.731413Z"
 created_by = "external:aide"
-watchers = ["external:aide"]
+watchers = [
+    "external:aide",
+    "agent:tix-filter",
+]
 ticket = "9xh2"
 +++
 

@@ -2,16 +2,15 @@
 id = "ui-9xh2"
 title = "Tickets page: a project dropdown (All by default) that filters tickets to one project; the choice sticks"
 kind = "feature"
-state = "built"
+state = "planned"
 created_at = "2026-11-18T02:49:54.215Z"
-updated_at = "2026-11-21T18:55:21.003401Z"
+updated_at = "2026-11-21T19:08:25.303401Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
     "agent:tix-filter",
 ]
 branch = "bridle/tix-filter"
-commit = "2347988"
 summary = "Tickets page now has a Project dropdown (All default, options from the projects already fetched). Filtering is client-side over the loaded lists; choice stored in localStorage key tickets.project, falls back to All if the project is gone. Code in src/Tickets.tsx, test in src/Tickets.test.tsx (an existing query became a heading role since 'p' is now also an option). No CHANGELOG.md in this repo. Browser click-through not done: no browser tool; only vitest and check:site. Commit 2347988."
 ticket = "9xh2"
 +++
@@ -55,3 +54,6 @@ From the human, via aide (2026-11-21 ~1:50 PM ET), on the orchestrator's second 
 
 ### note · external:aide · 2026-11-21T18:55:21.003Z
 Browser tool for workers submitted to bridle as br-4bhp.
+
+### note · agent:manager-6 · 2026-11-21T19:08:25.303Z
+sent back: Needs a browser click-through (dropdown starts on All, filters to one project, survives reload, narrow and wide) per orchestrator m-1721

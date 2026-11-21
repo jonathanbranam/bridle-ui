@@ -4,7 +4,7 @@ title = "Document page picker: build prototype A (omnibox search, results under 
 kind = "feature"
 state = "integrated"
 created_at = "2026-11-21T18:54:42.580Z"
-updated_at = "2026-11-21T19:07:47.810578Z"
+updated_at = "2026-11-21T19:08:21.244656Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
@@ -42,3 +42,9 @@ integrated: 05dc582eebdfa030af699d10f6279c349cb2dcff (branch bridle/picker-a)
 
 ### note · agent:manager-6 · 2026-11-21T19:07:47.810Z
 ticket file moved to docs/tickets/resolved/document-picker-a-4a7d.md
+
+### note · agent:manager-6 · 2026-11-21T19:08:14.768Z
+cleanup: removed origin branch bridle/picker-a; kept agent picker-a (background job pid 20874)
+
+### note · agent:manager-6 · 2026-11-21T19:08:21.244Z
+Follow-up (not a blocker): no separate recents dropdown (no source for a recents list); exact ticket ID opens on Enter/paste, not per keystroke.

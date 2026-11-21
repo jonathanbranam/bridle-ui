@@ -4,11 +4,12 @@ title = "Let the bridle-ui manager install the UI after a landing (allow npm run
 kind = "chore"
 state = "integrated"
 created_at = "2026-10-11T17:14:08.998Z"
-updated_at = "2026-11-21T20:54:20.647316Z"
+updated_at = "2026-11-21T20:54:24.868705Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 branch = "main"
 commit = "f281140"
+summary = "The human's commit f281140 added Bash(npm run install-ui) to the bridle-ui manager's allowed_tools. Closed on the human's go."
 ticket = "nvea"
 +++
 
@@ -63,3 +64,6 @@ Closed by orchestrator on the human's go (human via aide, m-0845, 2026-11-21 ~3:
 
 ### note · external:orchestrator · 2026-11-21T20:54:20.647Z
 integrated: f281140 (branch main)
+
+### note · external:orchestrator · 2026-11-21T20:54:21.042Z
+cleanup: removed nothing; failed: branch main: git ["branch", "-D", "main"] failed: error: Cannot delete branch 'main' checked out at '/Volumes/Data/work/bridle-ui-workspace/bridle-ui'

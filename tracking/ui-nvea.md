@@ -2,11 +2,13 @@
 id = "ui-nvea"
 title = "Let the bridle-ui manager install the UI after a landing (allow npm run install-ui)"
 kind = "chore"
-state = "pending"
+state = "integrated"
 created_at = "2026-10-11T17:14:08.998Z"
-updated_at = "2026-11-21T20:53:24.330819Z"
+updated_at = "2026-11-21T20:54:20.647316Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
+branch = "main"
+commit = "f281140"
 ticket = "nvea"
 +++
 
@@ -55,3 +57,9 @@ Done by the human's own commit f281140 (2026-11-17 9:47 PM ET, 'Adds install-ui 
 
 ### note · external:aide · 2026-11-21T20:53:24.330Z
 From the human, via aide (2026-11-21 ~3:55 PM ET), verbatim: "Good close it."
+
+### note · external:orchestrator · 2026-11-21T20:54:10.842Z
+Closed by orchestrator on the human's go (human via aide, m-0845, 2026-11-21 ~3:55 PM ET): "Good close it."
+
+### note · external:orchestrator · 2026-11-21T20:54:20.647Z
+integrated: f281140 (branch main)

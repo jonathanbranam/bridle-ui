@@ -33,3 +33,5 @@
 {"actor":"agent:short-doc","at":"2026-11-21T19:38:08.580995Z","from":"claimed","task":"ui-5bev","to":"built"}
 {"actor":"agent:manager-6","at":"2026-11-21T19:38:15.500386Z","from":"built","task":"ui-5bev","to":"dropped"}
 {"actor":"agent:manager-6","at":"2026-11-21T19:38:21.276944Z","from":"open","task":"ui-gb7q","to":"planned"}
+{"actor":"agent:todo-links","at":"2026-11-21T19:43:12.138700Z","from":"claimed","task":"ui-gb7q","to":"built"}
+{"actor":"agent:manager-6","at":"2026-11-21T19:43:22.368503Z","from":"built","task":"ui-gb7q","to":"integrated"}

@@ -2,14 +2,17 @@
 id = "ui-gb7q"
 title = "To-do deep links: route /p/<project>/todos/<id> and redirect a task page that loads a to-do (UI half of br-bnfs)"
 kind = "fix"
-state = "claimed"
+state = "integrated"
 created_at = "2026-10-18T13:34:06.141Z"
-updated_at = "2026-11-21T19:38:39.836429Z"
+updated_at = "2026-11-21T19:43:28.650287Z"
 created_by = "external:advisor/product-manager"
 watchers = [
     "external:advisor/product-manager",
     "agent:todo-links",
 ]
+branch = "bridle/todo-links"
+commit = "02cac9d0ec69f70f76a08f63fb63fd51a9da90d7"
+summary = "Added route /p/<project>/todos/<id> (ItemsView; the matching to-do, by task id or ticket id, gets data-wanted-todo, a ring and scrollIntoView after load). TicketView redirects to it when the loaded detail has todo: true (covers typed-in IDs and the jump box). todoHref in src/doc/links.ts; synced generated types (TaskDetail/TaskSummary gained todo; the sync also added unrelated new Account*/Session* types). url-scheme.md Final formats and redirects updated. bridle link already prints this form, so no bridle-repo task needed. Verified in a browser at 375 and 1280 wide (redirect from /tickets/ad-n3pc and from the typed ID on /tickets; highlighted item in view). Side finding NOT fixed: file-only ticket URL shows 'No ticket X' in the fixture; the fixture's ticket files have ids (ad-1a2b) not matching their file-name suffix (ad1a), so the gateway link resolve finds nothing; likely a fixture issue, not investigated further. Note: the to-do title link on the to-do list still points at the ticket URL, which now bounces back to the to-do page."
 ticket = "gb7q"
 +++
 
@@ -30,3 +33,21 @@ submitted by external:advisor/product-manager
 
 ### note · external:orchestrator · 2026-11-21T19:30:57.858Z
 readied by external:orchestrator
+
+### note · agent:todo-links · 2026-11-21T19:43:12.106Z
+Added route /p/<project>/todos/<id> (ItemsView; the matching to-do, by task id or ticket id, gets data-wanted-todo, a ring and scrollIntoView after load). TicketView redirects to it when the loaded detail has todo: true (covers typed-in IDs and the jump box). todoHref in src/doc/links.ts; synced generated types (TaskDetail/TaskSummary gained todo; the sync also added unrelated new Account*/Session* types). url-scheme.md Final formats and redirects updated. bridle link already prints this form, so no bridle-repo task needed. Verified in a browser at 375 and 1280 wide (redirect from /tickets/ad-n3pc and from the typed ID on /tickets; highlighted item in view). Side finding NOT fixed: file-only ticket URL shows 'No ticket X' in the fixture; the fixture's ticket files have ids (ad-1a2b) not matching their file-name suffix (ad1a), so the gateway link resolve finds nothing; likely a fixture issue, not investigated further. Note: the to-do title link on the to-do list still points at the ticket URL, which now bounces back to the to-do page.
+
+### note · agent:todo-links · 2026-11-21T19:43:12.138Z
+built: 0eee8ce (branch bridle/todo-links)
+
+### note · agent:todo-links · 2026-11-21T19:43:12.985Z
+done: to-do route + redirect, checked at 375/1280 in browser; check exit 0, 175 tests; 0eee8ce
+
+### note · agent:manager-6 · 2026-11-21T19:43:22.368Z
+integrated: 02cac9d0ec69f70f76a08f63fb63fd51a9da90d7 (branch bridle/todo-links)
+
+### note · agent:manager-6 · 2026-11-21T19:43:22.614Z
+ticket file moved to docs/tickets/resolved/todo-deep-links-gb7q.md
+
+### note · agent:manager-6 · 2026-11-21T19:43:28.650Z
+cleanup: removed agent todo-links, origin branch bridle/todo-links, branch bridle/todo-links

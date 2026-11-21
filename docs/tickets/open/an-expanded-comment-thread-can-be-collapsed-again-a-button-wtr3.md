@@ -1,14 +1,14 @@
 ---
-id: wtr3
+id: ui-wtr3
 title: An expanded comment thread can be collapsed again (a [-] button)
 kind: bug
-opened: 2026-10-09
-filed_by: external:aide
+created: 2026-10-09
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: [5zrr, ha6m]
+blocked_by: []
+related: [ui-5zrr, ui-ha6m]
 tasks: [ui-wtr3]
 ---
 

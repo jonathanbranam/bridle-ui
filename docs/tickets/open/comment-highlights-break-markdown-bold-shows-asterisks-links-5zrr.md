@@ -1,14 +1,14 @@
 ---
-id: 5zrr
+id: ui-5zrr
 title: "Comment highlights break markdown: bold shows asterisks, links show raw markdown and stop working"
 kind: bug
-opened: 2026-10-09
-filed_by: external:aide
+created: 2026-10-09
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: [ha6m, wtr3]
+blocked_by: []
+related: [ui-ha6m, ui-wtr3]
 tasks: [ui-5zrr]
 ---
 

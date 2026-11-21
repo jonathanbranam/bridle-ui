@@ -1,14 +1,14 @@
 ---
-id: q23d
+id: ui-q23d
 title: Text boxes grow with their text, up to about 10 lines (comment box shows 2 lines on mobile)
 kind: feature
-opened: 2026-10-08
-filed_by: external:aide
+created: 2026-10-08
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: []
+blocked_by: []
+related: []
 tasks: [ui-q23d]
 ---
 

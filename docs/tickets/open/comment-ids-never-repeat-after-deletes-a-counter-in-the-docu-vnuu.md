@@ -1,14 +1,14 @@
 ---
-id: vnuu
+id: ui-vnuu
 title: "Comment IDs never repeat after deletes: a counter in the document's front matter"
 kind: bug
-opened: 2026-10-09
-filed_by: external:aide
+created: 2026-10-09
+created_by: external:aide
 repos: [bridle-ui, bridle]
 changes: []
 specs: []
-needs: []
-see: [ha6m]
+blocked_by: []
+related: [ui-ha6m]
 tasks: [ui-vnuu]
 ---
 

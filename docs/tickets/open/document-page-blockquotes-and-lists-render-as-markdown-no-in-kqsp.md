@@ -1,14 +1,14 @@
 ---
-id: kqsp
+id: ui-kqsp
 title: "Document page: blockquotes and lists render as markdown (no indent, no numbers today)"
 kind: bug
-opened: 2026-10-09
-filed_by: external:aide
+created: 2026-10-09
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: [hqe4, 5zrr]
+blocked_by: []
+related: [ui-hqe4, ui-5zrr]
 tasks: [ui-kqsp]
 ---
 

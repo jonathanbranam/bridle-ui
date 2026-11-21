@@ -1,14 +1,14 @@
 ---
-id: 9hq8
+id: ui-9hq8
 title: "Documents of projects on another machine (the NUC): read and comment in bridle-ui"
 kind: feature
-opened: 2026-10-08
-filed_by: external:aide
+created: 2026-10-08
+created_by: external:aide
 repos: [bridle-ui, bridle]
 changes: []
 specs: []
-needs: []
-see: [u2df]
+blocked_by: []
+related: [ui-u2df]
 tasks: [ui-9hq8]
 ---
 

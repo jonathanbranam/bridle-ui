@@ -1,14 +1,14 @@
 ---
-id: 2kmw
+id: ui-2kmw
 title: "Task view: Done and Decline on a task claimed by the human, as on the to-do list"
 kind: feature
-opened: 2026-10-07
-filed_by: external:aide
+created: 2026-10-07
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: []
+blocked_by: []
+related: []
 tasks: [ui-2kmw]
 ---
 

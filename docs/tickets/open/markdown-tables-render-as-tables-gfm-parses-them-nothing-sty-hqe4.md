@@ -1,14 +1,14 @@
 ---
-id: hqe4
+id: ui-hqe4
 title: "Markdown tables render as tables: the Document page joins table rows into one line; nothing styles tables"
 kind: bug
-opened: 2026-10-08
-filed_by: external:aide
+created: 2026-10-08
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: []
+blocked_by: []
+related: []
 tasks: [ui-hqe4]
 ---
 

@@ -1,14 +1,14 @@
 ---
-id: bpsd
+id: ui-bpsd
 title: "Commenting: selection stays native (copy works); a [ + ] button beside it opens the comment box"
 kind: bug
-opened: 2026-10-08
-filed_by: external:aide
+created: 2026-10-08
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: []
+blocked_by: []
+related: []
 tasks: [ui-bpsd]
 ---
 

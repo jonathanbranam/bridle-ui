@@ -1,14 +1,14 @@
 ---
-id: tuj6
+id: ui-tuj6
 title: Comment box keeps the previous comment's text when opened for a new selection
 kind: bug
-opened: 2026-10-08
-filed_by: external:aide
+created: 2026-10-08
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: [bpsd]
+blocked_by: []
+related: [ui-bpsd]
 tasks: [ui-tuj6]
 ---
 

@@ -1,14 +1,14 @@
 ---
-id: ha6m
+id: ui-ha6m
 title: The human can delete a resolved comment thread (kept in git history)
 kind: feature
-opened: 2026-10-09
-filed_by: external:aide
+created: 2026-10-09
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: [5zrr, wtr3]
+blocked_by: []
+related: [ui-5zrr, ui-wtr3]
 tasks: [ui-ha6m]
 ---
 

@@ -1,14 +1,14 @@
 ---
-id: sxs3
+id: ui-sxs3
 title: Picking a document from the Document page's dropdown opens it (no Open click); a bridle-ui cleanups theme
 kind: feature
-opened: 2026-10-10
-filed_by: external:aide
+created: 2026-10-10
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: []
+blocked_by: []
+related: []
 tasks: [ui-sxs3]
 ---
 

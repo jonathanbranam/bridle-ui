@@ -1,14 +1,14 @@
 ---
-id: vhrb
+id: ui-vhrb
 title: A theme page (everything about one theme) and a roadmap page (epics in order) in the UI
 kind: feature
-opened: 2026-10-09
-filed_by: external:advisor/product-manager
+created: 2026-10-09
+created_by: external:advisor/product-manager
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: []
+blocked_by: []
+related: []
 tasks: [ui-vhrb]
 ---
 

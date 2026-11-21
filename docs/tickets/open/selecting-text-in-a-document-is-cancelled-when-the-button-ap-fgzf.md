@@ -1,14 +1,14 @@
 ---
-id: fgzf
+id: ui-fgzf
 title: Selecting text in a document is cancelled when the [ + ] button appears (Copy broken again)
 kind: bug
-opened: 2026-10-09
-filed_by: external:aide
+created: 2026-10-09
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: [bpsd, kqsp, 5zrr]
+blocked_by: []
+related: [ui-bpsd, ui-kqsp, ui-5zrr]
 tasks: [ui-fgzf]
 ---
 

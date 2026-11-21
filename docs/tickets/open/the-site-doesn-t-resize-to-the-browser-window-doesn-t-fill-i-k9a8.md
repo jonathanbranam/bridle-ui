@@ -1,14 +1,14 @@
 ---
-id: k9a8
+id: ui-k9a8
 title: "The site doesn't resize to the browser window: doesn't fill it, goes tiny with extra space"
 kind: bug
-opened: 2026-10-08
-filed_by: external:aide
+created: 2026-10-08
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: []
+blocked_by: []
+related: []
 tasks: [ui-k9a8]
 ---
 

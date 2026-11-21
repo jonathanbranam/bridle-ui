@@ -1,14 +1,14 @@
 ---
-id: ybka
+id: ui-ybka
 title: "Login: the username field doesn't capitalize or autocorrect on phones"
 kind: bug
-opened: 2026-10-09
-filed_by: external:aide
+created: 2026-10-09
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: []
+blocked_by: []
+related: []
 tasks: [ui-ybka]
 ---
 

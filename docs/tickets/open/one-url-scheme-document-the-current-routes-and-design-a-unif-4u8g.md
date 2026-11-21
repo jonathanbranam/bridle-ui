@@ -1,13 +1,13 @@
 ---
-id: 4u8g
+id: ui-4u8g
 title: "One URL scheme: document the current routes and design a unified, forward-looking deep-link scheme (for the human's review)"
 kind: arch-revision
-opened: 2026-10-06
+created: 2026-10-06
 repos: [bridle-ui, bridle]
 changes: []
 specs: []
-needs: []
-see: []
+blocked_by: []
+related: []
 tasks: [ui-4u8g]
 ---
 

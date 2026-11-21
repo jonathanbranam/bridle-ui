@@ -1,14 +1,14 @@
 ---
-id: qfur
+id: ui-qfur
 title: The human edits or deletes their own document comments until another role replies (unresolved threads)
 kind: feature
-opened: 2026-10-09
-filed_by: external:advisor/product-manager
+created: 2026-10-09
+created_by: external:advisor/product-manager
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: [ha6m, vnuu]
+blocked_by: []
+related: [ui-ha6m, ui-vnuu]
 tasks: [ui-qfur]
 ---
 

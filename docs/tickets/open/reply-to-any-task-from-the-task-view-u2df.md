@@ -1,14 +1,14 @@
 ---
-id: u2df
+id: ui-u2df
 title: Reply to any task from the task view
 kind: feature
-opened: 2026-10-08
-filed_by: external:aide
+created: 2026-10-08
+created_by: external:aide
 repos: [bridle-ui, bridle]
 changes: []
 specs: []
-needs: []
-see: [9hq8]
+blocked_by: []
+related: [ui-9hq8]
 tasks: [ui-u2df]
 ---
 

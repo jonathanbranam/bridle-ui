@@ -1,14 +1,14 @@
 ---
-id: 6tcv
+id: ui-6tcv
 title: "Copy buttons do nothing: the Clipboard API needs HTTPS and the site is plain HTTP"
 kind: bug
-opened: 2026-10-08
-filed_by: external:aide
+created: 2026-10-08
+created_by: external:aide
 repos: [bridle-ui]
 changes: []
 specs: []
-needs: []
-see: [bpsd]
+blocked_by: []
+related: [ui-bpsd]
 tasks: [ui-6tcv]
 ---
 

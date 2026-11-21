@@ -1,13 +1,13 @@
 ---
-id: 28em
+id: ui-28em
 title: Exact link formats for tasks, tickets, documents and specs, in every agent instruction; a rule that URL changes update them
 kind: feature
-opened: 2026-10-06
+created: 2026-10-06
 repos: [bridle-ui, bridle]
 changes: []
 specs: []
-needs: []
-see: []
+blocked_by: []
+related: []
 tasks: [ui-28em]
 ---
 

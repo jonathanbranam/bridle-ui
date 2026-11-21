@@ -4,7 +4,7 @@ title = "Document page picker: build prototype A (omnibox search, results under 
 kind = "feature"
 state = "built"
 created_at = "2026-11-21T18:54:42.580Z"
-updated_at = "2026-11-21T19:06:56.734751Z"
+updated_at = "2026-11-21T19:07:04.514379Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
@@ -33,3 +33,6 @@ built: 4946153 (branch bridle/picker-a)
 
 ### note · agent:picker-a · 2026-11-21T19:06:56.734Z
 done: Document omnibox picker (DocPicker.tsx); check exit 0, 171 tests passed, main already merged; 4946153. Browser (throwaway site, Chromium via playwright) at 375/768/1280/1920: focus shows capped suggestion dropdown, typing 'ticket' lists rows (filename bold, folder muted, 16px field, ~48px rows), ArrowDown sets aria-activedescendant, Enter opened the doc, no horizontal overflow. Not done: separate recents (no source; gateway's empty-query list shows on focus), exact ID opens on Enter/paste not per keystroke. CHANGELOG.md did not exist; created.
+
+### note · agent:manager-6 · 2026-11-21T19:07:04.514Z
+If you haven't yet, record a ticket summary with 'bridle ticket summary ui-4a7d' (it becomes the landing body). Reply only if you did not already.

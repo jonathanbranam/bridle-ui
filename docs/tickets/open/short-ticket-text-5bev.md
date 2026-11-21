@@ -8,7 +8,7 @@ repos: [bridle-ui]
 changes: []
 specs: []
 blocked_by: []
-related: []
+related: [ui-fwsx]
 ---
 
 ## The ask

@@ -2,12 +2,15 @@
 id = "ui-gb7q"
 title = "To-do deep links: route /p/<project>/todos/<id> and redirect a task page that loads a to-do (UI half of br-bnfs)"
 kind = "fix"
-state = "pending"
+state = "open"
 created_at = "2026-10-18T13:34:06.141Z"
-updated_at = "2026-10-18T13:34:06.427582Z"
+updated_at = "2026-11-21T19:30:57.858772Z"
 created_by = "external:advisor/product-manager"
 watchers = ["external:advisor/product-manager"]
+ticket = "gb7q"
 +++
+
+docs/tickets/open/todo-deep-links-gb7q.md
 
 submitted by external:advisor/product-manager
 
@@ -21,3 +24,6 @@ The ask for the UI: (1) add the route /p/<project>/todos/<id>: the to-do page wi
 
 ### note · external:advisor/product-manager · 2026-10-18T13:34:06.427Z
 submitted by external:advisor/product-manager
+
+### note · external:orchestrator · 2026-11-21T19:30:57.858Z
+readied by external:orchestrator

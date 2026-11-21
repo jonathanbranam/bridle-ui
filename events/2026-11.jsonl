@@ -26,3 +26,6 @@
 {"actor":"agent:manager-6","at":"2026-11-21T19:16:03.485856Z","from":"open","task":"ui-fwsx","to":"planned"}
 {"actor":"agent:ticket-page","at":"2026-11-21T19:23:13.138294Z","from":"claimed","task":"ui-fwsx","to":"built"}
 {"actor":"agent:manager-6","at":"2026-11-21T19:26:29.746683Z","from":"built","task":"ui-fwsx","to":"integrated"}
+{"actor":"external:orchestrator","at":"2026-11-21T19:30:57.858772Z","from":"pending","task":"ui-gb7q","to":"open"}
+{"actor":"human","at":"2026-11-21T19:30:59.772Z","from":"","task":"ui-5bev","to":"pending"}
+{"actor":"external:orchestrator","at":"2026-11-21T19:31:05.958029Z","from":"pending","task":"ui-5bev","to":"open"}

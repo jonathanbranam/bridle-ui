@@ -127,8 +127,7 @@ test("the open document comes from the query, and Open puts it there", async () 
 	expect(screen.getByLabelText("Document")).toHaveValue("docs/a.md");
 	// Open writes the query, so a refresh reopens the same document.
 	await user.clear(screen.getByLabelText("Document"));
-	await user.type(screen.getByLabelText("Document"), "docs/a.md");
-	await user.click(screen.getByRole("button", { name: "Open" }));
+	await user.type(screen.getByLabelText("Document"), "docs/a.md" + "{Enter}");
 	expect(await screen.findByText(/on feature/)).toBeInTheDocument();
 });
 

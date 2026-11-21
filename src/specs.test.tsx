@@ -123,8 +123,7 @@ steps.then(/^the "Clear search" button is enabled$/, () => {
 steps.given(/^an opened document$/, async () => {
 	renderDocument();
 	const user = userEvent.setup();
-	await user.type(screen.getByLabelText("Document"), "a.md");
-	await user.click(screen.getByRole("button", { name: "Open" }));
+	await user.type(screen.getByLabelText("Document"), "a.md" + "{Enter}");
 	await screen.findByText(/on feature/);
 });
 steps.when(/^the human selects text inside the body by touch$/, () => {

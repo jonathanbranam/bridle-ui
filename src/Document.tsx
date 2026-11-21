@@ -10,6 +10,7 @@ import {
 	writeDocument,
 } from "./api/client";
 import type { Document } from "./api/generated/Document";
+import { DocPicker } from "./DocPicker";
 import {
 	addComment,
 	addReply,
@@ -305,7 +306,6 @@ export function DocumentView({
 	const [idMatches, setIdMatches] = useState<IdMatch[]>([]);
 	const [captured, setCaptured] = useState<Captured>();
 	const tapping = useRef(false);
-	const pathInputRef = useRef<HTMLInputElement>(null);
 
 	const fail = useCallback(
 		(r: { notLoggedIn: boolean; error: string }) => {
@@ -543,7 +543,7 @@ export function DocumentView({
 		>
 			<div className="space-y-4">
 				{!initialPath && (
-					<form className="flex flex-wrap items-end gap-2" onSubmit={open}>
+					<div className="flex flex-wrap items-end gap-2">
 						<label className="flex flex-col text-sm">
 							Project
 							<select
@@ -560,49 +560,17 @@ export function DocumentView({
 									))}
 							</select>
 						</label>
-						<label className="flex min-w-64 flex-1 flex-col text-sm">
-							Document
-							<div className="flex items-center gap-1">
-								<input
-									ref={pathInputRef}
-									className="rounded border px-2 py-1 w-full"
-									list="document-matches"
-									placeholder="Search tickets and docs, or paste a ticket ID"
-									value={path}
-									onChange={(e) => {
-										setPath(e.target.value);
-										// A datalist pick arrives as a replacement, typing as an insertion:
-										// the pick opens the document at once, no Open click.
-										const picked =
-											(e.nativeEvent as InputEvent).inputType ===
-											"insertReplacementText";
-										if (picked) void open(e, e.target.value);
-									}}
-								/>
-								<button
-									type="button"
-									aria-label="Clear search"
-									disabled={!path}
-									onClick={() => {
-										setPath("");
-										setMatches([]);
-										pathInputRef.current?.focus();
-									}}
-									className="shrink-0 w-11 h-11 flex items-center justify-center rounded border text-red-600 hover:text-red-700 disabled:opacity-40 disabled:hover:text-red-600"
-								>
-									✕
-								</button>
-							</div>
-							<datalist id="document-matches">
-								{matches.map((m) => (
-									<option key={m} value={m} />
-								))}
-							</datalist>
-						</label>
-						<button type="submit" className="rounded border px-3 py-1">
-							Open
-						</button>
-					</form>
+						<div className="flex min-w-64 flex-1 flex-col text-sm">
+							<span aria-hidden="true">Document</span>
+							<DocPicker
+								value={path}
+								onChange={setPath}
+								matches={matches}
+								onPick={(p) => navigate(documentHref(project, p))}
+								onSubmit={(v) => void open({ preventDefault() {} }, v)}
+							/>
+						</div>
+					</div>
 				)}
 				{idMatches.length > 1 && (
 					<ul aria-label="Matching tickets" className="list-disc pl-5">

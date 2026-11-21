@@ -100,14 +100,14 @@ async function openDoc() {
 			</Routes>
 		</MemoryRouter>,
 	);
-	await user.type(screen.getByLabelText("Document"), "a.md");
-	await user.click(screen.getByRole("button", { name: "Open" }));
+	await user.type(screen.getByLabelText("Document"), "a.md" + "{Enter}");
 	await screen.findByText(/on feature/);
 	return user;
 }
 
-test("picking a datalist suggestion opens the document without an Open click", async () => {
+test("picking a result opens the document without an Enter or Open click", async () => {
 	stub();
+	const user = userEvent.setup();
 	render(
 		<MemoryRouter initialEntries={["/p/p/docs"]}>
 			<Routes>
@@ -118,19 +118,44 @@ test("picking a datalist suggestion opens the document without an Open click", a
 			</Routes>
 		</MemoryRouter>,
 	);
-	const field = screen.getByLabelText("Document");
+	const field = screen.getByRole("combobox", { name: "Document" });
 	await waitFor(() =>
 		expect((screen.getByLabelText("Project") as HTMLSelectElement).value).toBe(
 			"p",
 		),
 	);
-	// A typed key is an insertion and must not open; a pick is a replacement.
-	fireEvent.input(field, { target: { value: "a" }, inputType: "insertText" });
-	expect(screen.queryByText(/on feature/)).toBeNull();
-	fireEvent.input(field, {
-		target: { value: "a.md" },
-		inputType: "insertReplacementText",
-	});
+	await user.click(field);
+	await user.type(field, "a");
+	await screen.findByRole("option", { name: /a\.md/ });
+	await user.click(screen.getByRole("option", { name: /a\.md/ }));
+	await screen.findByText(/on feature/);
+});
+
+test("arrow keys move through the results and Enter opens the active one", async () => {
+	stub();
+	const user = userEvent.setup();
+	render(
+		<MemoryRouter initialEntries={["/p/p/docs"]}>
+			<Routes>
+				<Route
+					path="/p/:project/docs"
+					element={<DocumentView onLoggedOut={() => {}} />}
+				/>
+			</Routes>
+		</MemoryRouter>,
+	);
+	const field = screen.getByRole("combobox", { name: "Document" });
+	await waitFor(() =>
+		expect((screen.getByLabelText("Project") as HTMLSelectElement).value).toBe(
+			"p",
+		),
+	);
+	await user.click(field);
+	await user.type(field, "a");
+	await screen.findByRole("option", { name: /a\.md/ });
+	await user.keyboard("{ArrowDown}");
+	expect(field.getAttribute("aria-activedescendant")).toBeTruthy();
+	await user.keyboard("{Enter}");
 	await screen.findByText(/on feature/);
 });
 
@@ -314,8 +339,7 @@ test("the project is a dropdown of known projects and a bare ticket ID opens its
 	expect((await screen.findByRole("option", { name: "p" })).textContent).toBe(
 		"p",
 	);
-	await user.type(screen.getByLabelText("Document"), "x8jt");
-	await user.click(screen.getByRole("button", { name: "Open" }));
+	await user.type(screen.getByLabelText("Document"), "x8jt" + "{Enter}");
 	await screen.findByText(/on feature/);
 	const urls = vi.mocked(fetch).mock.calls.map((c) => String(c[0]));
 	expect(urls).toContain(
@@ -416,8 +440,7 @@ test("the document ticket ID renders as an IdChip when path ends with -<id>.md",
 			</Routes>
 		</MemoryRouter>,
 	);
-	await user.type(screen.getByLabelText("Document"), "x8jt");
-	await user.click(screen.getByRole("button", { name: "Open" }));
+	await user.type(screen.getByLabelText("Document"), "x8jt" + "{Enter}");
 	await screen.findByText(/on feature/);
 	expect(screen.getByRole("button", { name: "Copy x8jt" })).toBeInTheDocument();
 });
@@ -497,8 +520,7 @@ test("paths not matching the ticket ID format do not render a ticket chip", asyn
 			</Routes>
 		</MemoryRouter>,
 	);
-	await user.type(screen.getByLabelText("Document"), "notes-final");
-	await user.click(screen.getByRole("button", { name: "Open" }));
+	await user.type(screen.getByLabelText("Document"), "notes-final" + "{Enter}");
 	await screen.findByText(/on main/);
 	expect(screen.queryByRole("button", { name: /Copy final/ })).toBeNull();
 });
@@ -603,12 +625,10 @@ test("a project on another machine is named in the picker, opens, and a 503 show
 		</MemoryRouter>,
 	);
 	await screen.findByRole("option", { name: "notes (nuc)" });
-	await user.type(screen.getByLabelText("Document"), "a.md");
-	await user.click(screen.getByRole("button", { name: "Open" }));
+	await user.type(screen.getByLabelText("Document"), "a.md" + "{Enter}");
 	await screen.findByText(/on main/);
 	await user.clear(screen.getByLabelText("Document"));
-	await user.type(screen.getByLabelText("Document"), "down.md");
-	await user.click(screen.getByRole("button", { name: "Open" }));
+	await user.type(screen.getByLabelText("Document"), "down.md" + "{Enter}");
 	expect((await screen.findByRole("alert")).textContent).toBe(
 		"nuc is not answering: connection refused",
 	);

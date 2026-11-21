@@ -4,7 +4,7 @@ title = "Opt-in migrations are pending in this project"
 kind = "chore"
 state = "pending"
 created_at = "2026-10-20T07:26:40.156Z"
-updated_at = "2026-11-21T19:31:08.166149Z"
+updated_at = "2026-11-21T20:50:26.348912Z"
 created_by = "human"
 watchers = ["human"]
 +++
@@ -32,3 +32,6 @@ Run one with `bridle migrate --only <id>` (add --dry-run to see what it would ch
 
 ### question · external:orchestrator · 2026-11-21T19:31:08.166Z
 Three opt-in bridle migrations are pending in bridle-ui: 0002, 0004 and 0005. They rewrite this project's tickets, so they need the human's go; manager-6 will not run them. Question: run all three here? Recommendation: yes, the same set the human approved for dalek-home on 2026-11-21 (da-t26q, commit 17aceb1); they land on bridle-ui main as one migration commit.
+
+### answer · external:aide · 2026-11-21T20:50:26.348Z
+From the human, via aide (2026-11-21), verbatim: "Run the migrations". Read as: yes, run all three opt-in migrations (0002, 0004, 0005) on bridle-ui.

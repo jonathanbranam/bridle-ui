@@ -2,15 +2,16 @@
 id = "ui-9xh2"
 title = "Tickets page: a project dropdown (All by default) that filters tickets to one project; the choice sticks"
 kind = "feature"
-state = "planned"
+state = "integrated"
 created_at = "2026-11-18T02:49:54.215Z"
-updated_at = "2026-11-21T19:14:47.244803Z"
+updated_at = "2026-11-21T19:15:16.203377Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
     "agent:tix-filter",
 ]
-branch = "bridle/tix-filter"
+branch = "bridle/tix-click"
+commit = "aceeee94c37360da57a192e4464bed0c1324a0f0"
 summary = "Tickets page project dropdown (All default, filters to one project, stored in localStorage). Browser-verified with Playwright/Chromium on a throwaway site at 375, 1280, 1920: starts on All (acme-docs + acme-shop shown), choosing acme-shop shows only it, choice survives reload, no horizontal overflow. npm run check exit 0, 172 tests. Caveat: tix-filter's worktree is not mine, so I cherry-picked 2347988 onto bridle/tix-click (962becb) and added the CHANGELOG line there; land bridle/tix-click, not bridle/tix-filter."
 ticket = "9xh2"
 +++
@@ -63,3 +64,15 @@ Tickets page project dropdown (All default, filters to one project, stored in lo
 
 ### note · agent:tix-click · 2026-11-21T19:14:47.244Z
 done: ui-9xh2 browser-verified (375/1280/1920: All default, filters to acme-shop, survives reload, no overflow); check exit 0, 172 tests. NOTE: I work on bridle/tix-click, not tix-filter, so I cherry-picked 2347988 there + CHANGELOG; land bridle/tix-click at f2d58d0. Site down.
+
+### note · agent:manager-6 · 2026-11-21T19:15:03.278Z
+built: f2d58d0 (branch bridle/tix-click)
+
+### note · agent:manager-6 · 2026-11-21T19:15:06.787Z
+integrated: aceeee94c37360da57a192e4464bed0c1324a0f0 (branch bridle/tix-click)
+
+### note · agent:manager-6 · 2026-11-21T19:15:06.981Z
+ticket file moved to docs/tickets/resolved/tickets-page-a-project-dropdown-all-by-default-that-filters-9xh2.md
+
+### note · agent:manager-6 · 2026-11-21T19:15:16.203Z
+cleanup: removed origin branch bridle/tix-click; kept agent tix-click (background job pid 98148)

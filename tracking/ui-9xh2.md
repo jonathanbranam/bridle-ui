@@ -4,14 +4,14 @@ title = "Tickets page: a project dropdown (All by default) that filters tickets 
 kind = "feature"
 state = "planned"
 created_at = "2026-11-18T02:49:54.215Z"
-updated_at = "2026-11-21T19:08:25.303401Z"
+updated_at = "2026-11-21T19:14:47.244803Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
     "agent:tix-filter",
 ]
 branch = "bridle/tix-filter"
-summary = "Tickets page now has a Project dropdown (All default, options from the projects already fetched). Filtering is client-side over the loaded lists; choice stored in localStorage key tickets.project, falls back to All if the project is gone. Code in src/Tickets.tsx, test in src/Tickets.test.tsx (an existing query became a heading role since 'p' is now also an option). No CHANGELOG.md in this repo. Browser click-through not done: no browser tool; only vitest and check:site. Commit 2347988."
+summary = "Tickets page project dropdown (All default, filters to one project, stored in localStorage). Browser-verified with Playwright/Chromium on a throwaway site at 375, 1280, 1920: starts on All (acme-docs + acme-shop shown), choosing acme-shop shows only it, choice survives reload, no horizontal overflow. npm run check exit 0, 172 tests. Caveat: tix-filter's worktree is not mine, so I cherry-picked 2347988 onto bridle/tix-click (962becb) and added the CHANGELOG line there; land bridle/tix-click, not bridle/tix-filter."
 ticket = "9xh2"
 +++
 
@@ -57,3 +57,9 @@ Browser tool for workers submitted to bridle as br-4bhp.
 
 ### note · agent:manager-6 · 2026-11-21T19:08:25.303Z
 sent back: Needs a browser click-through (dropdown starts on All, filters to one project, survives reload, narrow and wide) per orchestrator m-1721
+
+### note · agent:tix-click · 2026-11-21T19:14:43.231Z
+Tickets page project dropdown (All default, filters to one project, stored in localStorage). Browser-verified with Playwright/Chromium on a throwaway site at 375, 1280, 1920: starts on All (acme-docs + acme-shop shown), choosing acme-shop shows only it, choice survives reload, no horizontal overflow. npm run check exit 0, 172 tests. Caveat: tix-filter's worktree is not mine, so I cherry-picked 2347988 onto bridle/tix-click (962becb) and added the CHANGELOG line there; land bridle/tix-click, not bridle/tix-filter.
+
+### note · agent:tix-click · 2026-11-21T19:14:47.244Z
+done: ui-9xh2 browser-verified (375/1280/1920: All default, filters to acme-shop, survives reload, no overflow); check exit 0, 172 tests. NOTE: I work on bridle/tix-click, not tix-filter, so I cherry-picked 2347988 there + CHANGELOG; land bridle/tix-click at f2d58d0. Site down.

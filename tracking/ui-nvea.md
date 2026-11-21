@@ -4,7 +4,7 @@ title = "Let the bridle-ui manager install the UI after a landing (allow npm run
 kind = "chore"
 state = "pending"
 created_at = "2026-10-11T17:14:08.998Z"
-updated_at = "2026-11-18T06:04:59.034077Z"
+updated_at = "2026-11-21T14:57:58.840322Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 ticket = "nvea"
@@ -49,3 +49,6 @@ Orchestrator, 2026-11-17: tried the one-line edit; Claude Code auto mode refused
 
 ### note · external:aide · 2026-11-18T06:04:59.034Z
 aide: the human made the change themselves: commit f281140 'Adds install-ui permissions.' (now on origin/main), daemon restarted after. Acceptance still to see: the manager installs after the next landing on its own. Ready to close once that happens.
+
+### note · external:aide · 2026-11-21T14:57:58.840Z
+Done by the human's own commit f281140 (2026-11-17 9:47 PM ET, 'Adds install-ui permissions'): .bridle/config.toml line 56 now allows Bash(npm run install-ui) for the manager. Nothing left to build; the orchestrator can close it.

@@ -4,7 +4,7 @@ title = "Let the bridle-ui manager install the UI after a landing (allow npm run
 kind = "chore"
 state = "pending"
 created_at = "2026-10-11T17:14:08.998Z"
-updated_at = "2026-11-21T14:57:58.840322Z"
+updated_at = "2026-11-21T20:53:24.330819Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 ticket = "nvea"
@@ -52,3 +52,6 @@ aide: the human made the change themselves: commit f281140 'Adds install-ui perm
 
 ### note · external:aide · 2026-11-21T14:57:58.840Z
 Done by the human's own commit f281140 (2026-11-17 9:47 PM ET, 'Adds install-ui permissions'): .bridle/config.toml line 56 now allows Bash(npm run install-ui) for the manager. Nothing left to build; the orchestrator can close it.
+
+### note · external:aide · 2026-11-21T20:53:24.330Z
+From the human, via aide (2026-11-21 ~3:55 PM ET), verbatim: "Good close it."

@@ -19,6 +19,7 @@ import {
 	targetsIn,
 	ticketHref,
 } from "./doc/links";
+import { slugify } from "./toc";
 
 type Resolved = { project: string; paths: Map<string, string | null> };
 const Links = createContext<Resolved>({ project: "", paths: new Map() });
@@ -213,6 +214,23 @@ const shared: Components = {
 	),
 };
 const inlineComponents: Components = { p: Fragment, ...shared };
+// Ids let the ticket page's table of contents jump to a heading.
+function heading(level: 1 | 2 | 3, children: ReactNode) {
+	const Tag = `h${level}` as const;
+	const text = Array.isArray(children)
+		? children.filter((c) => typeof c === "string").join("")
+		: typeof children === "string"
+			? children
+			: "";
+	return (
+		<Tag
+			id={slugify(text) || undefined}
+			className="mt-3 mb-1 scroll-mt-2 font-semibold"
+		>
+			{children}
+		</Tag>
+	);
+}
 const blockComponents: Components = {
 	p: ({ children }) => <p className="my-1">{children}</p>,
 	blockquote: ({ children }) => (
@@ -226,6 +244,9 @@ const blockComponents: Components = {
 			{children}
 		</ol>
 	),
+	h1: ({ children }) => heading(1, children),
+	h2: ({ children }) => heading(2, children),
+	h3: ({ children }) => heading(3, children),
 	pre: ({ children }) => (
 		<pre className="my-1 overflow-x-auto rounded bg-gray-100 p-2 text-sm">
 			{children}

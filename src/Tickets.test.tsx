@@ -6,6 +6,7 @@ import { LinkScope, Md } from "./Md";
 import { TicketsView, TicketView } from "./Tickets";
 
 afterEach(() => {
+	docText = "";
 	cleanup();
 	vi.unstubAllGlobals();
 });
@@ -39,6 +40,8 @@ const detail = (id: string, state: string, extra = {}) => ({
 const json = (v: unknown, status = 200) =>
 	new Response(JSON.stringify(v), { status });
 
+let docText = "";
+
 function gateway(tasks: Record<string, ReturnType<typeof detail>>) {
 	const fetchMock = vi.fn(async (url: string, _init?: RequestInit) => {
 		if (url.endsWith("/projects"))
@@ -48,6 +51,11 @@ function gateway(tasks: Record<string, ReturnType<typeof detail>>) {
 					{ project: "q", machine: null, url: null, reachable: true },
 				],
 			});
+		if (url.includes("/links/resolve"))
+			return json({
+				links: docText ? [{ target: "x-1111", path: "t/x-1111.md" }] : [],
+			});
+		if (url.includes("/documents/")) return json({ content: docText });
 		const list = url.match(/\/projects\/(\w+)\/tickets\?state=(\w+)/);
 		if (list) {
 			const all = list[1] === "p" ? Object.values(tasks) : [];
@@ -184,7 +192,7 @@ test("a task claimed by the human has Done and Decline, and shows the new state"
 	const fetchMock = gateway(tasks);
 	const base = fetchMock.getMockImplementation();
 	fetchMock.mockImplementation(async (url: string, init?: RequestInit) => {
-		if (init?.method === "POST") {
+		if (init?.method === "POST" && !url.includes("/links/")) {
 			tasks["x-1111"] = detail("x-1111", "dropped", { claimed_by: "human" });
 			return json({});
 		}
@@ -197,7 +205,9 @@ test("a task claimed by the human has Done and Decline, and shows the new state"
 	await userEvent.type(screen.getByLabelText(/Reason for declining/), "no");
 	await userEvent.click(screen.getByRole("button", { name: "Decline" }));
 	expect(await screen.findByText(/p \/ dropped/)).toBeInTheDocument();
-	const post = fetchMock.mock.calls.find(([, i]) => i?.method === "POST");
+	const post = fetchMock.mock.calls.find(
+		([u, i]) => i?.method === "POST" && !u.includes("/links/"),
+	);
 	expect(post?.[0]).toMatch(/\/projects\/p\/tickets\/x-1111\/drop$/);
 });
 
@@ -224,7 +234,7 @@ test("every task has a reply box; Reply posts the text, clears it and refetches"
 		const fetchMock = gateway(tasks);
 		const base = fetchMock.getMockImplementation();
 		fetchMock.mockImplementation(async (url: string, init?: RequestInit) => {
-			if (init?.method === "POST") {
+			if (init?.method === "POST" && !url.includes("/links/")) {
 				tasks["x-1111"].thread.push({
 					kind: "note",
 					from: "human",
@@ -243,7 +253,9 @@ test("every task has a reply box; Reply posts the text, clears it and refetches"
 		await userEvent.click(button);
 		expect(await screen.findByText("Hello there")).toBeInTheDocument();
 		expect(box).toHaveValue("");
-		const post = fetchMock.mock.calls.find(([, i]) => i?.method === "POST");
+		const post = fetchMock.mock.calls.find(
+			([u, i]) => i?.method === "POST" && !u.includes("/links/"),
+		);
 		expect(post?.[0]).toMatch(/\/projects\/p\/tickets\/x-1111\/reply$/);
 		expect(JSON.parse(String(post?.[1]?.body))).toEqual({
 			text: "Hello there",
@@ -291,7 +303,9 @@ test("Send to an agent lists the recipients and posts the message threaded on th
 	await userEvent.type(screen.getByLabelText("Message"), "please look");
 	await userEvent.click(screen.getByRole("button", { name: "Send" }));
 	expect(await screen.findByText("Sent to orchestrator")).toBeInTheDocument();
-	const post = fetchMock.mock.calls.find(([, i]) => i?.method === "POST");
+	const post = fetchMock.mock.calls.find(
+		([u, i]) => i?.method === "POST" && !u.includes("/links/"),
+	);
 	expect(JSON.parse(String(post?.[1]?.body))).toEqual({
 		to: "orchestrator",
 		text: "please look",
@@ -343,4 +357,29 @@ test("no row and no file says no ticket", async () => {
 	fileOnly(null);
 	app("/p/p/tickets/p-k1k1");
 	expect(await screen.findByRole("alert")).toHaveTextContent("No ticket");
+});
+
+test("the ticket page shows the document with the state and thread, no contents when short", async () => {
+	docText = "---\nid: x-1111\n---\n## Design\nThe document text.";
+	gateway({ "x-1111": detail("x-1111", "planned") });
+	app("/p/p/tickets/x-1111");
+	expect(await screen.findByText("The document text.")).toBeInTheDocument();
+	expect(screen.queryByText(/^id: x-1111/)).toBeNull();
+	expect(screen.getByText("Thread")).toBeInTheDocument();
+	expect(screen.getByText("A note")).toBeInTheDocument();
+	expect(
+		screen.queryByRole("navigation", { name: "Table of contents" }),
+	).toBeNull();
+});
+
+test("a long document gets a collapsible table of contents", async () => {
+	docText = `## First part\n${"line\n\n".repeat(80)}## Second part\ntail`;
+	gateway({ "x-1111": detail("x-1111", "planned") });
+	app("/p/p/tickets/x-1111");
+	const toc = await screen.findByRole("navigation", {
+		name: "Table of contents",
+	});
+	expect(toc.querySelector('a[href="#second-part"]')).not.toBeNull();
+	await userEvent.click(screen.getByRole("button", { name: "Hide contents" }));
+	expect(toc.querySelector("a")).toBeNull();
 });

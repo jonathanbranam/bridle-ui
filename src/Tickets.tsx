@@ -5,6 +5,7 @@ import {
 	type Action,
 	act,
 	projects as listProjects,
+	readDocument,
 	recipients,
 	resolveLinks,
 	sendMessage,
@@ -20,6 +21,7 @@ import { IdChip } from "./IdChip";
 import { TodoActions } from "./Items";
 import { LinkScope, Md } from "./Md";
 import { ticketTitle } from "./pageTitle";
+import { headings, stripFrontmatter, TOC_MIN_LINES } from "./toc";
 
 type Props = { onLoggedOut: () => void };
 
@@ -366,6 +368,94 @@ function SendToAgent({
 	);
 }
 
+/** The ticket file's text (no frontmatter), when the project has one for this ID. Best effort. */
+function useTicketDocument(project: string, id: string) {
+	const [text, setText] = useState<string>();
+	useEffect(() => {
+		let stale = false;
+		setText(undefined);
+		if (!project || !id) return;
+		resolveLinks(project, [id]).then(async (l) => {
+			const path = l.ok ? l.value.links?.[0]?.path : undefined;
+			if (!path || stale) return;
+			const d = await readDocument(project, path);
+			if (d.ok && !stale) setText(stripFrontmatter(d.value.content));
+		});
+		return () => {
+			stale = true;
+		};
+	}, [project, id]);
+	return text;
+}
+
+/** Left-hand contents, only for a long document. Starts collapsed on a narrow screen. */
+function Toc({ md }: { md: string }) {
+	const [open, setOpen] = useState(
+		() => typeof window === "undefined" || window.innerWidth >= 1024,
+	);
+	const items = headings(md);
+	if (md.split("\n").length < TOC_MIN_LINES || items.length === 0) return null;
+	return (
+		<nav
+			aria-label="Table of contents"
+			className="lg:sticky lg:top-2 lg:max-h-screen lg:w-64 lg:shrink-0 lg:self-start lg:overflow-y-auto"
+		>
+			<button
+				type="button"
+				className="rounded border px-2 py-1"
+				aria-expanded={open}
+				onClick={() => setOpen(!open)}
+			>
+				{open ? "Hide contents" : "Contents"}
+			</button>
+			{open && (
+				<ul className="mt-2 space-y-1 text-sm">
+					{items.map((h, i) => (
+						<li
+							// biome-ignore lint/suspicious/noArrayIndexKey: headings can repeat
+							key={i}
+							style={{ paddingLeft: `${(h.level - 1) * 0.75}rem` }}
+							className="break-words"
+						>
+							<a className="underline" href={`#${h.slug}`}>
+								{h.text}
+							</a>
+						</li>
+					))}
+				</ul>
+			)}
+		</nav>
+	);
+}
+
+/** The ticket document (the row's ask until the file loads), with contents when it is long. */
+function TicketDocument({
+	doc,
+	ask,
+}: {
+	doc: string | undefined;
+	ask: string;
+}) {
+	return (
+		<div className="flex flex-col gap-3 lg:flex-row">
+			{doc !== undefined && <Toc md={doc} />}
+			<div className="min-w-0 flex-1 break-words">
+				{doc !== undefined ? (
+					<Md block text={doc} />
+				) : (
+					<div className="space-y-2">
+						{paragraphs(ask).map((s) => (
+							<p key={s} className="whitespace-pre-wrap">
+								<Md text={s} />
+							</p>
+						))}
+					</div>
+				)}
+			</div>
+		</div>
+	);
+}
+
 /** `/p/{project}/tickets/{id}` */
 export function TicketView({ onLoggedOut }: Props) {
 	const { id = "", project } = useParams();
@@ -374,6 +464,7 @@ export function TicketView({ onLoggedOut }: Props) {
 	const [actionError, setActionError] = useState<string>();
 	// Not every ticket file has a daemon row; the file stands in when there is none.
 	const [file, setFile] = useState<{ project: string; path: string }>();
+	const doc = useTicketDocument(ticket?.project ?? "", ticket?.id ?? "");
 
 	useEffect(() => {
 		let stale = false;
@@ -441,7 +532,12 @@ export function TicketView({ onLoggedOut }: Props) {
 	return (
 		<LinkScope
 			project={ticket.project}
-			texts={[ticket.title, ticket.body, ...ticket.thread.map((m) => m.body)]}
+			texts={[
+				ticket.title,
+				ticket.body,
+				doc ?? "",
+				...ticket.thread.map((m) => m.body),
+			]}
 		>
 			<article className="space-y-3">
 				<h2 className="text-xl font-semibold">
@@ -483,13 +579,7 @@ export function TicketView({ onLoggedOut }: Props) {
 					project={ticket.project}
 					ids={ticket.blocked_by}
 				/>
-				<div className="space-y-2">
-					{paragraphs(ticket.body).map((s) => (
-						<p key={s} className="whitespace-pre-wrap">
-							<Md text={s} />
-						</p>
-					))}
-				</div>
+				<TicketDocument doc={doc} ask={ticket.body} />
 				<h3 className="font-medium">Thread</h3>
 				<ul className="space-y-2">
 					{ticket.thread.map((m) => (

@@ -4,6 +4,7 @@
 
 ### Added
 
+- One ticket page: the ticket document (frontmatter hidden) now shows together with its state, thread, reply and send boxes and to-do actions on one scrolling page. A document of 150+ lines gets a collapsible table of contents on the left (collapsed on narrow screens); headings get anchors (ui-fwsx).
 - Tickets page: a Project dropdown (All by default) filters tickets to one project; the choice is kept across reloads (ui-9xh2).
 
 ### Changed

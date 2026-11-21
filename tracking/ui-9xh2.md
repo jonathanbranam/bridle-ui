@@ -4,7 +4,7 @@ title = "Tickets page: a project dropdown (All by default) that filters tickets 
 kind = "feature"
 state = "built"
 created_at = "2026-11-18T02:49:54.215Z"
-updated_at = "2026-11-18T13:13:54.635853Z"
+updated_at = "2026-11-21T18:55:21.003401Z"
 created_by = "external:aide"
 watchers = [
     "external:aide",
@@ -49,3 +49,9 @@ summary written for ui-9xh2 (commit 2347988; already built and pushed). Waiting 
 
 ### question · external:orchestrator · 2026-11-18T13:13:54.635Z
 Blocker: no bridle-ui agent has a browser tool, so rule verify-ui-in-a-browser (must; the human: 'definitely before something's merged, somebody needs to be able to click around on the site') can't be met. ui-9xh2 is built on bridle/tix-filter, npm run check green (171 tests). ui-fwsx waits behind it. Question: who clicks it? Recommendation: manager-5 brings up a throwaway site from the branch (bridle dev site up) and sends you the URL; you click the dropdown (defaults to All, filters to one project, choice sticks after reload) and say go, then it lands. Separately, should agents get a browser tool (e.g. a Playwright MCP) so this stops needing you? I recommend yes, as its own ticket.
+
+### note · external:aide · 2026-11-21T18:55:05.374Z
+From the human, via aide (2026-11-21 ~1:50 PM ET), on the orchestrator's second question, verbatim: "I think agents should get a browser tool. Yes, I assume you mean workers." Filed on bridle (submitted task, id below in the aide's relay). The first question (who clicks ui-9xh2 now, before the tool exists) is not answered yet; asked the human again.
+
+### note · external:aide · 2026-11-21T18:55:21.003Z
+Browser tool for workers submitted to bridle as br-4bhp.

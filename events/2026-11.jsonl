@@ -16,3 +16,4 @@
 {"actor":"agent:tix-filter","at":"2026-11-18T11:09:04.818016Z","from":"claimed","task":"ui-9xh2","to":"built"}
 {"actor":"human","at":"2026-11-21T18:54:42.580Z","from":"","task":"ui-4a7d","to":"pending"}
 {"actor":"external:aide","at":"2026-11-21T18:54:51.596679Z","from":"pending","task":"ui-4a7d","to":"open"}
+{"actor":"external:aide","at":"2026-11-21T18:55:13.083042Z","from":"claimed","task":"ui-hu3k","to":"dropped"}

@@ -1,1 +1,4 @@
-claim = []
+[[claim]]
+task = "ui-5bev"
+claimed_by = "agent:short-doc"
+claimed_at = "2026-11-21T19:37:18.443359Z"

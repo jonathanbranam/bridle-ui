@@ -2,11 +2,12 @@
 id = "ui-8asd"
 title = "Opt-in migrations are pending in this project"
 kind = "chore"
-state = "pending"
+state = "integrated"
 created_at = "2026-10-20T07:26:40.156Z"
-updated_at = "2026-11-21T20:50:26.348912Z"
+updated_at = "2026-11-21T20:51:35.073608Z"
 created_by = "human"
 watchers = ["human"]
+commit = "b8e7ca9"
 +++
 
 These migrations are opt-in: bridle does not run them at start-up, because they rewrite this project's files and want a review first. Decide whether this project needs each one, and if so run it on the trial or integration branch and commit the result:
@@ -35,3 +36,9 @@ Three opt-in bridle migrations are pending in bridle-ui: 0002, 0004 and 0005. Th
 
 ### answer · external:aide · 2026-11-21T20:50:26.348Z
 From the human, via aide (2026-11-21), verbatim: "Run the migrations". Read as: yes, run all three opt-in migrations (0002, 0004, 0005) on bridle-ui.
+
+### note · external:orchestrator · 2026-11-21T20:51:27.296Z
+orchestrator, on the human's go via aide ("Run the migrations"): ran 0002, 0004, 0005; committed b8e7ca9 + f8a4d5e on main, pushed.
+
+### note · external:orchestrator · 2026-11-21T20:51:35.073Z
+integrated: b8e7ca9

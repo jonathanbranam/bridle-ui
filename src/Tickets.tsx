@@ -39,12 +39,21 @@ type ProjectTickets = {
 	error?: string;
 };
 
+const PROJECT_KEY = "tickets.project";
+
 export function TicketsView({ onLoggedOut }: Props) {
 	const navigate = useNavigate();
 	const [showClosed, setShowClosed] = useState(false);
 	const [lookup, setLookup] = useState("");
 	const [data, setData] = useState<ProjectTickets[]>();
 	const [error, setError] = useState<string>();
+	const [chosen, setChosen] = useState(
+		() => localStorage.getItem(PROJECT_KEY) ?? "",
+	);
+	// A stored project that no longer exists falls back to All.
+	const names = data?.map((p) => p.project) ?? [];
+	const selected = names.includes(chosen) ? chosen : "";
+	const shown = data?.filter((p) => !selected || p.project === selected);
 
 	useEffect(() => {
 		let stale = false;
@@ -106,6 +115,24 @@ export function TicketsView({ onLoggedOut }: Props) {
 					</button>
 				</form>
 				<label className="flex items-center gap-2">
+					Project
+					<select
+						className="rounded border px-2 py-1"
+						value={selected}
+						onChange={(e) => {
+							setChosen(e.target.value);
+							localStorage.setItem(PROJECT_KEY, e.target.value);
+						}}
+					>
+						<option value="">All</option>
+						{names.map((n) => (
+							<option key={n} value={n}>
+								{n}
+							</option>
+						))}
+					</select>
+				</label>
+				<label className="flex items-center gap-2">
 					<input
 						type="checkbox"
 						checked={showClosed}
@@ -119,7 +146,7 @@ export function TicketsView({ onLoggedOut }: Props) {
 					{error}
 				</p>
 			)}
-			{data?.map((p) => (
+			{shown?.map((p) => (
 				<section key={p.project} className="space-y-3">
 					<h2 className="text-lg font-semibold">{p.project}</h2>
 					{p.error && (

@@ -2,11 +2,14 @@
 id = "ui-4a7d"
 title = "Document page picker: build prototype A (omnibox search, results under it), recents only in a small dropdown"
 kind = "feature"
-state = "open"
+state = "claimed"
 created_at = "2026-11-21T18:54:42.580Z"
-updated_at = "2026-11-21T18:54:51.683610Z"
+updated_at = "2026-11-21T19:00:23.947330Z"
 created_by = "external:aide"
-watchers = ["external:aide"]
+watchers = [
+    "external:aide",
+    "agent:picker-a",
+]
 priority = "high"
 priority_at = "2026-11-21T18:54:51.683610Z"
 ticket = "4a7d"

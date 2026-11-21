@@ -25,3 +25,4 @@
 {"actor":"agent:manager-6","at":"2026-11-21T19:15:06.787778Z","from":"built","task":"ui-9xh2","to":"integrated"}
 {"actor":"agent:manager-6","at":"2026-11-21T19:16:03.485856Z","from":"open","task":"ui-fwsx","to":"planned"}
 {"actor":"agent:ticket-page","at":"2026-11-21T19:23:13.138294Z","from":"claimed","task":"ui-fwsx","to":"built"}
+{"actor":"agent:manager-6","at":"2026-11-21T19:26:29.746683Z","from":"built","task":"ui-fwsx","to":"integrated"}

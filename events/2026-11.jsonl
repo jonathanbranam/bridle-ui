@@ -18,3 +18,4 @@
 {"actor":"external:aide","at":"2026-11-21T18:54:51.596679Z","from":"pending","task":"ui-4a7d","to":"open"}
 {"actor":"external:aide","at":"2026-11-21T18:55:13.083042Z","from":"claimed","task":"ui-hu3k","to":"dropped"}
 {"actor":"agent:manager-6","at":"2026-11-21T19:00:07.197063Z","from":"open","task":"ui-4a7d","to":"planned"}
+{"actor":"agent:picker-a","at":"2026-11-21T19:06:55.963668Z","from":"claimed","task":"ui-4a7d","to":"built"}

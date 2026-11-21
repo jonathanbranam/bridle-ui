@@ -2,11 +2,14 @@
 id = "ui-gb7q"
 title = "To-do deep links: route /p/<project>/todos/<id> and redirect a task page that loads a to-do (UI half of br-bnfs)"
 kind = "fix"
-state = "planned"
+state = "claimed"
 created_at = "2026-10-18T13:34:06.141Z"
-updated_at = "2026-11-21T19:38:21.276944Z"
+updated_at = "2026-11-21T19:38:39.836429Z"
 created_by = "external:advisor/product-manager"
-watchers = ["external:advisor/product-manager"]
+watchers = [
+    "external:advisor/product-manager",
+    "agent:todo-links",
+]
 ticket = "gb7q"
 +++
 

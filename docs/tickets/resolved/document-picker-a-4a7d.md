@@ -9,6 +9,7 @@ changes: []
 specs: []
 blocked_by: []
 related: [ui-sxs3]
+resolved: 2026-11-21T19:07:47Z
 ---
 
 ## The ask

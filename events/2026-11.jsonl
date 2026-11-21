@@ -14,3 +14,5 @@
 {"actor":"external:orchestrator","at":"2026-11-18T11:01:33.318962Z","queue":"reprioritized"}
 {"actor":"agent:manager-5","at":"2026-11-18T11:07:13.745590Z","from":"open","task":"ui-9xh2","to":"planned"}
 {"actor":"agent:tix-filter","at":"2026-11-18T11:09:04.818016Z","from":"claimed","task":"ui-9xh2","to":"built"}
+{"actor":"human","at":"2026-11-21T18:54:42.580Z","from":"","task":"ui-4a7d","to":"pending"}
+{"actor":"external:aide","at":"2026-11-21T18:54:51.596679Z","from":"pending","task":"ui-4a7d","to":"open"}

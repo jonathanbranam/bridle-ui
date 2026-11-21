@@ -3,10 +3,19 @@ import type { ClaimAgent } from "./ClaimAgent";
 
 export type TaskSummary = { id: string, title: string, kind: string, state: string, priority: string, claimed_by: string | null, 
 /**
+ * A human's to-do (claimed by `human`): the UI opens the to-do page for it, not the ticket
+ * page (br-bnfs).
+ */
+todo: boolean, 
+/**
  * Set when `claimed_by` is `agent:<name>` and the daemon knows that agent.
  */
 agent: ClaimAgent | null, 
 /**
  * RFC 3339, UTC.
  */
-updated: string, };
+updated: string, 
+/**
+ * While `held`: who paused it, why, and until when (free text). Null otherwise.
+ */
+held_by: string | null, held_reason: string | null, held_until: string | null, };

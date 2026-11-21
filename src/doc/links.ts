@@ -29,6 +29,10 @@ export const projectHref = projectBase;
 export const ticketHref = (project: string, id: string) =>
 	`${projectBase(project)}/tickets/${encodeURIComponent(id)}`;
 
+/** The to-do page with that to-do scrolled into view. */
+export const todoHref = (project: string, id: string) =>
+	`${projectBase(project)}/todos/${encodeURIComponent(id)}`;
+
 /** True for a requirement (`r-xxxx`) or scenario (`s-xxxx`) ID; the gateway resolves it to a spec file. */
 export const isSpecId = (target: string) =>
 	new RegExp(`^${SPEC_ID.slice(WORD.length)}$`).test(target);

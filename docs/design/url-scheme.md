@@ -148,6 +148,7 @@ Final formats (the only ones the UI emits; builders are in `src/doc/links.ts`):
 |---|---|
 | project overview | `/p/{project}` |
 | ticket (what was a task or a ticket; `{id}` is `ui-xxxx`) | `/p/{project}/tickets/{id}` |
+| to-do (the to-do page with that to-do scrolled into view; `{id}` is the task or ticket id) | `/p/{project}/todos/{id}` |
 | document | `/p/{project}/docs?path={file path}` |
 | spec | `/p/{project}/specs?path={file path}#{requirement or scenario id}` (the `#id` is optional) |
 | spec index of a project | `/p/{project}/specs` |
@@ -164,6 +165,7 @@ Redirects (client-side, `src/Redirects.tsx`, kept indefinitely):
 | `/task?id=X&project=P`, `/ticket?id=X&project=P` | `/p/P/tickets/X` |
 | `/task?id=X`, `/ticket?id=X` | asks each project for X, then `/p/{project}/tickets/X` (error if none has it) |
 | `/tasks` | `/tickets` |
+| `/p/{project}/tickets/{id}` when the task is a human to-do (`todo: true`), also a typed-in ID | `/p/{project}/todos/{id}` |
 | `/document?project=P&path=F` | `/p/P/docs?path=F` |
 | `/specs?project=P&path=F#X` | `/p/P/specs?path=F#X` |
 | `/specs?project=P&capability=C` | `/p/P/specs?path=design/specs/C.md` |

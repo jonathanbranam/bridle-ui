@@ -114,6 +114,10 @@ export function App() {
 						element={<TicketView onLoggedOut={loggedOut} />}
 					/>
 					<Route
+						path="/p/:project/todos/:id"
+						element={<ItemsView onLoggedOut={loggedOut} />}
+					/>
+					<Route
 						path="/p/:project/docs"
 						element={<DocumentView onLoggedOut={loggedOut} />}
 					/>

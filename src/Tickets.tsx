@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, Navigate, useNavigate, useParams } from "react-router";
 import { AutoTextarea } from "./AutoTextarea";
 import {
 	type Action,
@@ -16,7 +16,7 @@ import {
 import type { TaskDetail } from "./api/generated/TaskDetail";
 import type { TaskSummary } from "./api/generated/TaskSummary";
 import { DocumentView } from "./Document";
-import { ticketHref } from "./doc/links";
+import { ticketHref, todoHref } from "./doc/links";
 import { IdChip } from "./IdChip";
 import { TodoActions } from "./Items";
 import { LinkScope, Md } from "./Md";
@@ -464,11 +464,14 @@ export function TicketView({ onLoggedOut }: Props) {
 	const [actionError, setActionError] = useState<string>();
 	// Not every ticket file has a daemon row; the file stands in when there is none.
 	const [file, setFile] = useState<{ project: string; path: string }>();
+	// A human to-do has its own page (br-bnfs); a ticket link or typed ID that is one lands there.
+	const [todoTo, setTodoTo] = useState<string>();
 	const doc = useTicketDocument(ticket?.project ?? "", ticket?.id ?? "");
 
 	useEffect(() => {
 		let stale = false;
 		setTicket(undefined);
+		setTodoTo(undefined);
 		setFile(undefined);
 		setError(undefined);
 		if (!id) {
@@ -477,8 +480,10 @@ export function TicketView({ onLoggedOut }: Props) {
 		}
 		findTicket(id, project).then((r) => {
 			if (stale) return;
-			if (r.ok) setTicket(r.value);
-			else if (r.notLoggedIn) onLoggedOut();
+			if (r.ok) {
+				if (r.value.todo) setTodoTo(todoHref(r.value.project, r.value.id));
+				else setTicket(r.value);
+			} else if (r.notLoggedIn) onLoggedOut();
 			else if (!project) setError(r.error);
 			else
 				resolveLinks(project, [id]).then((l) => {
@@ -513,6 +518,7 @@ export function TicketView({ onLoggedOut }: Props) {
 		return r.ok;
 	};
 
+	if (todoTo) return <Navigate to={todoTo} replace />;
 	if (error) return <p role="alert">{error}</p>;
 	if (file)
 		return (

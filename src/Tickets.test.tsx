@@ -89,6 +89,7 @@ const app = (path: string) =>
 					path="/p/:project/tickets/:id"
 					element={<TicketView onLoggedOut={() => {}} />}
 				/>
+				<Route path="/p/:project/todos/:id" element={<p>to-do page</p>} />
 			</Routes>
 		</MemoryRouter>,
 	);
@@ -382,4 +383,10 @@ test("a long document gets a collapsible table of contents", async () => {
 	expect(toc.querySelector('a[href="#second-part"]')).not.toBeNull();
 	await userEvent.click(screen.getByRole("button", { name: "Hide contents" }));
 	expect(toc.querySelector("a")).toBeNull();
+});
+
+test("a ticket page that loads a human to-do redirects to the to-do page", async () => {
+	gateway({ "x-1111": detail("x-1111", "planned", { todo: true }) });
+	app("/p/p/tickets/x-1111");
+	expect(await screen.findByText("to-do page")).toBeInTheDocument();
 });

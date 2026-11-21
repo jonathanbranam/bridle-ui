@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 import { AutoTextarea } from "./AutoTextarea";
 import { type Action, act, items } from "./api/client";
 import type { Items as ItemsData } from "./api/generated/Items";
@@ -11,6 +11,12 @@ type Props = { onLoggedOut: () => void };
 export function ItemsView({ onLoggedOut }: Props) {
 	const [data, setData] = useState<ItemsData>();
 	const [error, setError] = useState<string>();
+	// On /p/:project/todos/:id the page is the same list with that to-do scrolled into view.
+	const { project: wantProject, id: wantId } = useParams();
+	const isWanted = (
+		project: string,
+		t: { task_id: string; ticket: string | null },
+	) => project === wantProject && (t.task_id === wantId || t.ticket === wantId);
 
 	const load = useCallback(async () => {
 		const r = await items();
@@ -24,6 +30,14 @@ export function ItemsView({ onLoggedOut }: Props) {
 	useEffect(() => {
 		load();
 	}, [load]);
+
+	const wantedLoaded = !!data;
+	useEffect(() => {
+		if (!wantedLoaded || !wantId) return;
+		document
+			.querySelector("[data-wanted-todo]")
+			?.scrollIntoView?.({ block: "center" });
+	}, [wantedLoaded, wantId]);
 
 	// Refetch after every attempt so the list shows the gateway's truth, even on failure.
 	const run = async (
@@ -85,7 +99,11 @@ export function ItemsView({ onLoggedOut }: Props) {
 								</li>
 							))}
 							{p.todos.map((t) => (
-								<li key={t.task_id} className="rounded border p-3">
+								<li
+									key={t.task_id}
+									data-wanted-todo={isWanted(p.project, t) ? "" : undefined}
+									className={`rounded border p-3 ${isWanted(p.project, t) ? "ring-2 ring-blue-500" : ""}`}
+								>
 									<p className="font-medium">
 										<Link
 											className="underline"

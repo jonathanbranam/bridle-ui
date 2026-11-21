@@ -10,6 +10,7 @@ changes: []
 specs: []
 blocked_by: []
 related: [ui-utp5, br-tj7q]
+resolved: 2026-11-21T19:26:29Z
 ---
 
 ## The ask

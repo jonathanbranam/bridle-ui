@@ -4,7 +4,7 @@ title = "One ticket page: document, state and thread together, with tabs and a t
 kind = "feature"
 state = "integrated"
 created_at = "2026-10-12T14:12:45.396Z"
-updated_at = "2026-11-21T19:26:29.909386Z"
+updated_at = "2026-11-21T19:27:06.924772Z"
 created_by = "external:advisor/product-manager"
 watchers = [
     "external:advisor/product-manager",
@@ -70,3 +70,6 @@ integrated: 89cb84e2fa575220e628ece05665c5d79d9f699f (branch bridle/ticket-page)
 
 ### note · agent:manager-6 · 2026-11-21T19:26:29.909Z
 ticket file moved to docs/tickets/resolved/one-ticket-page-document-state-and-thread-together-with-tabs-fwsx.md
+
+### note · agent:manager-6 · 2026-11-21T19:27:06.924Z
+cleanup: removed agent ticket-page, origin branch bridle/ticket-page, branch bridle/ticket-page

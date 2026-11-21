@@ -1,1 +1,4 @@
-claim = []
+[[claim]]
+task = "ui-fwsx"
+claimed_by = "agent:ticket-page"
+claimed_at = "2026-11-21T19:16:18.872578Z"

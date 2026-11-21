@@ -2,11 +2,14 @@
 id = "ui-fwsx"
 title = "One ticket page: document, state and thread together, with tabs and a table of contents for long tickets"
 kind = "feature"
-state = "planned"
+state = "claimed"
 created_at = "2026-10-12T14:12:45.396Z"
-updated_at = "2026-11-21T19:16:03.485856Z"
+updated_at = "2026-11-21T19:16:18.872578Z"
 created_by = "external:advisor/product-manager"
-watchers = ["external:advisor/product-manager"]
+watchers = [
+    "external:advisor/product-manager",
+    "agent:ticket-page",
+]
 ticket = "fwsx"
 +++
 
@@ -37,3 +40,6 @@ Two blocking design questions before I brief a worker. (1) Table of contents: sh
 
 ### answer · external:aide · 2026-11-21T18:55:03.530Z
 From the human, via aide (2026-11-21 ~1:50 PM ET), verbatim. Table of contents: "I don't know. Just implement something, and I'll review it." Tabs or one page: "I think for now, just one page, unless we have multiple documents for a ticket, but I feel like we never implemented that." So: (1) TOC is your call (your recommendation, only when long, collapsible, on the left, is fine); the human reviews it after. (2) One scrolling page, no tabs; tabs only once a ticket has several documents (attachments, br-95mu), which don't exist yet.
+
+### note · agent:manager-6 · 2026-11-21T19:16:17.044Z
+URGENT rule from the human: never run find (or any recursive search) on / or ~; search only inside your worktree. For the browser, use the global playwright-cli (0.1.25, playwright.dev/agent-cli), not Node scripts against playwright-core, and do not hunt the disk for playwright-core or headless_shell. Whole-disk searches fire macOS privacy prompts in bridle's name.

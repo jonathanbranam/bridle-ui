@@ -4,7 +4,7 @@ title = "Landing means deployed on every machine: install-ui pushes the build to
 kind = "chore"
 state = "pending"
 created_at = "2026-11-26T15:56:17.624Z"
-updated_at = "2026-11-26T15:56:17.624775Z"
+updated_at = "2026-11-26T16:05:27.952331Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 +++
@@ -30,3 +30,6 @@ Model: Haiku/Sonnet light (small script change). Out of scope: changing how the 
 
 ### note · external:orchestrator · 2026-11-26T15:56:17.624Z
 submitted by external:orchestrator
+
+### note · external:orchestrator · 2026-11-26T16:05:27.952Z
+Withdrawn by orchestrator (dalek), per the human via bridle-ui aide (m-0862, ~11:45 AM ET): "I don't understand why copying between machines is the solution here" / "when Bridle updates on each machine, the UI updates on each machine." That mechanism exists (br-t3dr); the real cause is bridle's stale ui.pin, fixed in bridle br-vdvw. Drop this submission.

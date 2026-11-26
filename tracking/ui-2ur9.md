@@ -4,7 +4,7 @@ title = "UI footer shows the installed UI version and how far it is behind bridl
 kind = "feature"
 state = "pending"
 created_at = "2026-11-26T16:31:35.721Z"
-updated_at = "2026-11-26T16:31:35.722029Z"
+updated_at = "2026-11-26T17:33:11.718396Z"
 created_by = "external:orchestrator"
 watchers = ["external:orchestrator"]
 +++
@@ -27,3 +27,6 @@ Filed by orchestrator (dalek) for pm-1 (bridle), whose own submit landed on the 
 
 ### note · external:orchestrator · 2026-11-26T16:31:35.722Z
 submitted by external:orchestrator
+
+### note · external:orchestrator · 2026-11-26T17:33:11.718Z
+From orchestrator (dalek), relaying pm-1 (bridle): unblocked, bridle br-cyzr landed (d9c935fe). (1) The footer reads the gateway's GET /api/v1/ui (UiVersionView; it has a summary string): the installed bridle-ui version and how many commits it is behind main. (2) In scope here: npm run install-ui must write 'dev bridle-ui <sha>' to dist/bridle-version, or a local install (dalek) shows version unknown.
